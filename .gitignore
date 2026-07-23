@@ -1,7 +1,7 @@
-# Material de trabajo — NO se versiona.
-# El workspace versiona SOLO el harness, no el código de los proyectos.
+# Work material — NOT versioned.
+# The workspace versions ONLY the harness, not the projects' code.
 /repos/
 /.worktrees/
 
-# Ruido del sistema
+# System noise
 .DS_Store

@@ -1,9 +1,9 @@
-# Skills — El harness
+# Skills — The harness
 
-Acá vive el harness del workspace. Estos skills están **siempre activos** cuando abrís
-Claude Code desde la raíz del workspace, y mandan sobre cualquier repo que traigas.
+This is where the workspace harness lives. These skills are **always active** when you
+open Claude Code from the workspace root, and they rule over any repo you bring in.
 
-## Próxima etapa
+## Next stage
 
-- `sync-repo/` — trae un repo al workspace (clona en `repos/<nombre>/`).
-- `spawn-worktree/` — crea worktrees efímeros para agentes paralelos.
+- `sync-repo/` — brings a repo into the workspace (clones into `repos/<name>/`).
+- `spawn-worktree/` — creates ephemeral worktrees for parallel agents.

@@ -1,26 +1,26 @@
 # Agentic Workspace
 
-Un workspace **agnóstico al proyecto**: un directorio paraguas, con su propio repo,
-que aloja tu harness de agentes (skills, reglas, flujos) desacoplado de cualquier
-proyecto. Traés el repo que quieras adentro y lo trabajás con TU harness — no al revés.
+A **project-agnostic workspace**: an umbrella directory, with its own repo, that hosts
+your agent harness (skills, rules, flows) decoupled from any single project. You bring
+whatever repo you want inside and work it with YOUR harness — not the other way around.
 
-## Idea central
+## Core idea
 
-El harness es el que manda. Los proyectos son material de trabajo intercambiable que
-entra y sale. Esto es inversión de dependencias: el proyecto depende del workspace,
-nunca el workspace de un proyecto.
+The harness rules. Projects are interchangeable work material that comes and goes.
+This is dependency inversion: the project depends on the workspace, never the workspace
+on a project.
 
-## Cómo se usa (flujo previsto)
+## How to use it (intended flow)
 
-1. Abrís Claude Code parado en la **raíz** de este workspace → tu harness carga.
-2. `sync-repo <url|nombre>` → clona el proyecto en `repos/<nombre>/`.
-3. Trabajás. Si necesitás paralelizar → `spawn-worktree <repo> <task>` → agente aislado
-   en `.worktrees/<repo>/<task>/`.
-4. Al terminar → merge, limpieza (`git worktree prune`), el worktree desaparece.
+1. Open Claude Code from the **root** of this workspace → your harness loads.
+2. `sync-repo <url|name>` → clones the project into `repos/<name>/`.
+3. Work. If you need to parallelize → `spawn-worktree <repo> <task>` → isolated agent
+   in `.worktrees/<repo>/<task>/`.
+4. When done → merge, cleanup (`git worktree prune`), the worktree disappears.
 
-## Estado
+## Status
 
-- **Etapa 1 (actual):** cimientos — estructura, reglas, `.gitignore`, diseño escrito.
-- **Próximas etapas:** skills `sync-repo` y `spawn-worktree`, y el resto del harness.
+- **Stage 1 (current):** foundations — structure, rules, `.gitignore`, written design.
+- **Next stages:** `sync-repo` and `spawn-worktree` skills, and the rest of the harness.
 
-Ver el diseño completo en `docs/superpowers/specs/`.
+See the full design in `docs/superpowers/specs/`.
