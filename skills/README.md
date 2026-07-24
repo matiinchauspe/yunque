@@ -16,6 +16,8 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 - `aw-grill-plan/` — relentless one-question-at-a-time interview that front-loads the open
   decisions into an airtight spec, checking engram before asking. Adapted from Matt Pocock's
   `grilling`.
+- `aw-write-handoff/` — compacts a session into a disposable baton for the next agent:
+  labelled pointers into engram plus the live delta. Adapted from Matt Pocock's `handoff`.
 
 ## Next stage
 
