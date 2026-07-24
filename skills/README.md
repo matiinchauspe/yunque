@@ -5,10 +5,10 @@ open Claude Code from the workspace root, and they rule over any repo you bring 
 
 ## Naming convention
 
-Every harness skill follows `ws-<verb>-<noun>` (kebab-case). The `ws-` prefix marks it
+Every harness skill follows `aw-<verb>-<noun>` (kebab-case). The `aw-` prefix marks it
 as part of the workspace harness. See `CLAUDE.md` for the full rule.
 
 ## Next stage
 
-- `ws-sync-repo/` — brings a repo into the workspace (clones into `repos/<name>/`).
-- `ws-spawn-worktree/` — creates ephemeral worktrees for parallel agents.
+- `aw-sync-repo/` — brings a repo into the workspace (clones into `repos/<name>/`).
+- `aw-spawn-worktree/` — creates ephemeral worktrees for parallel agents.
