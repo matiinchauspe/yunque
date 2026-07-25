@@ -38,10 +38,16 @@ Index of the current harness (name — when to reach for it):
 | `aw-sync-repo` | Bring an external repo into the workspace | user |
 | `aw-write-skill` | Author or edit a skill — the quality bar | auto |
 | `aw-grill-plan` | Stress-test a plan/decision into an airtight spec | auto |
+| `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
 | `aw-write-handoff` | Compact a session into a baton for the next agent | user |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
 **user** = typed by name (Claude) / slash-command menu (Cursor).
+
+Skills that remember or recall across sessions follow one shared, tool-agnostic contract —
+`skills/_shared/memory-convention.md`. A skill declares intent (persist/recall) and never
+names a memory tool; the mechanism degrades from an available capability → per-project
+files under `.aw/memory/<project>/` → skip.
 
 ## Structure
 
@@ -50,12 +56,14 @@ agentic-workspace/
 ├─ AGENTS.md                 ← this file: the harness brain (cross-tool)
 ├─ CLAUDE.md                 → symlink to AGENTS.md (Claude Code reads this)
 ├─ README.md
-├─ .gitignore                ← ignores /repos and /.worktrees
+├─ .gitignore                ← ignores /repos, /.worktrees and /.aw/memory
 ├─ skills/aw-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
+├─ skills/_shared/           ← cross-skill contracts (e.g. memory-convention.md)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)
-└─ .worktrees/<repo>/<task>/ ← ephemeral worktrees (gitignored, on-demand)
+├─ .worktrees/<repo>/<task>/ ← ephemeral worktrees (gitignored, on-demand)
+└─ .aw/memory/<project>/     ← per-project memory file fallback (gitignored)
 ```
 
 ## Skill naming convention
@@ -70,6 +78,7 @@ directory name must match the skill name (Agent Skills spec).
 
 ## What this repo versions
 
-Only the harness: `skills/`, `AGENTS.md`, the `CLAUDE.md` symlink, the `.claude/skills`
-and `.cursor/skills` symlinks, `README.md`, `.gitignore`, `docs/`.
-The projects' code (`repos/`) and the worktrees (`.worktrees/`) are NOT versioned.
+Only the harness: `skills/` (including `skills/_shared/`), `AGENTS.md`, the `CLAUDE.md`
+symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `.gitignore`, `docs/`.
+The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory
+files (`.aw/memory/`) are NOT versioned.

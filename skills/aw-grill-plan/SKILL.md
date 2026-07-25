@@ -11,7 +11,7 @@ Ask the questions **one at a time**, waiting for feedback on each before continu
 
 ## Facts vs decisions
 
-If a *fact* can be found by exploring the environment, **look it up rather than asking** — the filesystem, tools, the codebase, and **engram** (past decisions from previous sessions) are all fair game. Before putting any decision to the user, search engram once (`mem_search` on the decision's keywords, then `mem_get_observation` for the full hit): if it was already settled in a prior session, surface it ("you decided X before — still holds?") instead of asking fresh. Nothing relevant found → ask. Any recommended answer you attach is grounded in what the lookup turned up, not a lazy default.
+If a *fact* can be found by exploring the environment, **look it up rather than asking** — the filesystem, tools, the codebase, and prior decisions from past sessions are all fair game. Before putting any decision to the user, **recall** prior work on the decision's keywords (follow `skills/_shared/memory-convention.md`): if it was already settled in a prior session, surface it ("you decided X before — still holds?") instead of asking fresh. Nothing relevant found → ask. Any recommended answer you attach is grounded in what the lookup turned up, not a lazy default.
 
 Surface only decisions an implementer couldn't safely default on their own; skip trivia they'd just pick. That bound is what keeps the interview relentless without turning endless.
 
@@ -19,7 +19,7 @@ The *decisions* themselves are the user's. Put each one to them and wait for the
 
 ## As decisions resolve
 
-Save each settled decision to engram (`mem_save`, type `decision`) as it lands — not at the end. The grilling front-loads the questions so the work afterwards runs autonomously; the record is what makes a later session (or a fresh agent) able to pick it up without re-asking.
+**Persist** each settled decision as it lands — not at the end — following `skills/_shared/memory-convention.md`. The grilling front-loads the questions so the work afterwards runs autonomously; the record is what makes a later session (or a fresh agent) able to pick it up without re-asking.
 
 ## Done
 
@@ -27,4 +27,4 @@ Do not act on the plan until the user confirms you have reached a shared underst
 
 ## Attribution
 
-Adapted for this workspace from **Matt Pocock's `grilling`** (github.com/mattpocock/skills, Apache-2.0). Change: facts-lookup extended to engram, and settled decisions are persisted to engram as they resolve.
+Adapted for this workspace from **Matt Pocock's `grilling`** (github.com/mattpocock/skills, Apache-2.0). Change: facts-lookup extended to recall prior decisions, and settled decisions are persisted as they resolve — both via `skills/_shared/memory-convention.md`.

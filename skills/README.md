@@ -14,10 +14,18 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 - `aw-write-skill/` — the quality bar for authoring harness skills (invocation, information
   hierarchy, pruning, failure modes). Adapted from Matt Pocock's `writing-great-skills`.
 - `aw-grill-plan/` — relentless one-question-at-a-time interview that front-loads the open
-  decisions into an airtight spec, checking engram before asking. Adapted from Matt Pocock's
-  `grilling`.
+  decisions into an airtight spec, recalling prior decisions before asking. Adapted from Matt
+  Pocock's `grilling`.
+- `aw-research/` — delegates reading legwork to a background agent; leaves a cited Markdown
+  file in the repo and persists a digest. Adapted from Matt Pocock's `research`.
 - `aw-write-handoff/` — compacts a session into a disposable baton for the next agent:
-  labelled pointers into engram plus the live delta. Adapted from Matt Pocock's `handoff`.
+  labelled pointers into durable memory plus the live delta. Adapted from Matt Pocock's `handoff`.
+
+## Shared contracts
+
+- `_shared/memory-convention.md` — how any skill remembers or recalls without naming a
+  memory tool: declare intent, degrade from an available capability → per-project files
+  under `.aw/memory/<project>/` → skip.
 
 ## Next stage
 
