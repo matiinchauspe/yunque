@@ -16,6 +16,9 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 - `aw-grill-plan/` — relentless one-question-at-a-time interview that front-loads the open
   decisions into an airtight spec, recalling prior decisions before asking. Adapted from Matt
   Pocock's `grilling`.
+- `aw-slice-plan/` — breaks an approved plan or spec into tracer-bullet vertical slices —
+  tickets that each cut a complete path through every layer and declare their blocking edges,
+  published through the artifact convention. Adapted from Matt Pocock's `to-tickets`.
 - `aw-research/` — delegates reading legwork to a background agent; leaves a cited Markdown
   file in the repo and persists a digest. Adapted from Matt Pocock's `research`.
 - `aw-write-handoff/` — compacts a session into a disposable baton for the next agent:
@@ -26,6 +29,10 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 - `_shared/memory-convention.md` — how any skill remembers or recalls without naming a
   memory tool: declare intent, degrade from an available capability → per-project files
   under `.aw/memory/<project>/` → skip.
+- `_shared/artifact-convention.md` — how any skill records tracked work (the tickets a plan
+  is sliced into) without naming a tracker: declare intent, degrade from an available
+  capability → per-project files under `.aw/artifacts/<project>/<feature>/` (the floor —
+  publishing never skips).
 
 ## Next stage
 

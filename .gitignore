@@ -2,7 +2,7 @@
 # The workspace versions ONLY the harness, not the projects' code.
 /repos/
 /.worktrees/
-/.aw/memory/
+/.aw/
 
 # System noise
 .DS_Store

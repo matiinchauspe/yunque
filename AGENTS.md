@@ -38,16 +38,22 @@ Index of the current harness (name — when to reach for it):
 | `aw-sync-repo` | Bring an external repo into the workspace | user |
 | `aw-write-skill` | Author or edit a skill — the quality bar | auto |
 | `aw-grill-plan` | Stress-test a plan/decision into an airtight spec | auto |
+| `aw-slice-plan` | Break an approved plan/spec into tracer-bullet tickets | auto |
 | `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
 | `aw-write-handoff` | Compact a session into a baton for the next agent | user |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
 **user** = typed by name (Claude) / slash-command menu (Cursor).
 
-Skills that remember or recall across sessions follow one shared, tool-agnostic contract —
-`skills/_shared/memory-convention.md`. A skill declares intent (persist/recall) and never
-names a memory tool; the mechanism degrades from an available capability → per-project
-files under `.aw/memory/<project>/` → skip.
+Skills lean on shared, tool-agnostic contracts under `skills/_shared/`. A skill declares
+intent and never names a tool; the mechanism degrades from an available capability →
+per-project files → (for memory) skip:
+
+- `memory-convention.md` — remember/recall across sessions (persist/recall) →
+  `.aw/memory/<project>/` → skip.
+- `artifact-convention.md` — record tracked work: the tickets a plan is sliced into
+  (publish/fetch) → `.aw/artifacts/<project>/<feature>/` (the floor — publishing is a
+  deliverable, so it never skips).
 
 ## Structure
 
@@ -56,14 +62,15 @@ agentic-workspace/
 ├─ AGENTS.md                 ← this file: the harness brain (cross-tool)
 ├─ CLAUDE.md                 → symlink to AGENTS.md (Claude Code reads this)
 ├─ README.md
-├─ .gitignore                ← ignores /repos, /.worktrees and /.aw/memory
+├─ .gitignore                ← ignores /repos, /.worktrees and /.aw
 ├─ skills/aw-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
-├─ skills/_shared/           ← cross-skill contracts (e.g. memory-convention.md)
+├─ skills/_shared/           ← cross-skill contracts (memory-convention, artifact-convention)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)
 ├─ .worktrees/<repo>/<task>/ ← ephemeral worktrees (gitignored, on-demand)
-└─ .aw/memory/<project>/     ← per-project memory file fallback (gitignored)
+├─ .aw/memory/<project>/     ← per-project memory file fallback (gitignored)
+└─ .aw/artifacts/<project>/<feature>/ ← per-project ticket file fallback (gitignored)
 ```
 
 ## Skill naming convention
@@ -81,4 +88,4 @@ directory name must match the skill name (Agent Skills spec).
 Only the harness: `skills/` (including `skills/_shared/`), `AGENTS.md`, the `CLAUDE.md`
 symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `.gitignore`, `docs/`.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory
-files (`.aw/memory/`) are NOT versioned.
+and artifact files (`.aw/`) are NOT versioned.
