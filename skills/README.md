@@ -23,6 +23,9 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
   file in the repo and persists a digest. Adapted from Matt Pocock's `research`.
 - `aw-write-handoff/` — compacts a session into a disposable baton for the next agent:
   labelled pointers into durable memory plus the live delta. Adapted from Matt Pocock's `handoff`.
+- `aw-judge-work/` — runs two blind independent reviewers over a decision, plan, spec,
+  design, skill, or code change, synthesizes their verdict, fixes, and re-judges to
+  convergence. Distilled from the global `judgment-day` skill.
 
 ## Shared contracts
 

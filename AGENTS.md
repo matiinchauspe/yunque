@@ -41,9 +41,17 @@ Index of the current harness (name — when to reach for it):
 | `aw-slice-plan` | Break an approved plan/spec into tracer-bullet tickets | auto |
 | `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
 | `aw-write-handoff` | Compact a session into a baton for the next agent | user |
+| `aw-judge-work` | Judge a decision/plan/spec/design/skill/code with two blind adversarial reviewers | auto |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
 **user** = typed by name (Claude) / slash-command menu (Cursor).
+
+**Adversarial review during coexistence.** While the global `judgment-day` skill is still
+installed, route its phrases — `judgment day`, `judgment-day`, `review adversarial`,
+`dual review`, `doble review`, `juzgar`, `que lo juzguen` — to the global. `aw-judge-work`
+fires via its `auto`/offer path and its own phrases (`judge this work`, `juzgá este
+trabajo`). A bare `juzgá`/`juzgar` with no qualifier routes to the global until retirement.
+When the global is retired, its phrases move to `aw-judge-work`.
 
 Skills lean on shared, tool-agnostic contracts under `skills/_shared/`. A skill declares
 intent and never names a tool; the mechanism degrades from an available capability →
