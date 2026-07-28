@@ -37,7 +37,8 @@ Index of the current harness (name — when to reach for it):
 | ----- | ---- | ---------- |
 | `aw-sync-repo` | Bring an external repo into the workspace | user |
 | `aw-write-skill` | Author or edit a skill — the quality bar | auto |
-| `aw-grill-plan` | Stress-test a plan/decision into an airtight spec | auto |
+| `aw-grill-plan` | Stress-test a plan/decision into airtight, settled decisions | auto |
+| `aw-write-spec` | Synthesize a settled conversation into one durable spec document | auto |
 | `aw-slice-plan` | Break an approved plan/spec into tracer-bullet tickets | auto |
 | `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
 | `aw-write-handoff` | Compact a session into a baton for the next agent | user |
@@ -59,9 +60,9 @@ per-project files → (for memory) skip:
 
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
   `.aw/memory/<project>/` → skip.
-- `artifact-convention.md` — record tracked work: the tickets a plan is sliced into
-  (publish/fetch) → `.aw/artifacts/<project>/<feature>/` (the floor — publishing is a
-  deliverable, so it never skips).
+- `artifact-convention.md` — record tracked work in two kinds: the spec a plan is written
+  into and the tickets it is sliced into (publish/fetch) → `.aw/artifacts/<project>/<feature>/`
+  (`spec.md` + numbered ticket files; the floor — publishing is a deliverable, so it never skips).
 
 ## Structure
 

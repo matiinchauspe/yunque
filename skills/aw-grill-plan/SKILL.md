@@ -1,6 +1,6 @@
 ---
 name: aw-grill-plan
-description: Use when the user wants to stress-test a plan, decision, design, or idea before acting — or uses any "grill" trigger ("grill me", "grillame", "cuestioname", "desafiame", "poné a prueba esto"). Front-loads the open decisions into one relentless interview so the resulting spec is airtight enough to execute autonomously.
+description: Use when the user wants to stress-test a plan, decision, design, or idea before acting — or uses any "grill" trigger ("grill me", "grillame", "cuestioname", "desafiame", "poné a prueba esto"). Front-loads the open decisions into one relentless interview so the settled decisions are airtight enough to execute autonomously.
 ---
 
 # aw-grill-plan

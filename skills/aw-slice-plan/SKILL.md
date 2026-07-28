@@ -11,9 +11,10 @@ edges**, is what turns an airtight spec into executable work.
 
 ### 1. Gather context
 
-Work from the plan or spec already in the conversation. If it lives as a published ticket
-or artifact, `fetch` it through `skills/_shared/artifact-convention.md` first. Done when the
-full plan or spec is in front of you.
+Work from the plan or spec already in the conversation. If the spec was published out of
+conversation — a fresh agent, a prior session — `fetch` the `spec` kind by its feature slug
+through `skills/_shared/artifact-convention.md` first. Done when the full plan or spec is in
+front of you.
 
 ### 2. Explore the codebase, if you haven't
 
