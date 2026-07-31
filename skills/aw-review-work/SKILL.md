@@ -1,20 +1,20 @@
 ---
-name: aw-judge-work
-description: Use when the user wants to adversarially stress-test a decision, plan, spec, design, skill, or code change before acting — e.g. "judge this work", "juzgá este trabajo". Runs two blind independent reviewers and synthesizes a verdict.
+name: aw-review-work
+description: Use when the user wants to adversarially stress-test a decision, plan, spec, design, skill, or code change before acting — e.g. "review this work", "revisá esto", "revisá este trabajo". Runs two blind independent reviewers and synthesizes a verdict.
 ---
 
-# Judge work — blind adversarial review
+# aw-review-work
 
-Two independent reviewers judge the same target at once, blind to each other. You
+Two independent reviewers review the same target at once, blind to each other. You
 coordinate and synthesize — you never review yourself. The value is independence: two
 minds that never saw each other's reasoning catch what one alone misses.
 
 ## Invoking this skill
 
-- **The user asked explicitly** ("judge this work", "juzgá este trabajo") → launch now.
+- **The user asked explicitly** ("review this work", "revisá esto") → launch now.
   They already consented.
 - **You surfaced it** (a strong decision just landed — see the gate) → emit ONE line
-  offering to judge, then WAIT. Launching two reviewers is expensive; never launch without
+  offering to review, then WAIT. Launching two reviewers is expensive; never launch without
   a yes. If the offer is ignored or declined, do not offer again for that target this
   session.
 
@@ -26,7 +26,7 @@ minds that never saw each other's reasoning catch what one alone misses.
 **Never offer for** (explicit-only): bug fixes, typos, single-file mechanical edits,
 refactors within one unit, doc tweaks, answering questions, exploratory work.
 
-## What to judge (the target kind sets the criteria)
+## What to review (the target kind sets the criteria)
 
 Infer the kind from the target. If it fits several, apply the UNION of their criteria; if
 none fits, use `decision`.
@@ -65,13 +65,13 @@ Per warning, ask whether it is real or theoretical:
 - **non-code** → "would an implementer building from this hit a wrong or blocked outcome?"
 
 Yes → **real**, fix it. No → **theoretical** (labelled INFO in the verdict — same thing);
-do not fix, do not re-judge.
+do not fix, do not re-review.
 
 ## Converging
 
 - **Round 1:** present the verdict and ask before fixing. Fix confirmed CRITICALs and real
-  WARNINGs, then re-judge.
-- **Round 2+:** re-judge only if confirmed CRITICALs remain. If only real WARNINGs are
+  WARNINGs, then re-review.
+- **Round 2+:** re-review only if confirmed CRITICALs remain. If only real WARNINGs are
   left, fix them inline and trust the fix on your own inspection — no new round. After 2
   fix iterations with issues still left, ask the user before continuing.
 - **Suspect and Contradiction findings also block a clean verdict:** a Suspect CRITICAL or
@@ -92,17 +92,22 @@ here.
 ## Blocking rules (do not skip)
 
 - Do NOT declare APPROVED until the convergence criteria above are met.
-- Do NOT commit, push, or move on after applying fixes until re-judgment completes.
+- Do NOT commit, push, or move on after applying fixes until re-review completes.
 - Do NOT say "done" until the verdict is terminal.
 - YOU never review the target yourself — you only launch, gather, and synthesize.
 
 ## Coexistence
 
-While the global `judgment-day` skill is still installed, do not claim its phrases
-("judgment day", "juzgar", "que lo juzguen", "review adversarial", "dual review"). This
-skill fires via its own path and phrases. AGENTS.md carries the routing rule.
+Where the global `judgment-day` skill is installed (Claude Code today), it owns the judge
+phrasing — AGENTS.md carries the one authoritative list and routes it to the global. This
+skill fires via its `auto`/offer path and its own review phrases ("review this work",
+"revisá esto", "revisá este trabajo"), which keep it clear of that list. Where the global is
+not present, these phrases are the only path. When the global is retired, its phrases move
+here.
 
 ## Attribution
 
 Distilled from the global `judgment-day` skill — the same blind-parallel protocol,
-rewritten tool-agnostic for this harness.
+rewritten tool-agnostic for this harness. Named for what it does: review any work, not only
+code (Matt Pocock's `code-review` is code-only), so the verb is `review` and the noun the
+general `work`.

@@ -40,19 +40,21 @@ Index of the current harness (name — when to reach for it):
 | `aw-grill-plan` | Stress-test a plan/decision into airtight, settled decisions | auto |
 | `aw-write-spec` | Synthesize a settled conversation into one durable spec document | auto |
 | `aw-slice-plan` | Break an approved plan/spec into tracer-bullet tickets | auto |
+| `aw-implement` | When the next step is writing code — from a spec, tickets, or a described task | auto |
+| `aw-tdd` | When building test-first — the red → green loop at a pre-agreed seam | auto |
 | `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
 | `aw-write-handoff` | Compact a session into a baton for the next agent | user |
-| `aw-judge-work` | Judge a decision/plan/spec/design/skill/code with two blind adversarial reviewers | auto |
+| `aw-review-work` | Review a decision/plan/spec/design/skill/code with two blind adversarial reviewers | auto |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
 **user** = typed by name (Claude) / slash-command menu (Cursor).
 
 **Adversarial review during coexistence.** While the global `judgment-day` skill is still
-installed, route its phrases — `judgment day`, `judgment-day`, `review adversarial`,
-`dual review`, `doble review`, `juzgar`, `que lo juzguen` — to the global. `aw-judge-work`
-fires via its `auto`/offer path and its own phrases (`judge this work`, `juzgá este
-trabajo`). A bare `juzgá`/`juzgar` with no qualifier routes to the global until retirement.
-When the global is retired, its phrases move to `aw-judge-work`.
+installed, it owns the judge phrasing — `judgment day`, `judgment-day`, `review adversarial`,
+`dual review`, `doble review`, `juzgar`, `juzgá`, `que lo juzguen` — route all of it to the
+global. `aw-review-work` fires via its `auto`/offer path and its own review phrases
+(`review this work`, `revisá esto`, `revisá este trabajo`), which keeps it clear of the
+global's judge phrases. When the global is retired, its phrases move to `aw-review-work`.
 
 Skills lean on shared, tool-agnostic contracts under `skills/_shared/`. A skill declares
 intent and never names a tool; the mechanism degrades from an available capability →
@@ -90,6 +92,10 @@ directory name must match the skill name (Agent Skills spec).
 - `aw-` prefix → the skill belongs to the workspace harness (distinguishes it from
   a repo's own skills or global skills in autocomplete).
 - After the prefix, **verb-noun** (imperative — reads like a command).
+- **Leading-word exception:** a skill whose subject is a strong pretrained term may keep that
+  term in place of strict verb-noun, when splitting it would cost invocation reliability —
+  e.g. `aw-tdd` (the `TDD` leading word) or `aw-research`. Reach for this rarely; the default
+  is verb-noun.
 - Examples: `aw-sync-repo`, `aw-spawn-worktree`, `aw-clean-worktree`, `aw-list-repos`.
 
 ## What this repo versions
