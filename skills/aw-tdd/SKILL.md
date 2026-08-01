@@ -10,9 +10,10 @@ This skill is the reference that makes the loop produce tests worth keeping — 
 test is, where it goes, the anti-patterns, and the rules of the loop. Every section applies
 on **every** cycle; consult them before and during the loop, not after.
 
-When exploring the codebase, read the project's domain glossary or context doc if one
-exists so test names and interface vocabulary match its **ubiquitous language**, and respect
-the ADRs in the area you're touching.
+When exploring the codebase, **consult** the project's domain model through
+`skills/_shared/domain-convention.md` so test names and interface vocabulary match its
+**ubiquitous language**, and respect the ADRs in the area you're touching. No model yet? Test
+in the language you have and move on — the consult degrades silently.
 
 ## What a good test is
 

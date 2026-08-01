@@ -43,6 +43,7 @@ Index of the current harness (name — when to reach for it):
 | `aw-implement` | When the next step is writing code — from a spec, tickets, or a described task | auto |
 | `aw-tdd` | When building test-first — the red → green loop at a pre-agreed seam | auto |
 | `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
+| `aw-model-domain` | Pin down a project's ubiquitous language and record the ADRs behind its shape | auto |
 | `aw-write-handoff` | Compact a session into a baton for the next agent | user |
 | `aw-review-work` | Review a decision/plan/spec/design/skill/code with two blind adversarial reviewers | auto |
 
@@ -57,14 +58,18 @@ global. `aw-review-work` fires via its `auto`/offer path and its own review phra
 global's judge phrases. When the global is retired, its phrases move to `aw-review-work`.
 
 Skills lean on shared, tool-agnostic contracts under `skills/_shared/`. A skill declares
-intent and never names a tool; the mechanism degrades from an available capability →
-per-project files → (for memory) skip:
+intent and never binds a specific tool; each contract resolves that intent to a concrete home
+and degrades by its own rules, spelled out below:
 
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
   `.aw/memory/<project>/` → skip.
 - `artifact-convention.md` — record tracked work in two kinds: the spec a plan is written
   into and the tickets it is sliced into (publish/fetch) → `.aw/artifacts/<project>/<feature>/`
   (`spec.md` + numbered ticket files; the floor — publishing is a deliverable, so it never skips).
+- `domain-convention.md` — capture/consult a project's domain model: its ubiquitous-language
+  glossary and the ADRs behind its shape (capture/consult) → committed in the target repo
+  (`CONTEXT.md` + `docs/adr/`) → `.aw/domain/<project>/` (same layout) when there is no repo. It
+  is a project deliverable, so capture never skips; consulting an absent model proceeds silently.
 
 ## Structure
 
@@ -75,14 +80,18 @@ agentic-workspace/
 ├─ README.md
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.aw
 ├─ skills/aw-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
-├─ skills/_shared/           ← cross-skill contracts (memory-convention, artifact-convention)
+├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-convention)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)
 ├─ .worktrees/<repo>/<task>/ ← ephemeral worktrees (gitignored, on-demand)
 ├─ .aw/memory/<project>/     ← per-project memory file fallback (gitignored)
-└─ .aw/artifacts/<project>/<feature>/ ← per-project ticket file fallback (gitignored)
+├─ .aw/artifacts/<project>/<feature>/ ← per-project ticket file fallback (gitignored)
+└─ .aw/domain/<project>/     ← domain-model fallback when work isn't tied to a repo (gitignored)
 ```
+
+The domain model's real home is the target repo itself (`repos/<name>/CONTEXT.md` + `docs/adr/`),
+committed with the code; `.aw/domain/` only catches work not tied to a repo.
 
 ## Skill naming convention
 
@@ -102,5 +111,5 @@ directory name must match the skill name (Agent Skills spec).
 
 Only the harness: `skills/` (including `skills/_shared/`), `AGENTS.md`, the `CLAUDE.md`
 symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `.gitignore`, `docs/`.
-The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory
-and artifact files (`.aw/`) are NOT versioned.
+The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
+artifact, and domain-model fallback files (`.aw/`) are NOT versioned.
