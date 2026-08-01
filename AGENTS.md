@@ -44,6 +44,7 @@ Index of the current harness (name — when to reach for it):
 | `aw-implement` | When the next step is writing code — from a spec, tickets, or a described task | auto |
 | `aw-tdd` | When building test-first — the red → green loop at a pre-agreed seam | auto |
 | `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
+| `aw-build-prototype` | Answer a design question by building it — a hand-driven state model, or rival UI variants | auto |
 | `aw-model-domain` | Pin down a project's ubiquitous language and record the ADRs behind its shape | auto |
 | `aw-write-handoff` | Compact a session into a baton for the next agent | user |
 | `aw-review-work` | Review a decision/plan/spec/design/skill/code with two blind adversarial reviewers | auto |
