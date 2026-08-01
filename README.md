@@ -10,17 +10,27 @@ The harness rules. Projects are interchangeable work material that comes and goe
 This is dependency inversion: the project depends on the workspace, never the workspace
 on a project.
 
-## How to use it (intended flow)
+## How to use it (the flow)
 
-1. Open Claude Code from the **root** of this workspace → your harness loads.
-2. `sync-repo <url|name>` → clones the project into `repos/<name>/`.
-3. Work. If you need to parallelize → `spawn-worktree <repo> <task>` → isolated agent
-   in `.worktrees/<repo>/<task>/`.
-4. When done → merge, cleanup (`git worktree prune`), the worktree disappears.
+1. Open your agent from the **root** of this workspace → the harness loads and rules.
+2. **Bring a repo in:** `aw-sync-repo <url|name>` → clones into `repos/<name>/`
+   (gitignored, its own `.git`).
+3. **Work it with the harness.** Small and settled → `aw-implement` builds it test-first
+   (`aw-tdd`), then `aw-review-work` stress-tests it. Large or foggy → plan first:
+   `aw-grill-plan` → `aw-write-spec` → `aw-slice-plan`, then build.
+4. **Parallelize** when you need to: `aw-spawn-worktree <repo> <task>` → an isolated agent
+   in `.worktrees/<repo>/<task>/` on its own branch. When done, `git worktree prune`.
 
-## Status
+## Current state
 
-- **Stage 1 (current):** foundations — structure, rules, `.gitignore`, written design.
-- **Next stages:** `sync-repo` and `spawn-worktree` skills, and the rest of the harness.
+The harness is operational — 12 skills over three shared contracts: bring-in
+(`aw-sync-repo`), planning (`aw-grill-plan` → `aw-write-spec` → `aw-slice-plan`), build
+(`aw-implement`, `aw-tdd`), knowledge (`aw-research`, `aw-model-domain`), isolation
+(`aw-spawn-worktree`), adversarial review (`aw-review-work`), handoff (`aw-write-handoff`),
+and authoring (`aw-write-skill`). Contracts: `memory-`, `artifact-`, and `domain-convention`.
 
-See the full design in `docs/superpowers/specs/`.
+Deferred: a heavier execution substrate behind an `execution-convention` — autonomous
+sandboxed runs that loop to completion — with `aw-spawn-worktree` as its lighter rung.
+
+The harness brain is `AGENTS.md`; the skill index is `skills/README.md`; research notes
+live in `docs/research/`.
