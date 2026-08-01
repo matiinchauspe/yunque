@@ -11,6 +11,9 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 ## Skills
 
 - `aw-sync-repo/` — brings a repo into the workspace (clones into `repos/<name>/`).
+- `aw-spawn-worktree/` — spawns an ephemeral git worktree for a synced repo on its own branch
+  (`.worktrees/<repo>/<task>/`), so parallel agents never collide. The light isolation rung —
+  creates only; the caller tears it down.
 - `aw-write-skill/` — the quality bar for authoring harness skills (invocation, information
   hierarchy, pruning, failure modes). Adapted from Matt Pocock's `writing-great-skills`.
 - `aw-grill-plan/` — relentless one-question-at-a-time interview that front-loads the open
@@ -29,6 +32,9 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
   code to pass it, refactor once green. Adapted from Matt Pocock's `tdd`.
 - `aw-research/` — delegates reading legwork to a background agent; leaves a cited Markdown
   file in the repo and persists a digest. Adapted from Matt Pocock's `research`.
+- `aw-model-domain/` — builds and sharpens a project's domain model: a ubiquitous-language
+  glossary (`CONTEXT.md`) and one-paragraph ADRs, captured through the domain convention.
+  Adapted from Matt Pocock's `domain-modeling`.
 - `aw-write-handoff/` — compacts a session into a disposable baton for the next agent:
   labelled pointers into durable memory plus the live delta. Adapted from Matt Pocock's `handoff`.
 - `aw-review-work/` — runs two blind independent reviewers over a decision, plan, spec,
@@ -40,11 +46,18 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 - `_shared/memory-convention.md` — how any skill remembers or recalls without naming a
   memory tool: declare intent, degrade from an available capability → per-project files
   under `.aw/memory/<project>/` → skip.
-- `_shared/artifact-convention.md` — how any skill records tracked work (the tickets a plan
-  is sliced into) without naming a tracker: declare intent, degrade from an available
-  capability → per-project files under `.aw/artifacts/<project>/<feature>/` (the floor —
-  publishing never skips).
+- `_shared/artifact-convention.md` — how any skill records tracked work (the spec a plan is
+  written into and the tickets it is sliced into) without naming a tracker: declare intent,
+  degrade from an available capability → per-project files under
+  `.aw/artifacts/<project>/<feature>/` (the floor — publishing never skips).
+- `_shared/domain-convention.md` — how any skill captures or consults a project's domain
+  model (glossary + ADRs) without naming a tool: committed in the target repo, with an
+  `.aw/domain/<project>/` fallback for repo-less work; capture never skips, consult degrades
+  silently.
 
 ## Next stage
 
-- `aw-spawn-worktree/` — creates ephemeral worktrees for parallel agents.
+- An execution substrate behind a tool-agnostic `execution-convention` — run a ticket
+  autonomously in a sandbox and loop to completion (Matt Pocock's `sandcastle` is the
+  candidate), with `aw-spawn-worktree` as its lighter fallback rung.
+- `aw-clean-worktree/` — the teardown half of `aw-spawn-worktree`.

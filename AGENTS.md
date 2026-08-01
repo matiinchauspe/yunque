@@ -36,6 +36,7 @@ Index of the current harness (name — when to reach for it):
 | Skill | When | Invocation |
 | ----- | ---- | ---------- |
 | `aw-sync-repo` | Bring an external repo into the workspace | user |
+| `aw-spawn-worktree` | Spawn an isolated worktree so parallel work never collides | auto |
 | `aw-write-skill` | Author or edit a skill — the quality bar | auto |
 | `aw-grill-plan` | Stress-test a plan/decision into airtight, settled decisions | auto |
 | `aw-write-spec` | Synthesize a settled conversation into one durable spec document | auto |

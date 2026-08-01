@@ -37,9 +37,9 @@ seams it's tested at, are in front of you.
 ### 2. Choose where to build
 
 The **current branch** is the floor — always available. A large or risky change, or one of
-several tickets run in parallel, wants isolation instead: a dedicated worktree, where the
-workspace can spawn one (the planned `aw-spawn-worktree` skill), falling back to the current
-branch until it can. Done when the branch or worktree to build in is named.
+several tickets run in parallel, wants isolation instead: a dedicated worktree spawned via
+`aw-spawn-worktree`, falling back to the current branch when one can't be spawned. Done when
+the branch or worktree to build in is named.
 
 ### 3. Build test-first
 
