@@ -38,6 +38,7 @@ Index of the current harness (name — when to reach for it):
 | `aw-sync-repo` | Bring an external repo into the workspace | user |
 | `aw-spawn-worktree` | Spawn an isolated worktree so parallel work never collides | auto |
 | `aw-write-skill` | Author or edit a skill — the quality bar | auto |
+| `aw-chart-course` | Chart work too big for one session as a live map of decision tickets, cleared one at a time | user |
 | `aw-grill-plan` | Stress-test a plan/decision into airtight, settled decisions | auto |
 | `aw-write-spec` | Synthesize a settled conversation into one durable spec document | auto |
 | `aw-slice-plan` | Break an approved plan/spec into tracer-bullet tickets | auto |
@@ -65,9 +66,12 @@ and degrades by its own rules, spelled out below:
 
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
   `.aw/memory/<project>/` → skip.
-- `artifact-convention.md` — record tracked work in two kinds: the spec a plan is written
-  into and the tickets it is sliced into (publish/fetch) → `.aw/artifacts/<project>/<feature>/`
-  (`spec.md` + numbered ticket files; the floor — publishing is a deliverable, so it never skips).
+- `artifact-convention.md` — record tracked work in three kinds: the map an effort is charted
+  onto, the spec a plan is written into, and the tickets it breaks into (publish/fetch; list
+  the decision tickets) →
+  `.aw/artifacts/<project>/<feature>/` (`map.md` + `spec.md` + decision tickets under
+  `decisions/` + numbered implementation ticket files; the floor — publishing is a deliverable,
+  so it never skips).
 - `domain-convention.md` — capture/consult a project's domain model: its ubiquitous-language
   glossary and the ADRs behind its shape (capture/consult) → committed in the target repo
   (`CONTEXT.md` + `docs/adr/`) → `.aw/domain/<project>/` (same layout) when there is no repo. It

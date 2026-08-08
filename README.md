@@ -17,17 +17,21 @@ on a project.
    (gitignored, its own `.git`).
 3. **Work it with the harness.** Small and settled → `aw-implement` builds it test-first
    (`aw-tdd`), then `aw-review-work` stress-tests it. Large or foggy → plan first:
-   `aw-grill-plan` → `aw-write-spec` → `aw-slice-plan`, then build.
+   `aw-grill-plan` → `aw-write-spec` → `aw-slice-plan`, then build. Too big to hold in one
+   session → `aw-chart-course` charts it as a map of decisions first, then hands off to that
+   planning chain.
 4. **Parallelize** when you need to: `aw-spawn-worktree <repo> <task>` → an isolated agent
    in `.worktrees/<repo>/<task>/` on its own branch. When done, `git worktree prune`.
 
 ## Current state
 
-The harness is operational — 12 skills over three shared contracts: bring-in
-(`aw-sync-repo`), planning (`aw-grill-plan` → `aw-write-spec` → `aw-slice-plan`), build
-(`aw-implement`, `aw-tdd`), knowledge (`aw-research`, `aw-model-domain`), isolation
-(`aw-spawn-worktree`), adversarial review (`aw-review-work`), handoff (`aw-write-handoff`),
-and authoring (`aw-write-skill`). Contracts: `memory-`, `artifact-`, and `domain-convention`.
+The harness is operational — 14 skills over three shared contracts: bring-in
+(`aw-sync-repo`), charting (`aw-chart-course`), planning (`aw-grill-plan` → `aw-write-spec` →
+`aw-slice-plan`), build (`aw-implement`, `aw-tdd`), knowledge (`aw-research`,
+`aw-model-domain`), prototyping (`aw-build-prototype`), isolation (`aw-spawn-worktree`),
+adversarial review (`aw-review-work`), handoff (`aw-write-handoff`), and authoring
+(`aw-write-skill`). Contracts: `memory-`, `artifact-` (map/spec/ticket kinds), and
+`domain-convention`.
 
 Deferred: a heavier execution substrate behind an `execution-convention` — autonomous
 sandboxed runs that loop to completion — with `aw-spawn-worktree` as its lighter rung.

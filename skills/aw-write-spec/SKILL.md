@@ -32,8 +32,11 @@ Done when the task is confirmed large **and** every blocking decision is settled
 ### 1. Gather context — no interview
 
 Pull the whole picture together: the conversation, plus the decisions `aw-grill-plan`
-persisted (`recall` via `skills/_shared/memory-convention.md`). Any fact you can find by
-exploring the codebase, look up rather than ask. Synthesis only — the user answers nothing.
+persisted (`recall` via `skills/_shared/memory-convention.md`). When the task was charted by
+`aw-chart-course`, also `fetch` the `map` kind (`skills/_shared/artifact-convention.md`) and
+follow its **Decisions so far** links to the resolved decision tickets — the map is an index,
+so the decisions themselves live in the tickets, not the one-line gists. Any fact you can find
+by exploring the codebase, look up rather than ask. Synthesis only — the user answers nothing.
 Done when every settled decision is in front of you.
 
 ### 2. Sketch the testing seams
