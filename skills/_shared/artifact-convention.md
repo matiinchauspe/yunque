@@ -43,7 +43,8 @@ publish(artifact, project, feature):        # artifact is a map, a spec, or a ti
        - a decision ticket        → decisions/<NN>-<slug>.md   numbered from 01, edges as a
                                     `Blocked by:` line naming other decision tickets (same
                                     namespace), with a `Type:` line (research / prototype /
-                                    grilling / task) and a `Status:` line (open / resolved /
+                                    grilling / task — a `task` records its HITL/AFK mode, e.g.
+                                    `task (AFK)`) and a `Status:` line (open / resolved /
                                     out-of-scope). Updated in place — resolving flips Status to
                                     resolved, rescoping past the destination to out-of-scope;
                                     only `open` tickets enter the frontier.
@@ -63,9 +64,9 @@ fetch(reference, project):  try each mechanism until one YIELDS the artifact —
      The reference names the artifact's feature, plus the ticket number — and, for a ticket,
      whether it is a decision or implementation ticket.
 
-list(project, feature):  enumerate a feature's decision tickets — the raw material a frontier
-     is computed from (the map indexes only closed tickets, so open ones are found here, not on
-     the map):
+list(project, feature):  enumerate a feature's decision tickets — the raw material
+     `flow-convention.md` computes a frontier from (the map indexes only closed tickets, so
+     open ones are found here, not on the map):
        1. capability → resolve the map by the feature key, then query its children scoped to
                        `project`, reading each child's type, blocking edges, and terminal state
                        (resolved vs out-of-scope) the tracker's own way.
@@ -73,11 +74,9 @@ list(project, feature):  enumerate a feature's decision tickets — the raw mate
                        file's `Type:`, `Blocked by:`, and `Status:` lines.
      Returns every decision ticket with its type, edges, and status — all statuses, so the
      caller can see that a resolved or out-of-scope blocker no longer gates. It is empty only
-     when the effort has no decision tickets at all. The caller has already `fetch`ed the map,
-     so it reads the signals apart: a map with no OPEN tickets in the returned set is a cleared
-     course; no map means the effort was never charted. From the returned set the caller
-     computes the frontier — the open tickets none of whose blockers are still open (resolved or
-     out-of-scope no longer gates) — in the backend's own order.
+     when the effort has no decision tickets at all. From the returned set the **frontier** —
+     the takeable tickets — is computed by `flow-convention.md`, which also owns what an empty
+     result means for the walk; the walk lives there, not here.
 ```
 
 - **Capability** = any issue-tracker tool the agent has loaded (an MCP tracker server, a
@@ -102,6 +101,6 @@ share one, or the second `publish` overwrites the first.
 
 An artifact's **content** — map, spec, or ticket — is backend-independent: the skill that
 produces it owns what it says; this convention owns only where it lands and how its edges are
-drawn. For the frontier, the decision tickets `list` returns are authoritative; the map's
+drawn. The decision tickets `list` returns are the authoritative record; the map's
 Decisions-so-far index is a derived, human-readable view — if the two diverge, repair the
-index, not the frontier.
+index, not the tickets.

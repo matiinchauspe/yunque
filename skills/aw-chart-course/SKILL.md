@@ -67,10 +67,12 @@ a human is in the loop:
   `aw-model-domain` when vocabulary is at stake. The default type.
 - **task** (HITL or AFK) — manual work that must happen before a decision can be made
   (provisioning access, moving data so its shape is visible). The one type that *does* rather
-  than decides; resolved when the work is done and its resulting facts are recorded.
+  than decides; resolved when the work is done and its resulting facts are recorded. Stamp its
+  mode on the `Type:` (`task (AFK)` when the agent can drive it alone, `task (HITL)` when it
+  needs a human) — the walk reads that to decide how to drive it.
 
-**HITL** means the decision resolves only through a live exchange — the agent never stands in
-for the human's side of it. Resolve tickets one at a time.
+**HITL** / **AFK** marks whether a human is in the loop; `skills/_shared/flow-convention.md`
+governs what that means for the walk — cadence, auto-dispatch, and how the human is asked.
 
 ### Fog or ticket?
 
@@ -98,15 +100,15 @@ beyond it is **Out of scope**, and never graduates.
 ## Work through the map
 
 1. **Orient.** `fetch` the `map` kind through `skills/_shared/artifact-convention.md` and load
-   it at low resolution — but the map indexes only closed tickets, so `list` the effort's
-   decision tickets through the convention to see the open ones. From that list compute the
-   **frontier** — the open tickets none of whose blockers are still open (a resolved or
-   out-of-scope blocker no longer gates), in the backend's own order — and print it (a backend
+   it at low resolution — but the map indexes only closed tickets, so compute the **frontier**
+   through `skills/_shared/flow-convention.md` to see the takeable ones, and print it (a backend
    that renders its own frontier makes this a harmless echo). Done when you know which tickets
    are takeable.
-2. **Take one ticket.** The user's choice, or the first frontier ticket. Dispatch it to the
-   skill its `Type:` names; resolve it there, zooming into the map only as needed. Resolve one
-   ticket per session — each ticket spends a full context, and the file floor is single-writer.
+2. **Take one ticket.** The user's choice, or the first frontier ticket; **claim it first**
+   through `flow-convention.md` so a concurrent session skips it (and release it there if the
+   session ends before it resolves). Dispatch it to the skill its `Type:` names and resolve it
+   there, zooming into the map only as needed — at the cadence `flow-convention.md` sets (one
+   HITL ticket per session; research fans out AFK). Done when the ticket is resolved.
 3. **Record the resolution.** Post the answer to the ticket, mark it resolved, and append a
    one-line gist + link to the map's **Decisions so far**. Done when the resolved ticket is
    indexed on the map.
@@ -128,7 +130,6 @@ are pushed behind `skills/_shared/artifact-convention.md`, so the skill never na
 the four ticket types dispatch to the harness siblings `aw-research` / `aw-build-prototype` /
 `aw-grill-plan` + `aw-model-domain`, and the cleared map hands off to `aw-write-spec`. The
 plan-don't-do spine, fog-of-war, decision-ticket typing, and HITL/AFK axis are preserved from
-the source; the source's one-ticket-per-session rule is preserved but tightened — its research
-exception folds into the serial default until a future `flow-convention` restores it. Parallel
-research subagents, ticket claiming, and push-right question batching are deferred to that
-`flow-convention`.
+the source; the walk mechanics the source carries inline — frontier, one-ticket-per-session
+cadence, ticket claiming, parallel research subagents, and push-right question batching — live
+in `skills/_shared/flow-convention.md`, which this skill's walk defers to.

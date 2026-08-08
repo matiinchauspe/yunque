@@ -46,14 +46,18 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 - `_shared/memory-convention.md` — how any skill remembers or recalls without naming a
   memory tool: declare intent, degrade from an available capability → per-project files
   under `.aw/memory/<project>/` → skip.
-- `_shared/artifact-convention.md` — how any skill records tracked work (the spec a plan is
-  written into and the tickets it is sliced into) without naming a tracker: declare intent,
-  degrade from an available capability → per-project files under
-  `.aw/artifacts/<project>/<feature>/` (the floor — publishing never skips).
+- `_shared/artifact-convention.md` — how any skill records tracked work in three kinds (the map
+  an effort is charted onto, the spec a plan is written into, the tickets it is sliced into)
+  without naming a tracker: declare intent, degrade from an available capability → per-project
+  files under `.aw/artifacts/<project>/<feature>/` (the floor — publishing never skips).
 - `_shared/domain-convention.md` — how any skill captures or consults a project's domain
   model (glossary + ADRs) without naming a tool: committed in the target repo, with an
   `.aw/domain/<project>/` fallback for repo-less work; capture never skips, consult degrades
   silently.
+- `_shared/flow-convention.md` — how any skill walks a charted map without naming a tracker:
+  the frontier (takeable tickets), claim/release (concurrency), and the walk rules (cadence,
+  autonomy, research auto-dispatch, push-right, empty-frontier). The plan in motion, over the store
+  `artifact-convention` holds at rest; native tracker → single-writer file floor.
 
 ## Next stage
 

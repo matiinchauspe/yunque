@@ -25,13 +25,13 @@ on a project.
 
 ## Current state
 
-The harness is operational — 14 skills over three shared contracts: bring-in
+The harness is operational — 14 skills over four shared contracts: bring-in
 (`aw-sync-repo`), charting (`aw-chart-course`), planning (`aw-grill-plan` → `aw-write-spec` →
 `aw-slice-plan`), build (`aw-implement`, `aw-tdd`), knowledge (`aw-research`,
 `aw-model-domain`), prototyping (`aw-build-prototype`), isolation (`aw-spawn-worktree`),
 adversarial review (`aw-review-work`), handoff (`aw-write-handoff`), and authoring
-(`aw-write-skill`). Contracts: `memory-`, `artifact-` (map/spec/ticket kinds), and
-`domain-convention`.
+(`aw-write-skill`). Contracts: `memory-`, `artifact-` (map/spec/ticket kinds, the plan at
+rest), `domain-`, and `flow-convention` (walking a charted map — the plan in motion).
 
 Deferred: a heavier execution substrate behind an `execution-convention` — autonomous
 sandboxed runs that loop to completion — with `aw-spawn-worktree` as its lighter rung.

@@ -76,6 +76,12 @@ and degrades by its own rules, spelled out below:
   glossary and the ADRs behind its shape (capture/consult) → committed in the target repo
   (`CONTEXT.md` + `docs/adr/`) → `.aw/domain/<project>/` (same layout) when there is no repo. It
   is a project deliverable, so capture never skips; consulting an absent model proceeds silently.
+- `flow-convention.md` — walk a charted map: which ticket is takeable now, who holds it, at what
+  pace, what runs unattended (frontier/claim/release + cadence, autonomy, auto-dispatch,
+  push-right, empty-frontier).
+  The plan in motion, where `artifact-convention` holds it at rest — it computes the frontier over
+  that store and keeps none of its own; native tracker → file floor (single-writer, so the walk
+  degrades to serial and claiming goes mute).
 
 ## Structure
 
@@ -86,7 +92,7 @@ agentic-workspace/
 ├─ README.md
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.aw
 ├─ skills/aw-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
-├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-convention)
+├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-convention)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)
