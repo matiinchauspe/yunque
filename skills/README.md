@@ -58,10 +58,14 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
   the frontier (takeable tickets), claim/release (concurrency), and the walk rules (cadence,
   autonomy, research auto-dispatch, push-right, empty-frontier). The plan in motion, over the store
   `artifact-convention` holds at rest; native tracker → single-writer file floor.
+- `_shared/execution-convention.md` — how any skill runs one ticket to completion without naming a
+  runtime: isolate (always a named branch, degrading sandbox → worktree → single-writer inline
+  floor) and converge (a bounded loop to the strongest done-signal the ticket offers, else
+  fail-fast). The run of one — selection-agnostic, never counts (flow's) nor folds the branch back
+  (a serial concern beyond it). Grounded in Matt Pocock's `sandcastle`.
 
 ## Next stage
 
-- An execution substrate behind a tool-agnostic `execution-convention` — run a ticket
-  autonomously in a sandbox and loop to completion (Matt Pocock's `sandcastle` is the
-  candidate), with `aw-spawn-worktree` as its lighter fallback rung.
+- A dispatching skill that composes flow + artifact + execution — walks the frontier and hands each
+  fit ticket to a run (the orchestrator layer; `aw-implement` is the natural home).
 - `aw-clean-worktree/` — the teardown half of `aw-spawn-worktree`.

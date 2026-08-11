@@ -82,6 +82,12 @@ and degrades by its own rules, spelled out below:
   The plan in motion, where `artifact-convention` holds it at rest — it computes the frontier over
   that store and keeps none of its own; native tracker → file floor (single-writer, so the walk
   degrades to serial and claiming goes mute).
+- `execution-convention.md` — run one ticket to completion, isolated: the workspace it runs in and
+  the loop that drives it to done (isolate/converge). Isolation degrades sandbox → worktree
+  (`aw-spawn-worktree`) → single-writer inline floor; converge is a bounded loop ending on the
+  strongest done-signal the ticket offers, else fail-fast. The run of one — it never counts (flow's)
+  nor folds the branch back (a serial concern beyond it); selection-agnostic, a dispatching skill
+  hands it the ticket.
 
 ## Structure
 
@@ -92,7 +98,7 @@ agentic-workspace/
 ├─ README.md
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.aw
 ├─ skills/aw-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
-├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-convention)
+├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-convention)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)
