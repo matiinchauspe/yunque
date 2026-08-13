@@ -1,6 +1,7 @@
 ---
 name: aw-sync-repo
-description: Bring an external repo into the agentic workspace as work material. Trigger when the user wants to clone/sync a project into the workspace to work on it — e.g. "sync repo X", "bring in <url>", "clone <owner/repo> into the workspace". Clones into repos/<name>/ (gitignored, its own .git).
+description: Bring an external repo into the workspace as work material — cloned into repos/<name>/, gitignored, with its own .git.
+disable-model-invocation: true
 ---
 
 # aw-sync-repo
