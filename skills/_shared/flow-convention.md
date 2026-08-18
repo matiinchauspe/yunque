@@ -32,10 +32,13 @@ frontier(project, feature):  the takeable set — the edge of the known. A ticke
      resolved or ruled out-of-scope: a ticket unblocked mid-walk re-enters. Each tier realizes
      that one predicate with its own primitives:
   1. A capability that renders its own frontier
-       → query it directly: open children, no open blocker, no assignee, in its own order.
-  2. Else → `list` the decision tickets through artifact-convention.md; a ticket is unblocked
-         when every name on its `Blocked by:` line is terminal — join each named blocker to its
-         own status in the `list` result. Keep the open, unblocked ones, first by number.
+       → query it directly, scoped to the feature key and the DECISION namespace marker: open
+         tickets, no open blocker, no assignee, in its own order. An effort both charted and
+         sliced holds two ticket sets under one feature key, so a query that skips the marker
+         would hand an implementation ticket to a walk that reads a `Type:` it does not carry.
+  2. Else → `list` the decision namespace through artifact-convention.md; a ticket is unblocked
+         when every number on its `Blocked by:` line is terminal — join each blocker number to
+         its own status in the `list` result. Keep the open, unblocked ones, first by number.
          The file ticket format carries no claim field, so "unclaimed" is vacuously true here —
          safe only because the floor is single-writer (Rule 3).
 
@@ -99,6 +102,13 @@ the same tracked-work artifacts that convention stores.
 
 ## Ownership
 
-Flow owns **takeability and concurrency** — which ticket is takeable now and who holds it. The
-ticket's *resolution content* — the decision it records — is owned by the skill its type
-dispatches to, not by this contract.
+Flow owns **takeability and concurrency on the decision walk** — which decision ticket is takeable
+now and who holds it. The ticket's *resolution content* — the decision it records — is owned by the
+skill its type dispatches to, not by this contract.
+
+It does NOT reach the implementation namespace. The **walk rules** are what make this contract
+decision-specific — cadence, autonomy, research auto-dispatch and push-right all key off a `Type:`
+implementation tickets do not carry, so on them the rules are not merely unnecessary, they are
+unfollowable. A skill that builds a sliced plan computes its own frontier over
+`artifact-convention.md`'s implementation namespace, and owes itself its own reading of an empty
+one.

@@ -91,9 +91,10 @@ beyond it is **Out of scope**, and never graduates.
    the fog-or-ticket test to each. Done when every surfaced question is either a sharp
    ticket-to-be or a line of fog.
 3. **Publish the map, then the tickets.** `publish` the `map` kind, then `publish` each
-   specifiable ticket with its `Type:`. Wire blocking edges once every ticket has an identity
-   (on a backend that mints ids on creation, that means a second pass). Done when the map and
-   every open ticket exist and every blocking edge is drawn.
+   specifiable ticket with its `Type:`. Wire blocking edges once every ticket has a number —
+   **an edge names its blocker's number**, the join key `artifact-convention.md` defines, so the
+   walk resolves edges without matching titles. Done when the map and every open ticket exist
+   and every blocking edge is drawn.
 4. **Stop.** Charting is one session's work; it resolves nothing. Hand off — the next session
    works the map.
 
@@ -109,13 +110,13 @@ beyond it is **Out of scope**, and never graduates.
    session ends before it resolves). Dispatch it to the skill its `Type:` names and resolve it
    there, zooming into the map only as needed — at the cadence `flow-convention.md` sets (one
    HITL ticket per session; research fans out AFK). Done when the ticket is resolved.
-3. **Record the resolution.** Post the answer to the ticket, mark it resolved, and append a
-   one-line gist + link to the map's **Decisions so far**. Done when the resolved ticket is
-   indexed on the map.
+3. **Record the resolution.** Post the answer to the ticket, `resolve` it to `resolved` through
+   `artifact-convention.md`, and append a one-line gist + link to the map's **Decisions so far**.
+   Done when the resolved ticket is indexed on the map.
 4. **Graduate the fog.** A resolved ticket clears the fog ahead of it: promote whatever is now
-   sharp from **Not yet specified** into fresh tickets, and rescope anything that turned out
-   to sit past the destination into **Out of scope**. Done when the map reflects the new
-   frontier.
+   sharp from **Not yet specified** into fresh tickets, and rescope anything that turned out to
+   sit past the destination — `resolve` those to `out-of-scope` and move them under the map's
+   **Out of scope**. Done when the map reflects the new frontier.
 
 When no tickets remain, the way is clear: hand the cleared map to `aw-write-spec`, which
 collapses its decisions into a buildable spec. Chart, then spec — never loop the map straight

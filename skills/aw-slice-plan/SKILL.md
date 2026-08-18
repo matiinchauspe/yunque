@@ -45,8 +45,13 @@ slice lands green. Sequence it **expand–contract** instead: expand (add the ne
 the old, nothing breaks), migrate the call sites in batches sized by blast radius (each
 batch a ticket blocked by the expand), then contract (delete the old form, in a ticket
 blocked by every batch). Keep CI green batch to batch where each batch stands alone; where
-it can't, the batches share an integration branch that all block one final
-integrate-and-verify ticket, and green is promised only there.
+it can't, the batches share a **named integration branch** that each of them declares, and
+all block one final integrate-and-verify ticket that takes that branch as its base — green is
+promised only there. Naming the branch on the ticket is what makes the batch **recognisable**
+to whatever builds it: a skill that builds one ticket at a time reads that line, declines the
+batch instead of chaining the rest of the plan onto a red one, and reports the branch the
+batch needs. A batch that promises green downstream and names nowhere to put it is
+indistinguishable from an ordinary ticket that simply fails.
 
 Done when every slice obeys the rules above (expand–contract batches excepted) and its
 blocking edges are drawn.
@@ -69,19 +74,51 @@ Iterate until the user approves; publish only once they do.
 dependency order (blockers first) so each ticket's edges can name real ones. Work the
 **frontier** — any ticket whose blockers are all done; for a linear chain that is top to
 bottom. Fill the template per ticket; the convention decides where it lands and how its
-edges are drawn. Done when every ticket the user approved in step 4 has a published artifact.
+edges are drawn.
+
+Publish every ticket **open**. That is where its lifecycle starts, and the skill that builds it
+flips it to resolved once its branch is gated and chained — slicing never writes a terminal state.
+How `open` is expressed is the convention's call, not this skill's. Done when every ticket the
+user approved in step 4 has a published artifact, all of them open.
+
+Then tell the user to type **`aw-build-plan`**, with the repo, the feature key, and the slug it
+should prefix each run's branch with: it walks these tickets to completion, cutting each run from
+the last one's branch, and leaves the final branch to review. That skill is user-invoked, so this one cannot reach it. Slicing stops at published
+tickets — it never dispatches one, and an expand–contract batch it does not walk at all: say
+plainly that those tickets are built by hand.
 
 <ticket-template>
+
+# <NN> — <Ticket title>
 
 **What to build:** the end-to-end behaviour this ticket makes work, from the user's
 perspective.
 
-**Blocked by:** the tickets that gate this one, or "None — can start immediately".
+**Blocked by:** the numbers of the tickets that gate this one, or "None — can start
+immediately".
 
 - [ ] Acceptance criterion 1
 - [ ] Acceptance criterion 2
 
 </ticket-template>
+
+The **number leads the title**, and blocking edges name numbers rather than titles — that number
+is the join key the convention addresses a ticket by, and it survives whatever id a tracker
+assigns. Publishing also stamps the ticket **open** — a `Status:` line where the convention's floor
+is a file, the tracker's own open state otherwise; that shape is `artifact-convention.md`'s, which
+is why the template above does not carry it.
+
+**One further line is written on an expand–contract batch and on nothing else:**
+
+```
+**Integrates on:** <the named integration branch this batch merges onto>
+```
+
+It is kept out of the template on purpose. A building skill reads that line to decide whether to
+build the ticket at all, and the template is where a field description gets dutifully filled in —
+so a template slot here would put `Integrates on: None` on every ordinary slice and a builder
+would decline the entire plan. **Absence is what marks an ordinary ticket. Never write the line
+empty, and never write it as `None`.**
 
 Tickets describe behaviour and acceptance criteria. A file path or code snippet goes stale
 fast — the one exception is a prototype snippet that pins a decision prose can't (a schema, a

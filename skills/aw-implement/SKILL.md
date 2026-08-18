@@ -22,10 +22,44 @@ Apply those same two here, and let its guard own their definitions so the two ne
   back — `aw-grill-plan` if a decision is open, `aw-write-spec` / `aw-slice-plan` if it's
   settled but unsliced. Building large or unripe work is the failure this gate exists to stop.
 - **One run, one ticket.** aw-implement builds a single ticket or task. A multi-ticket plan is
-  a frontier to walk — the orchestrator's job, not this skill's: route it back to planning
-  rather than selecting one and inventorying the rest.
+  a frontier to walk, not a run: an unsliced one routes back to planning, and an already-sliced
+  one belongs to `aw-build-plan`. That skill is user-invoked, so this one cannot reach it — tell
+  the user to type it rather than selecting one ticket and inventorying the rest.
 
-Done when the task is confirmed small and settled, or handed back to the planning flow.
+Done when the task is confirmed small and settled, handed back to the planning flow, or named as
+a walk for the user to start.
+
+## Dispatched runs
+
+A **dispatched run** is this skill entered on a walk's hand-off — one ticket, its repo, its base,
+the name to give the workspace and branch, and no human at the convergence points. **What makes it dispatched is that package, never the
+mechanism that carried it**: a walk with a subagent capability hands it to a fresh context, and one
+without hands it to itself, in-thread. Both are dispatched runs and owe everything below. Reading
+the mode off the mechanism instead would turn a walk's degraded pass into an attended build —
+re-litigating whether to build at all, stopping for a review with nobody there, and landing a commit
+its caller never asked for.
+
+It differs from a run a human is driving in exactly four ways, and nowhere else: the guard
+above is already satisfied — the walk found the ticket fit, so do not re-litigate magnitude or
+ripeness; step 2 does not choose, it always isolates, passing the handed base and name; **it ends at
+step 3** — neither the review of step 4 nor the landing of step 5 runs, because `aw-review-work`
+assumes a human at its convergence points and no human is there, so review is the walk's to push
+right, over the assembled result; and before ending it runs **the repo's whole-tree gates** — test,
+build and typecheck, from wherever the repo declares them — against its branch in the workspace it
+already built, reporting which of *passed*, *failed*, *none declared* or *could not run* it got.
+
+That last one is not the ticket's done-signal, which step 3 already settled on the ticket's own
+seams. It is a different question — does everything still hold together — and it is asked here
+because this workspace is the only place the project's environment stands up. The walk chains or
+stops on that answer, so a run that omits it hands back a branch its caller cannot act on.
+
+So a **converged** dispatched run's own last act is to hand back **the name of the branch it
+created** — the walk addresses it rather than predicting it — and to remove the workspace it
+created around that branch, since the branch is the whole deliverable and the worktree is
+scaffolding. **A run that fail-fasts removes nothing**: its workspace is the only evidence of what
+went wrong, and its caller is told to leave it standing for a human to read. The walk cuts its next
+run from a converged branch rather than from the mainline; a branch you isolated on your own waits
+as a ref for a human.
 
 ## Steps
 
@@ -43,11 +77,15 @@ with the test seams for it where any exist.
 unattended, branch-producing. What picks the mode is that provenance: a task you build directly
 and attend yourself is none of those, so it stays outside the contract
 and builds on the current branch, single-writer — its commit a local landing the human driving it
-owns, not a fold. A ticket handed to you to run, or a large or risky change worth isolating, calls
-`isolate` through the contract, which resolves the run's workspace down its ladder (a sandbox,
+owns, not an integration. A ticket handed to you to run, or a large or risky change worth
+isolating, calls `isolate` through the contract, which resolves the run's workspace down its ladder (a sandbox,
 else an isolated worktree via `aw-spawn-worktree`, else the host tree's single-writer floor),
-every tier on its own named branch. Done when the workspace is chosen: the current branch for a
-task you build in place, or an isolated workspace on its own named branch.
+every tier on its own named branch. **Pass on the base and the name you were handed** — the base
+is the ref carrying this ticket's dependencies, the name is how your caller will address the
+branch afterwards; a run you entered on your own has neither, so the contract cuts from HEAD and
+the run names itself. Done when the workspace is chosen: the current branch for a task you build
+in place, or an isolated workspace on its own named branch, cut from the right base and carrying
+the name your caller will look for.
 
 ### 3. Converge on done
 
@@ -65,7 +103,8 @@ done-signal has fired.
 
 ### 4. Review the run
 
-Only a run whose done-signal fired reaches here — a fail-fast run never does. Hand the change to
+Only a run whose done-signal fired reaches here — a fail-fast run never does, and neither does a
+dispatched run, which ended at step 3. Hand the change to
 `aw-review-work` as an explicit review request — it only reviews and reports; you address what it
 surfaces, and a behavioural fix re-enters `converge` (through `aw-tdd`), still ceiling-bounded, so
 it lands back under the same done-signal. Done when the review passes or its findings are
@@ -75,12 +114,11 @@ addressed.
 
 Where the converged work lands depends on where it ran. An attended run on the current branch —
 commit it there with a conventional-commit message, no attribution, but only when the user has
-asked; that commit is a local landing, not a fold. Otherwise stop and report, ready to commit. A
-run that went through `isolate` sits on its own named branch: always leave that branch as a ref,
-since folding it into the mainline — the serial merge and whole-tree gate — is beyond this run,
-as is resolving the fetched ticket; who folds it, or whether a fold-owner exists yet, is not
-this run's to know. Done when an attended run is committed or reported ready, or an isolated
-run's branch is left as a ref.
+asked; that commit is a local landing, not an integration. Otherwise stop and report, ready to
+commit. A run that went through `isolate` sits on its own named branch: always leave that branch as
+a ref, since integrating it — the whole-tree gate, and whatever a dispatcher chains onto it — is
+beyond this run, as is resolving the fetched ticket. Done when an attended run is committed or reported ready, or an
+isolated run's branch is left as a ref.
 
 ## Attribution
 
@@ -92,5 +130,5 @@ build or route back to planning; `/tdd` and `/code-review` become the harness's 
 an isolated run is `isolate`d and `converge`d through the execution-convention — the run-of-one
 substrate this skill consumes as a single run, blind to any siblings a future orchestrator
 dispatches beside it. Matt commits straight to the current branch; here that is gated on the
-user having asked, and an isolated run's fold into the mainline is left to its fold-owner. The
+user having asked, and an isolated run's branch is left for whoever integrates it. The
 spec-or-tickets input and test-first-at-seams spine are preserved.

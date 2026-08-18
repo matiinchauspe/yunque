@@ -42,6 +42,7 @@ Index of the current harness (name — when to reach for it):
 | `aw-grill-plan` | Stress-test a plan/decision into airtight, settled decisions | auto |
 | `aw-write-spec` | Synthesize a settled conversation into one durable spec document | auto |
 | `aw-slice-plan` | Break an approved plan/spec into tracer-bullet tickets | auto |
+| `aw-build-plan` | Build a sliced plan to completion, leaving one branch to review | user |
 | `aw-implement` | When the next step is writing code — from a spec, tickets, or a described task | auto |
 | `aw-tdd` | When building test-first — the red → green loop at a pre-agreed seam | auto |
 | `aw-research` | Delegate reading legwork; get back a cited Markdown file | auto |
@@ -67,8 +68,9 @@ and degrades by its own rules, spelled out below:
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
   `.aw/memory/<project>/` → skip.
 - `artifact-convention.md` — record tracked work in three kinds: the map an effort is charted
-  onto, the spec a plan is written into, and the tickets it breaks into (publish/fetch; list
-  the decision tickets) →
+  onto, the spec a plan is written into, and the tickets it breaks into (publish/fetch/resolve;
+  list one ticket **namespace** — decision or implementation, never both, since they are separate
+  sets on independent counters, joined by the ticket **number**) →
   `.aw/artifacts/<project>/<feature>/` (`map.md` + `spec.md` + decision tickets under
   `decisions/` + numbered implementation ticket files; the floor — publishing is a deliverable,
   so it never skips).
@@ -81,13 +83,17 @@ and degrades by its own rules, spelled out below:
   push-right, empty-frontier).
   The plan in motion, where `artifact-convention` holds it at rest — it computes the frontier over
   that store and keeps none of its own; native tracker → file floor (single-writer, so the walk
-  degrades to serial and claiming goes mute).
+  degrades to serial and claiming goes mute). Scoped to the **decision** walk: its walk rules key
+  off a `Type:` implementation tickets do not carry, so `aw-build-plan` computes its own frontier.
 - `execution-convention.md` — run one ticket to completion, isolated: the workspace it runs in and
   the loop that drives it to done (isolate/converge). Isolation degrades sandbox → worktree
-  (`aw-spawn-worktree`) → single-writer inline floor; converge is a bounded loop ending on the
-  strongest done-signal the ticket offers, else fail-fast. The run of one — it never counts (flow's)
-  nor folds the branch back (a serial concern beyond it); selection-agnostic, a dispatching skill
-  hands it the ticket.
+  (`aw-spawn-worktree`) → single-writer inline floor, cutting the branch from an optional `base`
+  the caller passes when it holds one (else HEAD); tier 1 is any sandbox — the agent's or one the
+  target repo declares — qualifying only by SHAPE, a per-ticket entry point (a whole orchestrator
+  answers a different verb). Converge is a bounded loop ending on the strongest done-signal the
+  ticket offers, else fail-fast. The run of one — it never counts (flow's) nor integrates the branch
+  it leaves (`aw-build-plan`'s, which does that by cutting each run from the last one's branch);
+  selection-agnostic, a dispatching skill hands it the ticket.
 
 ## Structure
 

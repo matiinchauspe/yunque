@@ -17,7 +17,8 @@ on a project.
    (gitignored, its own `.git`).
 3. **Work it with the harness.** Small and settled → `aw-implement` builds it test-first
    (`aw-tdd`), then `aw-review-work` stress-tests it. Large or foggy → plan first:
-   `aw-grill-plan` → `aw-write-spec` → `aw-slice-plan`, then build. Too big to hold in one
+   `aw-grill-plan` → `aw-write-spec` → `aw-slice-plan`, then `aw-build-plan` walks the sliced
+   tickets to done and leaves one branch to review. Too big to hold in one
    session → `aw-chart-course` charts it as a map of decisions first, then hands off to that
    planning chain.
 4. **Parallelize** when you need to: `aw-spawn-worktree <repo> <task>` → an isolated agent
@@ -25,17 +26,20 @@ on a project.
 
 ## Current state
 
-The harness is operational — 14 skills over five shared contracts: bring-in
+The harness is operational — 15 skills over five shared contracts: bring-in
 (`aw-sync-repo`), charting (`aw-chart-course`), planning (`aw-grill-plan` → `aw-write-spec` →
-`aw-slice-plan`), build (`aw-implement`, `aw-tdd`), knowledge (`aw-research`,
-`aw-model-domain`), prototyping (`aw-build-prototype`), isolation (`aw-spawn-worktree`),
-adversarial review (`aw-review-work`), handoff (`aw-write-handoff`), and authoring
-(`aw-write-skill`). Contracts: `memory-`, `artifact-` (map/spec/ticket kinds, the plan at
-rest), `domain-`, `flow-convention` (walking a charted map — the plan in motion), and
+`aw-slice-plan`), build (`aw-build-plan` orchestrating, `aw-implement`, `aw-tdd`), knowledge
+(`aw-research`, `aw-model-domain`), prototyping (`aw-build-prototype`), isolation
+(`aw-spawn-worktree`), adversarial review (`aw-review-work`), handoff (`aw-write-handoff`), and
+authoring (`aw-write-skill`). Contracts: `memory-`, `artifact-` (map/spec/ticket kinds, the plan
+at rest), `domain-`, `flow-convention` (walking a charted map — the plan in motion), and
 `execution-convention` (running one ticket, isolated, to done — the run of one).
 
-Next: a dispatching skill that composes flow + artifact + execution — walks the frontier and
-hands each fit ticket to a run.
+The planning-to-build chain now closes end to end: charted → specced → sliced → built, with the
+walk cutting each run from the branch the last one produced and leaving that final branch for a
+human to review and merge.
+
+What comes next is listed in `skills/README.md` under **Next stage**.
 
 The harness brain is `AGENTS.md`; the skill index is `skills/README.md`; research notes
 live in `docs/research/`.

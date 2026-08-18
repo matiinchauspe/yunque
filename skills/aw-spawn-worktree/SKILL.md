@@ -21,7 +21,10 @@ pure git, local, no sandbox — the seam a heavier execution substrate plugs in 
 ## Inputs
 
 - `<repo>` — the synced repo under `repos/<repo>/`.
-- `<task>` — a kebab-case slug for the work; names both the worktree dir and its branch.
+- `<task>` — a kebab-case slug for the work; names both the worktree dir and its branch. It may
+  carry slash-separated segments (`<prefix>/<ticket>-<nonce>`) so a caller spawning a whole set
+  can group them under one branch namespace it can list and prune later; git takes the slashes in
+  a branch name, and the worktree simply nests to match.
 - `<base>` — the ref to branch from (optional; defaults to the repo's current `HEAD`).
 
 ## Steps
