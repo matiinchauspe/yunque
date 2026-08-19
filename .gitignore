@@ -4,5 +4,8 @@
 /.worktrees/
 /.aw/
 
+# Editor multi-root workspace — names repos that exist only on this machine.
+*.code-workspace
+
 # System noise
 .DS_Store
