@@ -159,7 +159,12 @@ there and leaves the ref — so a branch that is present, descended and non-empt
 written, never that the ticket reached its done-signal.
 
 Three moves end a pass. **Chain**: the ticket resolves, its branch is the next base, step 1 reads
-again. **Skip**: the chain does not advance, the next dispatch cuts from the same base, and you
+again — and **the previously chained link's workspace is removed**, since the branch you just
+chained already contains it and a human only ever needs to run the newest one. Prune **workspaces,
+never refs**: `git worktree remove` deletes a working directory, and every branch this walk left
+stands untouched, which is what keeps step 1 able to read the chain. A run cannot do this pruning
+itself — it never knows whether it is the last — so the walk does it, one link behind. **Skip**: the
+chain does not advance, the next dispatch cuts from the same base, and you
 **leave everything the run left behind** — that branch is what step 1 reads to know this ticket was
 tried, and its workspace is a human's to inspect. Only a *converged* run owes you its branch name,
 so for a skip, report the name you handed out. **Stop the walk**: leave every branch where it is,
@@ -225,7 +230,11 @@ Done when the pass has chained, skipped, or stopped.
 - **What it was cut from** — the derived tip, the mainline snapshot step 1 recorded, or a `<base>` a
   human named. Say plainly when it was the last: on a feature with resolved tickets, nothing checked
   that base carries their work, and if it does not, that work is not in the deliverable.
-- **The chain** — every ticket built, in order, with the branch each produced.
+- **The chain** — every ticket built, in order, with the branch each produced, and **the one
+  workspace still standing**: the deliverable's, which contains every link before it. That is where
+  a human runs the gates before merging. Say plainly that the earlier workspaces were pruned as the
+  walk chained past them and that their branches are all still there, or a reader will take the
+  missing directories for lost work. Removing that last workspace is theirs to do, once they have run it.
 - **Every ticket skipped, loudly**, with which of step 3's reasons skipped it, naming any branch and
   workspace it left behind and saying that **deleting the branch is what retries it**. For a
   declined batch, what it would take to build by hand.

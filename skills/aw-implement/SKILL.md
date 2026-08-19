@@ -54,12 +54,14 @@ because this workspace is the only place the project's environment stands up. Th
 stops on that answer, so a run that omits it hands back a branch its caller cannot act on.
 
 So a **converged** dispatched run's own last act is to hand back **the name of the branch it
-created** — the walk addresses it rather than predicting it — and to remove the workspace it
-created around that branch, since the branch is the whole deliverable and the worktree is
-scaffolding. **A run that fail-fasts removes nothing**: its workspace is the only evidence of what
-went wrong, and its caller is told to leave it standing for a human to read. The walk cuts its next
-run from a converged branch rather than from the mainline; a branch you isolated on your own waits
-as a ref for a human.
+created** — the walk addresses it rather than predicting it — and to **leave standing the workspace
+it created around that branch**. The branch carries the work, but only the workspace carries the
+environment that work runs in: tear it down and a human must rebuild that environment before they
+can run anything, which is how a chain reaches review unverified. **A run that fail-fasts removes
+nothing** either: its workspace is the only evidence of what went wrong. Either way the workspace is
+**a human's to remove**, once they have run what it holds — so a run reports its path alongside its
+branch. The walk cuts its next run from a converged branch rather than from the mainline; a branch
+you isolated on your own waits as a ref for a human.
 
 ## Steps
 
