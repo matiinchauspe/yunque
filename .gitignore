@@ -9,3 +9,9 @@
 
 # System noise
 .DS_Store
+
+# Research notes — kept locally, not published.
+/docs/
+
+# Plugin scratch state.
+/.superpowers/

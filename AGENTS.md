@@ -104,7 +104,6 @@ yunque/
 ├─ README.md
 ├─ LICENSE                   ← MIT
 ├─ assets/                   ← the Yunque mark (light/dark SVG for the README)
-├─ docs/research/            ← research notes behind the harness design
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.yun
 ├─ skills/yun-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
 ├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-convention)
@@ -138,6 +137,6 @@ directory name must match the skill name (Agent Skills spec).
 
 Only the harness: `skills/` (including `skills/_shared/`), `AGENTS.md`, the `CLAUDE.md`
 symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `LICENSE`,
-`assets/`, `.gitignore`, `docs/`.
+`assets/` and `.gitignore`. Research notes under `docs/` stay local and are gitignored.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
 artifact, and domain-model fallback files (`.yun/`) are NOT versioned.

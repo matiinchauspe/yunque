@@ -272,4 +272,4 @@ phase exists to resolve, minus the planning-time disjointness that keeps that ph
 overlap is structural: put the term back and the frontier collapses to roughly one ticket. Second,
 `isolate` resolves its ladder *inside* the run, so the walk **cannot know before dispatching** which
 tier a run lands on, and must plan for the single-writer floor.
-`docs/research/matt-pocock-sandcastle-parallelism.md` holds the evidence.
+Both were established by reading `sandcastle`'s `parallel-planner` template directly.

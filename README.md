@@ -88,8 +88,7 @@ human to review and merge.
 
 What comes next is listed in `skills/README.md` under **Next stage**.
 
-The harness brain is `AGENTS.md`; the skill index is `skills/README.md`; research notes
-live in `docs/research/`.
+The harness brain is `AGENTS.md`; the skill index is `skills/README.md`.
 
 ## Credits
 
@@ -105,13 +104,11 @@ adapted skill names the work it learned from.
 - **[mattpocock/sandcastle](https://github.com/mattpocock/sandcastle)** (MIT) — the frontier walk
   and isolated per-ticket execution behind `yun-build-plan` and `execution-convention`.
 
-**Researched, not adapted** — studied while designing the harness, with notes in
-[`docs/research/`](docs/research/), but nothing carried into the skills:
+**Researched, not adapted** — studied while designing the harness, but nothing from them
+reached the skills:
 
 - **[Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec)** (MIT)
 - **[Gentleman-Programming/gentle-ai](https://github.com/Gentleman-Programming/gentle-ai)** (MIT)
-
-Quotations in the research notes are cited to file and line.
 
 ## License
 
