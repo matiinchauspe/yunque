@@ -75,7 +75,7 @@ most won't.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `domain-modeling`**
-(github.com/mattpocock/skills, Apache-2.0). Changes: the producer/consumer split is
+(github.com/mattpocock/skills, MIT). Changes: the producer/consumer split is
 externalised — this skill is the producer, while the rules for *reading* the model (which
 Matt keeps in a per-repo `docs/agents/domain.md` plus an inline `tdd` rule) live once in
 `skills/_shared/domain-convention.md`; the glossary and ADR formats are inlined rather than

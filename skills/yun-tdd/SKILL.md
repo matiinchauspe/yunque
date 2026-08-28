@@ -65,7 +65,7 @@ effort lands on the critical paths and complex logic instead of every edge case.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `tdd`** (github.com/mattpocock/skills,
-Apache-2.0). Changes: renamed to the `yun-<verb>-<noun>` harness family (the `TDD` leading
+MIT). Changes: renamed to the `yun-<verb>-<noun>` harness family (the `TDD` leading
 word is kept intact for invocation reliability); the TypeScript-specific `tests.md` /
 `mocking.md` reference files are dropped, their mocking guidance collapsed to one
 language-agnostic rule; refactor stays in the loop as each slice's third beat once green

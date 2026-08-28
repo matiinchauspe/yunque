@@ -125,7 +125,7 @@ into `yun-implement`.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `wayfinder`** (github.com/mattpocock/skills,
-Apache-2.0). Changes: renamed to the `yun-<verb>-<noun>` convention; the map is published as a
+MIT). Changes: renamed to the `yun-<verb>-<noun>` convention; the map is published as a
 new `map` artifact kind and all tracker mechanics (native dependencies, `gh` API, sub-issues)
 are pushed behind `skills/_shared/artifact-convention.md`, so the skill never names a tracker;
 the four ticket types dispatch to the harness siblings `yun-research` / `yun-build-prototype` /

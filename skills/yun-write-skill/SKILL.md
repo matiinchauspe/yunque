@@ -94,4 +94,4 @@ Use these to diagnose issues the user may be having with the skill.
 
 ## Attribution
 
-Adapted for this workspace from **Matt Pocock's `writing-great-skills`** (github.com/mattpocock/skills, Apache-2.0). Changes: renamed to the `yun-<verb>-<noun>` harness convention, switched to model-invocation so it applies automatically while authoring, workspace-mechanics deferred to `CLAUDE.md`, and the OpenAI agent wiring and aihero.dev/`ask-matt` ecosystem references dropped.
+Adapted for this workspace from **Matt Pocock's `writing-great-skills`** (github.com/mattpocock/skills, MIT). Changes: renamed to the `yun-<verb>-<noun>` harness convention, switched to model-invocation so it applies automatically while authoring, workspace-mechanics deferred to `CLAUDE.md`, and the OpenAI agent wiring and aihero.dev/`ask-matt` ecosystem references dropped.

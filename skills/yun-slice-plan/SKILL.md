@@ -128,7 +128,7 @@ prototype.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `to-tickets`** (github.com/mattpocock/skills,
-Apache-2.0). Changes: renamed to the `yun-<verb>-<noun>` convention; `publish` and `fetch`
+MIT). Changes: renamed to the `yun-<verb>-<noun>` convention; `publish` and `fetch`
 route through `skills/_shared/artifact-convention.md` instead of a `setup`-bound tracker
 config, so the skill never names a tracker; Matt's two ticket templates (local vs. issue)
 collapse into one, since the convention — not the skill — maps a ticket's edges onto the

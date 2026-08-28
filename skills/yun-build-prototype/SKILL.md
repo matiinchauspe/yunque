@@ -61,7 +61,7 @@ mainline, and its digest is persisted through the memory convention.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `prototype`** (github.com/mattpocock/skills,
-Apache-2.0). Changes: switched to model-invocation with harness trigger phrasing; the two
+MIT). Changes: switched to model-invocation with harness trigger phrasing; the two
 branches stay as **disclosed reference files** (`LOGIC.md` / `UI.md`) because they are
 mutually exclusive paths — a run loads only the branch it takes; capture is rebound to the
 harness seams that exist today — the prototype is parked on a throwaway branch off the

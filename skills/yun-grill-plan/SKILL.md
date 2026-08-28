@@ -27,4 +27,4 @@ Do not act on the plan until the user confirms you have reached a shared underst
 
 ## Attribution
 
-Adapted for this workspace from **Matt Pocock's `grilling`** (github.com/mattpocock/skills, Apache-2.0). Change: facts-lookup extended to recall prior decisions, and settled decisions are persisted as they resolve — both via `skills/_shared/memory-convention.md`.
+Adapted for this workspace from **Matt Pocock's `grilling`** (github.com/mattpocock/skills, MIT). Change: facts-lookup extended to recall prior decisions, and settled decisions are persisted as they resolve — both via `skills/_shared/memory-convention.md`.

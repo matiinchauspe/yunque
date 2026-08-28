@@ -86,7 +86,7 @@ there. Done when the spec is published and its location is known.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `to-spec`** (github.com/mattpocock/skills,
-Apache-2.0). Changes: added the two-gate guard (magnitude + ripeness) so it fires
+MIT). Changes: added the two-gate guard (magnitude + ripeness) so it fires
 autonomously without producing a premature spec; `recall` and `publish` route through the
 memory- and artifact-conventions instead of a `setup`-bound tracker, so the skill never
 names a tracker; the spec publishes as the `spec` artifact kind alongside `yun-slice-plan`'s

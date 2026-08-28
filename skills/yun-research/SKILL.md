@@ -34,6 +34,6 @@ does the reading, you keep working, and you get back a cited document to react t
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `research`** (github.com/mattpocock/skills,
-Apache-2.0). Changes: renamed to the `yun-<verb>-<noun>` harness convention; added a
+MIT). Changes: renamed to the `yun-<verb>-<noun>` harness convention; added a
 recall-first step and a project-scoped digest via `skills/_shared/memory-convention.md`
 (the full cited file still lives in the repo); dropped the OpenAI agent wiring.

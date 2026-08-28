@@ -27,4 +27,4 @@ If the user passed an argument, treat it as the next session's focus and shape t
 
 ## Attribution
 
-Adapted for this workspace from Matt Pocock's `handoff` (github.com/mattpocock/skills, Apache-2.0). Change: durable content is persisted to and referenced from the workspace memory convention rather than restated, so the baton stays a thin pointer-plus-delta.
+Adapted for this workspace from Matt Pocock's `handoff` (github.com/mattpocock/skills, MIT). Change: durable content is persisted to and referenced from the workspace memory convention rather than restated, so the baton stays a thin pointer-plus-delta.

@@ -125,7 +125,7 @@ isolated run's branch is left as a ref.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `implement`** (github.com/mattpocock/skills,
-Apache-2.0). Changes: switched to model-invocation and added a **two-gate guard** (magnitude
+MIT). Changes: switched to model-invocation and added a **two-gate guard** (magnitude
 + ripeness, whose definitions `yun-write-spec` owns) so the harness itself decides whether to
 build or route back to planning; `/tdd` and `/code-review` become the harness's `yun-tdd` and
 `yun-review-work` (which reviews only); work is `fetch`ed through the artifact-convention, and
