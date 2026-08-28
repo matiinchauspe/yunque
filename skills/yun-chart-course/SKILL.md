@@ -1,0 +1,136 @@
+---
+name: yun-chart-course
+description: Chart a course through work too big for one session — a live map of decision tickets, resolved one at a time until the way to the destination is clear.
+disable-model-invocation: true
+---
+
+# yun-chart-course
+
+**Plan, don't do.** Some work is too big for one session and wrapped in **fog** — the way
+from here to the **destination** isn't visible yet. Charting is finding that way, not
+charging at it: each **decision ticket** resolves one open question, and the course is clear
+when nothing is left to decide before someone goes and builds. The pull to just write the
+code is the signal you've reached the edge of the map — hand off, don't build.
+
+## Guard — is this even a charting job?
+
+The heaviest flow in the harness. Reserve it for the idea that genuinely won't fit one
+session. Two checks before you chart:
+
+- **Size.** A well-scoped feature — one that fits a single session — is not a charting job.
+  Hand it to `yun-grill-plan` → `yun-write-spec`, not here.
+- **Fog.** Name the destination and grill it breadth-first. If no fog surfaces — you can
+  already state every decision — you don't need a map. Stop and hand to `yun-write-spec`.
+
+Done when the work is confirmed too big for one session **and** fog remains after naming the
+destination.
+
+## The map
+
+One live artifact per effort, `publish`ed as the `map` kind through
+`skills/_shared/artifact-convention.md`. It is an **index, not a store**: a decision lives in
+exactly one place — its ticket — and the map only gists it and links. Refer to every ticket
+by its title, never a bare id. The body is the whole course at low resolution, read once at
+the start of every session.
+
+<map-template>
+
+## Destination
+<what reaching the end looks like — the spec, decision, or change this effort finds its way to. One or two lines; every session orients to it first.>
+
+## Notes
+<domain; skills every session should consult; standing preferences for this effort>
+
+## Decisions so far
+<the index — one line per resolved ticket, enough to judge relevance, then zoom the link>
+- [<resolved ticket title>](link) — <one-line gist of the answer>
+
+## Not yet specified
+<in-scope fog you can't ticket yet; graduates as the frontier advances>
+
+## Out of scope
+<work ruled beyond the destination; ruled out, never graduates>
+
+</map-template>
+
+## Decision tickets
+
+Each ticket is a child of the map, its body one **Question** — the decision it resolves,
+sized to a single session. It carries a `Type:` that says which skill resolves it and whether
+a human is in the loop:
+
+- **research** (AFK) — surface a fact a decision waits on, from docs or APIs outside the
+  working directory. Resolved by an `yun-research` subagent.
+- **prototype** (HITL) — make a cheap concrete artifact to react to when "how should it look
+  / behave" is the question. Resolved by `yun-build-prototype`.
+- **grilling** (HITL) — one question at a time via `yun-grill-plan`, paired with
+  `yun-model-domain` when vocabulary is at stake. The default type.
+- **task** (HITL or AFK) — manual work that must happen before a decision can be made
+  (provisioning access, moving data so its shape is visible). The one type that *does* rather
+  than decides; resolved when the work is done and its resulting facts are recorded. Stamp its
+  mode on the `Type:` (`task (AFK)` when the agent can drive it alone, `task (HITL)` when it
+  needs a human) — the walk reads that to decide how to drive it.
+
+**HITL** / **AFK** marks whether a human is in the loop; `skills/_shared/flow-convention.md`
+governs what that means for the walk — cadence, auto-dispatch, and how the human is asked.
+
+### Fog or ticket?
+
+The test is whether you can state the question precisely now — *not* whether you can answer
+it. **Ticket** when it's already sharp, even if blocked. **Not yet specified** when you can't
+phrase it that sharply yet — don't pre-slice fog into ticket-sized pieces; one patch may
+graduate into several tickets, or none. Fog only ever gathers *toward* the destination; work
+beyond it is **Out of scope**, and never graduates.
+
+## Chart the map
+
+1. **Name the destination.** Grill it with `yun-grill-plan` (and `yun-model-domain` for
+   vocabulary). Naming it first shapes every ticket. Done when the destination is one or two
+   lines you can publish.
+2. **Map the frontier.** Grill breadth-first for the decisions between here and there. Apply
+   the fog-or-ticket test to each. Done when every surfaced question is either a sharp
+   ticket-to-be or a line of fog.
+3. **Publish the map, then the tickets.** `publish` the `map` kind, then `publish` each
+   specifiable ticket with its `Type:`. Wire blocking edges once every ticket has a number —
+   **an edge names its blocker's number**, the join key `artifact-convention.md` defines, so the
+   walk resolves edges without matching titles. Done when the map and every open ticket exist
+   and every blocking edge is drawn.
+4. **Stop.** Charting is one session's work; it resolves nothing. Hand off — the next session
+   works the map.
+
+## Work through the map
+
+1. **Orient.** `fetch` the `map` kind through `skills/_shared/artifact-convention.md` and load
+   it at low resolution — but the map indexes only closed tickets, so compute the **frontier**
+   through `skills/_shared/flow-convention.md` to see the takeable ones, and print it (a backend
+   that renders its own frontier makes this a harmless echo). Done when you know which tickets
+   are takeable.
+2. **Take one ticket.** The user's choice, or the first frontier ticket; **claim it first**
+   through `flow-convention.md` so a concurrent session skips it (and release it there if the
+   session ends before it resolves). Dispatch it to the skill its `Type:` names and resolve it
+   there, zooming into the map only as needed — at the cadence `flow-convention.md` sets (one
+   HITL ticket per session; research fans out AFK). Done when the ticket is resolved.
+3. **Record the resolution.** Post the answer to the ticket, `resolve` it to `resolved` through
+   `artifact-convention.md`, and append a one-line gist + link to the map's **Decisions so far**.
+   Done when the resolved ticket is indexed on the map.
+4. **Graduate the fog.** A resolved ticket clears the fog ahead of it: promote whatever is now
+   sharp from **Not yet specified** into fresh tickets, and rescope anything that turned out to
+   sit past the destination — `resolve` those to `out-of-scope` and move them under the map's
+   **Out of scope**. Done when the map reflects the new frontier.
+
+When no tickets remain, the way is clear: hand the cleared map to `yun-write-spec`, which
+collapses its decisions into a buildable spec. Chart, then spec — never loop the map straight
+into `yun-implement`.
+
+## Attribution
+
+Adapted for this workspace from **Matt Pocock's `wayfinder`** (github.com/mattpocock/skills,
+Apache-2.0). Changes: renamed to the `yun-<verb>-<noun>` convention; the map is published as a
+new `map` artifact kind and all tracker mechanics (native dependencies, `gh` API, sub-issues)
+are pushed behind `skills/_shared/artifact-convention.md`, so the skill never names a tracker;
+the four ticket types dispatch to the harness siblings `yun-research` / `yun-build-prototype` /
+`yun-grill-plan` + `yun-model-domain`, and the cleared map hands off to `yun-write-spec`. The
+plan-don't-do spine, fog-of-war, decision-ticket typing, and HITL/AFK axis are preserved from
+the source; the walk mechanics the source carries inline — frontier, one-ticket-per-session
+cadence, ticket claiming, parallel research subagents, and push-right question batching — live
+in `skills/_shared/flow-convention.md`, which this skill's walk defers to.

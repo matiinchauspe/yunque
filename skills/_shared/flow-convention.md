@@ -1,6 +1,6 @@
 # Flow convention
 
-Shared contract for every `aw-*` skill that **walks** a charted map — moves through the
+Shared contract for every `yun-*` skill that **walks** a charted map — moves through the
 decision tickets an effort has been charted onto, rather than storing them. Where
 `artifact-convention.md` holds the plan **at rest** — the map, its tickets, their types and
 dependency edges — this contract governs the plan **in motion**: which ticket is takeable now,
@@ -59,7 +59,7 @@ claim(ticket, project) / release(ticket, project):  the concurrency lock.
   `artifact-convention.md` resolves against. It carries its own project scoping and, often,
   its own frontier view and assignee model; use them.
 - **File fallback** reads the tickets `artifact-convention.md` wrote under
-  `.aw/artifacts/<project>/<feature>/` — flow computes over that store, it does not keep one
+  `.yun/artifacts/<project>/<feature>/` — flow computes over that store, it does not keep one
   of its own.
 
 ## Walk rules

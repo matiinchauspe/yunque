@@ -1,6 +1,6 @@
 # Artifact convention
 
-Shared contract for every `aw-*` skill that records or fetches **tracked work** across
+Shared contract for every `yun-*` skill that records or fetches **tracked work** across
 sessions — the artifact **kinds** a plan produces: the **map** an effort is charted onto, the
 **spec** it is written into, and the **tickets** it breaks into (decision tickets when
 charted, implementation tickets when sliced). A skill declares **intent** — `publish`,
@@ -48,7 +48,7 @@ publish(artifact, project, feature):        # artifact is a map, a spec, or a ti
          **The publishing skill assigns that number** — the next free one in that namespace
          under this feature, read from `list` — because a tracker's own id is the tracker's,
          and edges drawn on it would not survive a move to another backend.
-  2. Else → write under  .aw/artifacts/<project>/<feature>/   (workspace root, gitignored):
+  2. Else → write under  .yun/artifacts/<project>/<feature>/   (workspace root, gitignored):
        - a map    → map.md                 (one per feature; a live index, edited in place
                                            across sessions — appended to, never regenerated
                                            from scratch. Its links to decision tickets are
@@ -75,7 +75,7 @@ publish(artifact, project, feature):        # artifact is a map, a spec, or a ti
 fetch(reference, project):  try each mechanism until one YIELDS the artifact — a present but
      empty capability falls through, it does not short-circuit:
        1. capability → address a map or spec by the feature key, a ticket by feature + number.
-       2. files      → read a map at .aw/artifacts/<project>/<feature>/map.md, a spec at
+       2. files      → read a map at .yun/artifacts/<project>/<feature>/map.md, a spec at
                        spec.md; a decision ticket at decisions/<NN>-<slug>.md, an
                        implementation ticket at the numbered file the reference names.
        3. neither yields it → if the artifact is in the conversation, use that; otherwise
@@ -93,8 +93,8 @@ list(project, feature, namespace):  enumerate a feature's tickets in ONE namespa
                        found. Read each result's number, blocking edges, terminal state, and —
                        for decision tickets — its type, the tracker's own way.
        2. files      → scan the namespace's own path: decision tickets under
-                       .aw/artifacts/<project>/<feature>/decisions/ , implementation tickets at
-                       .aw/artifacts/<project>/<feature>/<NN>-<slug>.md . Read each ticket
+                       .yun/artifacts/<project>/<feature>/decisions/ , implementation tickets at
+                       .yun/artifacts/<project>/<feature>/<NN>-<slug>.md . Read each ticket
                        file's `Blocked by:` and `Status:` lines, plus `Type:` where the
                        namespace carries one.
      Returns every ticket in that namespace with its NUMBER, edges, status, and — where the
@@ -120,8 +120,8 @@ resolve(reference, project, state):  move ONE ticket to a terminal state — `re
 - **Capability** = any issue-tracker tool the agent has loaded (an MCP tracker server, a
   CLI, a native store, whatever). It carries its own project scoping — use its project field.
   The convention does not know or care which one it is.
-- **File fallback** scopes by path: `.aw/artifacts/<project>/<feature>/`, sharing the
-  `.aw/<kind>/<project>/` namespace with `.aw/memory/` and nesting a numbered ticket file
+- **File fallback** scopes by path: `.yun/artifacts/<project>/<feature>/`, sharing the
+  `.yun/<kind>/<project>/` namespace with `.yun/memory/` and nesting a numbered ticket file
   beneath the feature.
 
 ## Scope resolution

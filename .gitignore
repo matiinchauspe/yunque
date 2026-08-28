@@ -2,7 +2,7 @@
 # The workspace versions ONLY the harness, not the projects' code.
 /repos/
 /.worktrees/
-/.aw/
+/.yun/
 
 # Editor multi-root workspace — names repos that exist only on this machine.
 *.code-workspace

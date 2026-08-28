@@ -1,6 +1,6 @@
 # Execution convention
 
-Shared contract for every `aw-*` skill that **runs** a single ticket to completion — takes one
+Shared contract for every `yun-*` skill that **runs** a single ticket to completion — takes one
 branch-producing ticket it is handed and drives it, isolated, until its work reaches the strongest
 done-signal the ticket offers and lands on a branch. Where `flow-convention.md`
 **walks** the whole map — which ticket is takeable, how many run at once, at what cadence — this
@@ -13,7 +13,7 @@ maps both to whatever runtime the running agent has.
 1. **A skill NEVER names a runtime product.** Not a sandbox product, not a container engine.
    Naming one couples the harness to a product; the harness is tool-agnostic by design. A skill
    says *"run this ticket to completion"* — nothing more. Pointing at another harness contract or
-   at a harness skill — as this file points at `aw-spawn-worktree` — is internal wiring, not a
+   at a harness skill — as this file points at `yun-spawn-worktree` — is internal wiring, not a
    product name, and is allowed, exactly as `flow-convention.md` names `artifact-convention.md`.
 2. **The run of one — execution never counts.** A run drives exactly one ticket and has no view of
    its siblings. How many run, in what order, which are takeable — **the count** — is
@@ -62,7 +62,7 @@ isolate(ticket, project, base?, name?):  the workspace the run happens in + its 
          tier-1 capability here, so the ladder degrades. Every rung hands up the same artifact;
          only the degree of isolation around it varies.
   2. Else → an isolated git worktree on its own named branch, cut from `base`, under
-         .worktrees/<repo>/<task>/ , via aw-spawn-worktree — where `name` is that skill's
+         .worktrees/<repo>/<task>/ , via yun-spawn-worktree — where `name` is that skill's
          `<task>`, which names the worktree dir and the branch alike. Filesystem isolation
          without a container, the lighter rung.
   3. Else → inline in the host working tree, on its own named branch cut from `base` and

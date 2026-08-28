@@ -1,6 +1,6 @@
 # Domain convention
 
-Shared contract for every `aw-*` skill that captures or consults a project's **domain
+Shared contract for every `yun-*` skill that captures or consults a project's **domain
 model** — its **ubiquitous language** and the decisions behind its shape. A skill declares
 **intent** — `capture` or `consult` — and this file maps that intent to where the model
 lives and how it degrades.
@@ -12,7 +12,7 @@ The model is two artifact kinds, and only two:
 - **decisions** — architecture decision records (ADRs): one per decision, why the shape is
   the way it is. Recorded sparingly, only for choices worth remembering.
 
-`aw-model-domain` owns what those say; this convention owns where they land and how a reader
+`yun-model-domain` owns what those say; this convention owns where they land and how a reader
 reaches them.
 
 ## Rules
@@ -40,7 +40,7 @@ capture(entry, project):        # entry is a resolved term, or a decision
        - a term     → the glossary at the repo root (CONTEXT.md)
        - a decision → docs/adr/<NNNN>-<slug>.md
   2. project is not tied to a repo (project = _workspace) → write the SAME layout under
-       .aw/domain/<project>/ (workspace root, gitignored): CONTEXT.md + docs/adr/<NNNN>-<slug>.md.
+       .yun/domain/<project>/ (workspace root, gitignored): CONTEXT.md + docs/adr/<NNNN>-<slug>.md.
 
   In both homes: a decision is a new file, numbered by scanning the active home's docs/adr/
   for the highest existing NNNN-prefixed file and incrementing by one — starting at 0001 when
