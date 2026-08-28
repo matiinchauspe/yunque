@@ -102,7 +102,10 @@ yunque/
 ├─ AGENTS.md                 ← this file: the harness brain (cross-tool)
 ├─ CLAUDE.md                 → symlink to AGENTS.md (Claude Code reads this)
 ├─ README.md
-├─ .gitignore                ← ignores /repos, /.worktrees and /.aw
+├─ LICENSE                   ← MIT
+├─ assets/                   ← the Yunque mark (light/dark SVG for the README)
+├─ docs/research/            ← research notes behind the harness design
+├─ .gitignore                ← ignores /repos, /.worktrees and /.yun
 ├─ skills/yun-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
 ├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-convention)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
@@ -134,6 +137,7 @@ directory name must match the skill name (Agent Skills spec).
 ## What this repo versions
 
 Only the harness: `skills/` (including `skills/_shared/`), `AGENTS.md`, the `CLAUDE.md`
-symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `.gitignore`, `docs/`.
+symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `LICENSE`,
+`assets/`, `.gitignore`, `docs/`.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
 artifact, and domain-model fallback files (`.yun/`) are NOT versioned.
