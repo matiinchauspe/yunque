@@ -96,19 +96,11 @@ The skills here are original writing, but several of them adapt patterns worked 
 other people. The lineage is recorded per skill in [`skills/README.md`](skills/README.md) — each
 adapted skill names the work it learned from.
 
-**Adapted from:**
-
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT) — the skill-authoring bar,
   and the patterns behind charting, grilling, spec-writing, slicing, implementing, TDD, research,
   prototyping, domain modeling and handoff.
 - **[mattpocock/sandcastle](https://github.com/mattpocock/sandcastle)** (MIT) — the frontier walk
   and isolated per-ticket execution behind `yun-build-plan` and `execution-convention`.
-
-**Researched, not adapted** — studied while designing the harness, but nothing from them
-reached the skills:
-
-- **[Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec)** (MIT)
-- **[Gentleman-Programming/gentle-ai](https://github.com/Gentleman-Programming/gentle-ai)** (MIT)
 
 ## License
 
