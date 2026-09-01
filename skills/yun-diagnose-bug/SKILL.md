@@ -1,6 +1,6 @@
 ---
 name: yun-diagnose-bug
-description: Diagnosis loop for hard bugs and performance regressions — build a tight feedback loop that goes red on the bug before theorising about it. Use when a bug resists the obvious fix or its repro is unreliable, when something got slower, or when the user says "diagnosticá" / "no entiendo por qué falla" / "está lento".
+description: Diagnosis loop for hard bugs and performance regressions — build a tight feedback loop that goes red on the bug before theorising about it. Use when the user says "diagnose this bug" / "diagnosticá" / "no entiendo por qué falla" / "está lento", when a bug resisted the obvious fix, when its repro will not hold still, or when something got slower.
 ---
 
 # yun-diagnose-bug
@@ -24,23 +24,28 @@ in the environment rather than in what you show, and quote only the lines of a c
 artifact that carry the signal. If what survives redaction is not enough to diagnose the bug,
 say so and ask the user.
 
+Captured artifacts — traces, HAR files, log dumps, core dumps — carry live secrets whatever you
+quote from them. Write them to a **gitignored scratch path** outside the working tree, and
+delete them in step 6: the commit that lands the fix must not be able to reach one.
+
 ## Steps
 
 ### 1. Build a feedback loop
 
-**This is the skill.** Everything else is mechanical. With a **tight** pass/fail signal — one
-that goes **red** on _this_ bug — you will find the cause; bisection, hypothesis-testing and
-instrumentation all just consume it. Spend disproportionate effort here, and be **relentless**.
+**This is the skill.** With a **tight** pass/fail signal — one that goes **red** on _this_
+bug — you will find the cause; bisection, hypothesis-testing and instrumentation all just
+consume it. Spend disproportionate effort here, and be **relentless**.
 
 **Routes to construct one**, in roughly this order — the route you pick sets the ceiling on how
 **tight** the loop can get:
 
-1. **Failing test** at whatever seam reaches the bug — unit, integration, e2e.
+1. **Failing test** at whatever seam reaches the bug — unit, integration, e2e. It is a
+   diagnostic loop that step 6 retires; step 5 writes the regression test, at a confirmed seam.
 2. **Curl / HTTP script** against a running dev server.
 3. **CLI invocation** with a fixture input, diffing stdout against a known-good snapshot.
 4. **Headless browser script** driving the UI, asserting on DOM, console or network.
-5. **Replay a captured trace** — save a real request, payload or event log to disk and replay
-   it through the code path in isolation.
+5. **Replay a captured trace** — save a real request, payload or event log to scratch and
+   replay it through the code path in isolation.
 6. **Throwaway harness** — a minimal subset of the system, deps mocked, reaching the bug in
    one function call.
 7. **Property / fuzz loop** — for "sometimes wrong output", run 1000 random inputs and look
@@ -84,6 +89,9 @@ invocation and its redacted output — that is:
 - [ ] **Fast** — seconds, not minutes.
 - [ ] **Agent-runnable** — runnable unattended; a human inside it only via route 11's script.
 
+Or, when it will not reproduce at all, done when you have stopped and asked — attempts listed,
+one of the three routes above requested.
+
 ### 2. Reproduce and minimise
 
 Run the loop and watch it go **red**. Confirm it produces the failure the **user** described
@@ -91,12 +99,17 @@ rather than a different one nearby — wrong bug, wrong fix — that it reproduc
 that you have captured the exact symptom for later steps to verify a fix against.
 
 Then shrink the repro to the smallest scenario that still goes red: cut inputs, callers,
-config, data and steps **one at a time**, re-running the loop after each cut. It pays twice —
-fewer moving parts left to suspect in step 3, and the clean regression test in step 5.
+config, data and steps **one at a time**, re-running the loop after each cut. Keep the
+un-minimised loop as you go — step 5 re-runs it. It pays twice: fewer moving parts left to
+suspect in step 3, and the clean regression test in step 5.
+
+On a flaky loop, one green run after a cut is luck rather than evidence. Re-run at the
+reproduction rate you pinned in step 1 — enough runs that a still-load-bearing element would
+have gone red — before you accept the cut.
 
 Done when the loop has gone red on the **user's** symptom across runs with that symptom
-captured, and every remaining element is load-bearing: removing any one of them turns the loop
-green.
+captured, the un-minimised loop is still runnable, and every remaining element is load-bearing:
+removing any one of them turns the loop green.
 
 ### 3. Hypothesise
 
@@ -125,7 +138,7 @@ step 1's baseline, then bisect. Measure first, fix second.
 
 Done when a probe has confirmed one hypothesis, or falsified all of them and sent you back to
 step 3 with what it taught you. Three round trips without a confirmed hypothesis is the signal
-to stop and report what you have ruled out, rather than cycling.
+to stop, report what you have ruled out, and clean up through step 6.
 
 ### 5. Fix, test-first
 
@@ -146,16 +159,31 @@ seam and drive the fix through `yun-tdd`'s **red → green** loop, which owns th
 and what makes a test worth keeping. Finally re-run step 1's loop against the original,
 un-minimised scenario.
 
-Done when the seam is confirmed or its absence reported, the regression test passes, and the
-original loop is green.
+**Performance branch.** A timing assertion at a seam is a flaky test, and `yun-tdd`'s
+**red → green** loop has no baseline or threshold to drive. Step 1's measurement harness is
+already the regression check: fix, then run it against the recorded baseline until it goes
+green under the threshold, and report the before and after numbers.
+
+Done when one of:
+
+- **Seam confirmed** — the regression test is written at it, it passes, and step 1's loop is
+  green against the un-minimised scenario.
+- **No correct seam** — its absence is reported with the reason the codebase's shape blocks the
+  lockdown, and step 1's loop is green against the un-minimised scenario without one.
+- **Performance regression** — step 1's measurement harness is green under its threshold against
+  the recorded baseline, with the before and after numbers reported.
+- **Seam unconfirmed, user away** — nothing is written at it. Park: report the confirmed cause
+  and the seam candidate, clean up through step 6, and leave the fix for the confirmation. The
+  gate holds; the run ends rather than stalling behind it.
 
 ### 6. Clean up
 
 - [ ] Every `[DEBUG-...]` probe is removed — search the prefix.
-- [ ] Throwaway harnesses are deleted, or moved somewhere clearly marked as debug scratch.
-- [ ] The hypothesis that proved correct is `persist`ed through
-      `skills/_shared/memory-convention.md` — the symptom, the cause, and the loop that caught
-      it — so the next run's recall starts where this one ended.
+- [ ] Throwaway harnesses and route 1's diagnostic test are deleted, or moved to scratch.
+- [ ] Every captured artifact is deleted from scratch.
+- [ ] The hypothesis that proved correct — or, when step 4 aborted, the ones it ruled out — is
+      `persist`ed through `skills/_shared/memory-convention.md` with the symptom and the loop
+      that caught it, so the next run's recall starts where this one ended.
 
 The fix lands where an attended run lands anywhere in this harness: commit it only when the
 user asks.
