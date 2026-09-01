@@ -70,8 +70,10 @@ you isolated on your own waits as a ref for a human.
 If a spec or tickets were produced, `fetch` them through
 `skills/_shared/artifact-convention.md` — the full spec body, or the one ticket you'll run. If
 the task was described directly, the conversation is the brief. Any fact you can find by
-exploring the codebase, look up rather than ask. Done when what to build is in front of you,
-with the test seams for it where any exist.
+exploring the codebase, look up rather than ask. `consult` the project's domain model
+(`skills/_shared/domain-convention.md`) so the code you write names things in the **ubiquitous
+language** and respects the ADRs covering the area you touch. Done when what to build is in
+front of you, with the test seams for it where any exist.
 
 ### 2. Choose where the run happens
 

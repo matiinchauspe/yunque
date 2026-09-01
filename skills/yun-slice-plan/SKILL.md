@@ -18,11 +18,13 @@ front of you.
 
 ### 2. Explore the codebase, if you haven't
 
-Read enough of the code to slice against its real shape — so ticket titles use the
-project's own vocabulary and slices respect the seams already there. Look for
-**prefactoring** that makes the work easier: *make the change easy, then make the easy
-change* — any prefactoring becomes the first slice. Done when you can name tickets in the
-code's own vocabulary and have decided whether prefactoring is needed.
+Read enough of the code to slice against its real shape — so slices respect the seams already
+there. **Vocabulary comes from the domain model, not the code**: `consult` it through
+`skills/_shared/domain-convention.md`, since the glossary knows which synonyms it rejects and
+the code only carries whichever name won last. Look for **prefactoring** that makes the work
+easier: *make the change easy, then make the easy change* — any prefactoring becomes the first
+slice. Done when you can name tickets in the project's **ubiquitous language** and have decided
+whether prefactoring is needed.
 
 ### 3. Draft the vertical slices
 
