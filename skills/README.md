@@ -44,6 +44,9 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
   large or unsettled work back to planning. Adapted from Matt Pocock's `implement`.
 - `yun-tdd/` — the red → green loop: a failing test at a pre-agreed seam, then only enough
   code to pass it, refactor once green. Adapted from Matt Pocock's `tdd`.
+- `yun-diagnose-bug/` — the repair path: build a tight loop that goes red on the bug before
+  theorising, minimise the repro, rank falsifiable hypotheses, instrument, then fix through
+  `yun-tdd` and persist the cause. Adapted from Matt Pocock's `diagnosing-bugs`.
 - `yun-research/` — delegates reading legwork to a background agent; leaves a cited Markdown
   file in the repo and persists a digest. Adapted from Matt Pocock's `research`.
 - `yun-build-prototype/` — answers a design question by building it: a hand-driven state model,

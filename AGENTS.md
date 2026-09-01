@@ -45,6 +45,7 @@ Index of the current harness (name — when to reach for it):
 | `yun-build-plan` | Build a sliced plan to completion, leaving one branch to review | user |
 | `yun-implement` | When the next step is writing code — from a spec, tickets, or a described task | auto |
 | `yun-tdd` | When building test-first — the red → green loop at a pre-agreed seam | auto |
+| `yun-diagnose-bug` | When something is broken, failing or slow — a red loop before any theory | auto |
 | `yun-research` | Delegate reading legwork; get back a cited Markdown file | auto |
 | `yun-build-prototype` | Answer a design question by building it — a hand-driven state model, or rival UI variants | auto |
 | `yun-model-domain` | Pin down a project's ubiquitous language and record the ADRs behind its shape | auto |
@@ -60,6 +61,16 @@ installed, it owns the judge phrasing — `judgment day`, `judgment-day`, `revie
 global. `yun-review-work` fires via its `auto`/offer path and its own review phrases
 (`review this work`, `revisá esto`, `revisá este trabajo`), which keeps it clear of the
 global's judge phrases. When the global is retired, its phrases move to `yun-review-work`.
+
+**Bug diagnosis during coexistence.** While the global `superpowers:systematic-debugging` is
+still installed, its description — "any bug, test failure, or unexpected behavior, before
+proposing fixes" — is a strict superset of this harness's, so it owns the first report of an
+ordinary bug. `yun-diagnose-bug` owns the ones a first pass does not close: a bug that resists
+the obvious fix, a repro that will not hold still, and any performance regression — plus its
+Spanish phrases (`diagnosticá`, `no entiendo por qué falla`, `está lento`), which the global
+does not carry.
+Reach for it by name once an ordinary pass has already failed. When the global is retired, the
+whole surface moves to `yun-diagnose-bug`.
 
 Skills lean on shared, tool-agnostic contracts under `skills/_shared/`. A skill declares
 intent and never binds a specific tool; each contract resolves that intent to a concrete home

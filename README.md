@@ -55,7 +55,7 @@ Then the rule the whole thing rests on:
 Open it in `repos/<project>/` and the agent loads *that project's* skills; the harness never
 loads. You don't go into the repo — you bring the repo into the workspace.
 
-To verify it took, your agent should list 15 skills prefixed `yun-`.
+To verify it took, your agent should list 16 skills prefixed `yun-`.
 
 ## How to use it (the flow)
 
@@ -73,7 +73,7 @@ To verify it took, your agent should list 15 skills prefixed `yun-`.
 
 ## Current state
 
-The harness is operational — 15 skills over five shared contracts: bring-in
+The harness is operational — 16 skills over five shared contracts: bring-in
 (`yun-sync-repo`), charting (`yun-chart-course`), planning (`yun-grill-plan` → `yun-write-spec` →
 `yun-slice-plan`), build (`yun-build-plan` orchestrating, `yun-implement`, `yun-tdd`), knowledge
 (`yun-research`, `yun-model-domain`), prototyping (`yun-build-prototype`), isolation
@@ -97,7 +97,7 @@ other people. The lineage is recorded per skill in [`skills/README.md`](skills/R
 adapted skill names the work it learned from.
 
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT) — the skill-authoring bar,
-  and the patterns behind charting, grilling, spec-writing, slicing, implementing, TDD, research,
+  and the patterns behind charting, grilling, spec-writing, slicing, implementing, TDD, diagnosing, research,
   prototyping, domain modeling and handoff.
 - **[mattpocock/sandcastle](https://github.com/mattpocock/sandcastle)** (MIT) — the frontier walk
   and isolated per-ticket execution behind `yun-build-plan` and `execution-convention`.
