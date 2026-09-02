@@ -124,7 +124,8 @@ yunque/
 ├─ .worktrees/<repo>/<task>/ ← ephemeral worktrees (gitignored, on-demand)
 ├─ .yun/memory/<project>/     ← per-project memory file fallback (gitignored)
 ├─ .yun/artifacts/<project>/<feature>/ ← per-project ticket file fallback (gitignored)
-└─ .yun/domain/<project>/     ← domain-model fallback when work isn't tied to a repo (gitignored)
+├─ .yun/domain/<project>/     ← domain-model fallback when work isn't tied to a repo (gitignored)
+└─ .yun/handoffs/            ← session batons, retired when superseded (gitignored)
 ```
 
 The domain model's real home is the target repo itself (`repos/<name>/CONTEXT.md` + `docs/adr/`),
@@ -150,4 +151,4 @@ Only the harness: `skills/` (including `skills/_shared/`), `AGENTS.md`, the `CLA
 symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `LICENSE`,
 `assets/` and `.gitignore`. Research notes under `docs/` stay local and are gitignored.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
-artifact, and domain-model fallback files (`.yun/`) are NOT versioned.
+artifact, domain-model and handoff files (`.yun/`) are NOT versioned.
