@@ -164,6 +164,18 @@ _Failure mode._ Steering by prohibition — telling the agent what _not_ to do �
 
 _Avoid_: ironic rebound, don't-prompting, the pink elephant
 
+### Dead Branch
+
+_Failure mode._ A **branch** that cannot be completed as written. Two shapes. It closes on a **completion criterion** only a different branch can satisfy — a step that opens an exit for the user-is-away case, then demands the artifact the attended case produces. Or it reads a reference whose antecedent resolves nowhere along this path, which is how **progressive disclosure** goes wrong: a term several steps read gets pushed behind a **context pointer**, and every step but the one that opened the file is left holding a dead reference. The defect lives on a path, not in a passage — every passage is correct read alone, which is why re-reading the edited region cannot surface it, and why a reviewer of the version before the edit cannot either: the defect was born in the edit. A skill is a program with no test suite, and reading one is not running it. Cure: a **traversal**.
+
+_Avoid_: dead end, broken path, unreachable branch
+
+### Traversal
+
+Following one **branch** end to end — every step in order, as a run taking that path would — and checking that each **completion criterion** along it is reachable and each reference along it resolves. The defence against a **dead branch**, and the closest a skill gets to being run rather than read. Run one after any structural edit (a **progressive disclosure**, a split, a reorder) and over each branch of a skill carrying more than one. A linear skill has no path to follow, so traversing it is a **no-op**.
+
+_Avoid_: walk, walkthrough, dry run, path check
+
 ## Pruning
 
 Keeping a skill lean — each remedy paired with the failure it cures.
