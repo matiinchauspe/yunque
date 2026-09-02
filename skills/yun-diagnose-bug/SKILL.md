@@ -36,29 +36,11 @@ delete them in step 6: the commit that lands the fix must not be able to reach o
 bug — you will find the cause; bisection, hypothesis-testing and instrumentation all just
 consume it. Spend disproportionate effort here, and be **relentless**.
 
-**Routes to construct one**, in roughly this order — the route you pick sets the ceiling on how
-**tight** the loop can get:
-
-1. **Failing test** at whatever seam reaches the bug — unit, integration, e2e. It is a
-   diagnostic loop that step 6 retires; step 5 writes the regression test, at a confirmed seam.
-2. **Curl / HTTP script** against a running dev server.
-3. **CLI invocation** with a fixture input, diffing stdout against a known-good snapshot.
-4. **Headless browser script** driving the UI, asserting on DOM, console or network.
-5. **Replay a captured trace** — save a real request, payload or event log to scratch and
-   replay it through the code path in isolation.
-6. **Throwaway harness** — a minimal subset of the system, deps mocked, reaching the bug in
-   one function call.
-7. **Property / fuzz loop** — for "sometimes wrong output", run 1000 random inputs and look
-   for the failure mode.
-8. **Bisection harness** — if the bug appeared between two known states, automate "boot at
-   state X, check, repeat" so `git bisect run` can consume it.
-9. **Differential loop** — the same input through two versions or configs, diffing outputs.
-10. **Measurement harness** — for a regression, where there is no binary failure to assert.
-    Record a **baseline**, time the path against it, and go **red** past a threshold you set.
-    Reach for a profiler or query plan where the timing alone won't localise it.
-11. **Human in the loop** — last resort. Generate a bash script that walks the human through
-    the steps only they can perform and captures their output back to you, so the loop stays
-    structured even with a person inside it.
+**Pick a route to construct one.** [`LOOPS.md`](LOOPS.md) holds the eleven, ordered — read it
+and pick before you build, because the route sets the ceiling on how **tight** the loop can get.
+Two of them carry this skill's tails: the **measurement harness**, which records a **baseline**
+and goes **red** past a threshold, is the only route a performance regression has, and the
+**human-in-the-loop** script is the last resort when no route runs unattended.
 
 **Tighten it.** Treat the loop as a product: faster (cache setup, skip unrelated init, narrow
 the scope), sharper (assert the specific symptom, not "didn't crash"), more deterministic (pin
@@ -85,12 +67,14 @@ invocation and its redacted output — that is:
 - [ ] **Red-capable** — it drives the real bug code path and asserts the user's exact symptom,
       so it goes red on this bug and green once fixed. Not "runs without erroring". For a
       regression, red is a measurement breaching its threshold against the baseline.
-- [ ] **Deterministic** — the same verdict every run (flaky bugs: a pinned, high reproduction rate).
+- [ ] **Deterministic** — the same verdict every run (flaky bugs: a pinned, high reproduction
+      rate).
 - [ ] **Fast** — seconds, not minutes.
-- [ ] **Agent-runnable** — runnable unattended; a human inside it only via route 11's script.
+- [ ] **Agent-runnable** — runnable unattended; a human inside it only via the human-in-the-loop
+      script.
 
 Or, when it will not reproduce at all, done when you have stopped and asked — attempts listed,
-one of the three routes above requested.
+one of the three asks above made.
 
 ### 2. Reproduce and minimise
 
@@ -179,7 +163,7 @@ Done when one of:
 ### 6. Clean up
 
 - [ ] Every `[DEBUG-...]` probe is removed — search the prefix.
-- [ ] Throwaway harnesses and route 1's diagnostic test are deleted, or moved to scratch.
+- [ ] Throwaway harnesses and any diagnostic test step 1 wrote are deleted, or moved to scratch.
 - [ ] Every captured artifact is deleted from scratch.
 - [ ] The hypothesis that proved correct — or, when step 4 aborted, the ones it ruled out — is
       `persist`ed through `skills/_shared/memory-convention.md` with the symptom and the loop
@@ -193,21 +177,16 @@ Done when every box is checked.
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `diagnosing-bugs`**
-(github.com/mattpocock/skills, MIT). Changes: renamed to the `yun-<verb>-<noun>` convention;
-the phases become the harness's numbered steps, each closing on a **Done when** completion
-criterion; reading `CONTEXT.md` and ADRs becomes a `consult` through
-`skills/_shared/domain-convention.md`; the correct hypothesis is `persist`ed through
-`skills/_shared/memory-convention.md` rather than left in a commit message, and a `recall` at
-the head gives that persist a reader. The restated write-test-watch-it-fail-apply-fix loop is
-handed to `yun-tdd`, the single source of truth for seams and test quality — this skill names
-the seam candidate and carries its evidence in, while `yun-tdd` still takes it to the user, so
-its pre-agreed-seam rule is satisfied by the join rather than bypassed. A measurement route is added so the advertised performance branch
-has a path through step 1, which upstream's binary red-capable test did not give it. The
-browser route drops its named tools and the measurement route its named timer, since the
-harness runs against repos whose stack it does not choose; `scripts/hitl-loop.template.sh` and
-the `agents/openai.yaml` wiring are dropped, the human-in-the-loop route staying as a described
-last resort. Upstream's "never log everything and grep" is restated positively as targeted
-probes at distinguishing boundaries, per this harness's own negation rule. Spanish triggers are
-added to the description. The loop-first discipline, the construction routes, the **tight** and
-**red** leading words, minimisation, ranked falsifiable hypotheses, tagged probes, the
-performance branch and the cleanup checklist are preserved.
+(github.com/mattpocock/skills, MIT). Changes: renamed to the `yun-<verb>-<noun>` convention; the
+phases become numbered steps, each closing on a **Done when** criterion; reading `CONTEXT.md` and
+ADRs becomes a `consult` through `skills/_shared/domain-convention.md`, and the correct hypothesis
+a `persist` through `skills/_shared/memory-convention.md`, with a `recall` at the head to read it
+back. The write-test-watch-it-fail-apply-fix loop is handed to `yun-tdd`, the single source of
+truth for seams and test quality. A measurement route is added to give the performance branch a
+path through step 1, and the routes are disclosed to [`LOOPS.md`](LOOPS.md). Named tools, the
+`hitl-loop` template and the `agents/openai.yaml` wiring are dropped, since the harness runs
+against repos whose stack it does not choose. Upstream's "never log everything and grep" is
+restated positively per this harness's negation rule, and Spanish triggers are added to the
+description. The loop-first discipline, the **tight** and **red** leading words, minimisation,
+ranked falsifiable hypotheses, tagged probes, the performance branch and the cleanup checklist
+are preserved.
