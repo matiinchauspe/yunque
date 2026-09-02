@@ -7,7 +7,7 @@ argument-hint: "What will the next session focus on?"
 
 # yun-write-handoff
 
-Write a handoff document that lets a fresh agent continue this work without re-deriving it. Save it as one markdown file at `.yun/handoffs/handoff-<slug>.md` and report the slug — the directory is conventional, so the slug alone points the next session at the baton. It is a disposable **baton**, not a versioned artifact.
+Write a handoff document that lets a fresh agent continue this work without re-deriving it. Save it as one markdown file at `.yun/handoffs/handoff-<slug>.md` and report the slug — the directory is conventional, so the slug alone points the next session at the baton. **The slug names the effort, not the session** — one effort, one file, however many sessions it takes. It is a disposable **baton**, not a versioned artifact.
 
 ## What goes in the baton
 
@@ -21,7 +21,7 @@ Before writing the baton, **persist** anything durable following `skills/_shared
 
 ## Retire the superseded baton
 
-`.yun/handoffs/` holds live work only. Before you save, look for an existing baton for the same effort: the new one carries its content forward, so delete the old file once the new one is written. A stale baton beside a fresh one is the expensive failure — the next session reads the loser as fact and works from a false picture. Retiring a baton whose effort has closed for good is the user's call: name the file and ask.
+`.yun/handoffs/` holds live work only. List it before you write: this effort's existing baton is the file you replace, so write over its path and the old one retires with it. A stale baton beside a fresh one is the expensive failure — the next session reads the loser as fact and works from a false picture. Retiring a baton whose effort has closed for good is the user's call: name the file and ask.
 
 ## Guardrails
 

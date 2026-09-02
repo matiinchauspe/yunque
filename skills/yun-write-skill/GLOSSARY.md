@@ -172,7 +172,7 @@ _Avoid_: dead end, broken path, unreachable branch
 
 ### Traversal
 
-Following one **branch** end to end — every step in order, as a run taking that path would — and checking that each **completion criterion** along it is reachable and each reference along it resolves. The defence against a **dead branch**, and the closest a skill gets to being run rather than read. Run one after any structural edit (a **progressive disclosure**, a split, a reorder) and over each branch of a skill carrying more than one. A linear skill has no path to follow, so traversing it is a **no-op**.
+Following one **branch** end to end — every step in order, as a run taking that path would — and checking that each **completion criterion** along it is reachable and each reference along it resolves. The defence against a **dead branch**, and the closest a skill gets to being run rather than read. Run one after any edit that changes the skill's paths (adding or removing a **branch**, a **progressive disclosure**, a split, a reorder) and over each branch of a skill carrying more than one. A linear skill has no path to follow, so traversing it is a **no-op**.
 
 _Avoid_: walk, walkthrough, dry run, path check
 
