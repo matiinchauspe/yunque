@@ -107,13 +107,16 @@ and go to step 4 with whichever one holds:**
 - **No tickets at all under this feature key** → nothing was ever sliced here. Say that, rather than
   reporting a finished walk over an empty set.
 - **Nothing open remains** → the plan is built.
-- **Open tickets remain** → separate them. Ones in the failed set are reported as skipped; the rest
-  are **stranded**, each waiting — directly, or through a chain of open tickets — on something that
-  will never resolve: a skipped ticket, a cycle among the edges, a number never published, or a
-  blocker closed some way that is not `resolved`. Follow each one's edges to that root and name it.
+- **Open tickets remain** → separate them. Ones in the failed set are reported as skipped; ones
+  step 2 **declined** — a ticket nothing could `fetch`, or a batch refused — are takeable and wait
+  on no root, so they are reported as declined rather than stranded; the rest are **stranded**, each
+  waiting — directly, or through a chain of open tickets — on something that will never resolve: a
+  skipped ticket, a cycle among the edges, a number never published, or a blocker closed some way
+  that is not `resolved`. Follow each **stranded** one's edges to that root and name it.
   A walk that built eleven of twelve and skipped one is neither finished nor simply stuck.
 
-Done when you hold the takeable set and the base, or know which empty reading you are in.
+Done when you hold the takeable set and the base, know which empty reading you are in, or stopped
+because neither the chain nor a `<base>` resolved.
 
 ### 2. Dispatch the frontier's first ticket to a run
 
@@ -149,7 +152,8 @@ Without a subagent capability, hand that same package to yourself. It is **still
 `yun-implement` keys the mode off the package, never off who carries it — so only the fresh context
 is lost, and step 4 says so.
 
-Done when the ticket is dispatched, or a decline is recorded and step 1 recomputed.
+Done when the ticket is dispatched, a decline is recorded and step 1 recomputed, or the walk stopped
+on a loose host working tree.
 
 ### 3. Take what the run hands back
 
@@ -236,8 +240,10 @@ Done when the pass has chained, skipped, or stopped.
   walk chained past them and that their branches are all still there, or a reader will take the
   missing directories for lost work. Removing that last workspace is theirs to do, once they have run it.
 - **Every ticket skipped, loudly**, with which of step 3's reasons skipped it, naming any branch and
-  workspace it left behind and saying that **deleting the branch is what retries it**. For a
-  declined batch, what it would take to build by hand.
+  workspace it left behind and saying that **deleting the branch is what retries it**.
+- **Every ticket declined**, with what step 2 refused it for: a batch, with what it would take to
+  build by hand; a ticket nothing could `fetch`, with the store and key that failed — the repair is
+  there rather than in the repo, and a declined ticket left no branch to delete.
 - **Every ticket left stranded**, each with the root its edges lead to. A quiet strand reads as a
   delivery.
 - **What was never verified** — every ticket whose repo declared no gates, and any run that shared
@@ -249,8 +255,8 @@ Then say **when the refs may go: once the whole feature is built — not once a 
 deliverable into the mainline.** Step 1 reads the chain out of that namespace, and a merged
 deliverable over a feature with tickets still open is precisely the walk that will need it.
 
-Done when the human knows what to review, what was skipped, what was stranded, what went unchecked,
-and what a retry costs.
+Done when the human knows what to review, what was skipped, what was declined, what was stranded,
+what went unchecked, and what a retry costs.
 
 ## Attribution
 
