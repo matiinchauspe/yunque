@@ -91,6 +91,11 @@ On a flaky loop, one green run after a cut is luck rather than evidence. Re-run 
 reproduction rate you pinned in step 1 — enough runs that a still-load-bearing element would
 have gone red — before you accept the cut.
 
+**Performance branch.** Scale is itself part of the signal: cutting data volume, iteration
+count or concurrency takes the measurement harness under its threshold without removing a
+cause. Pin the scale that reproduces the regression, minimise around it, and treat that pinned
+scale as load-bearing.
+
 Done when the loop has gone red on the **user's** symptom across runs with that symptom
 captured, the un-minimised loop is still runnable, and every remaining element is load-bearing:
 removing any one of them turns the loop green.
@@ -157,13 +162,15 @@ Done when one of:
 - **Performance regression** — step 1's measurement harness is green under its threshold against
   the recorded baseline, with the before and after numbers reported.
 - **Seam unconfirmed, user away** — nothing is written at it. Park: report the confirmed cause
-  and the seam candidate, clean up through step 6, and leave the fix for the confirmation. The
-  gate holds; the run ends rather than stalling behind it.
+  and the seam candidate, and leave the fix for the confirmation. The gate holds; the run ends
+  rather than stalling behind it.
 
 ### 6. Clean up
 
 - [ ] Every `[DEBUG-...]` probe is removed — search the prefix.
-- [ ] Throwaway harnesses and any diagnostic test step 1 wrote are deleted, or moved to scratch.
+- [ ] Throwaway harnesses and any diagnostic test step 1 wrote are deleted — or, when the run
+      ends without a fix, moved to scratch and their paths reported, so the run that resumes
+      inherits the loop instead of rebuilding it.
 - [ ] Every captured artifact is deleted from scratch.
 - [ ] The hypothesis that proved correct — or, when step 4 aborted, the ones it ruled out — is
       `persist`ed through `skills/_shared/memory-convention.md` with the symptom and the loop
