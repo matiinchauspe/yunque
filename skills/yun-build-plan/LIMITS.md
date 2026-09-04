@@ -1,8 +1,9 @@
 # The walk's declared limits
 
 Stated here rather than discovered: one shape the walk **refuses to build**, one judgment it
-**cannot make and proceeds anyway**, and the places where the mechanism is weaker than it looks —
-what a green gate, a chained branch, a resolved ticket, and a readable chain each fail to guarantee.
+**cannot make and proceeds anyway**, why it is **serial**, and the places where the mechanism is
+weaker than it looks — what a green gate, a chained branch, a resolved ticket, and a readable chain
+each fail to guarantee.
 
 ## What this walk does not build
 
@@ -94,6 +95,18 @@ ordinary merge with none of those guarantees.
 The walk does not fetch, because a network call nobody asked for is its own hazard, and it does not
 re-baseline mid-walk, because that would invalidate every gate it already ran. So it reports the
 snapshot instead, and the human merging knows what the green did and did not cover.
+
+## Why the walk is serial
+
+**Serial rests on the predicate, not on the floors.** The source's frontier treats file overlap as a
+blocking edge; ours are the dependency edges the slicing declared, so two of our frontier's tickets
+may well touch the same files — fanning out would generate exactly the conflicts the source's merge
+phase exists to resolve, minus the planning-time disjointness that keeps that phase tractable. And
+`yun-slice-plan:33` makes every slice cut "a narrow but complete path through every layer", so that
+overlap is structural: put the term back and the frontier collapses to roughly one ticket. Second,
+`isolate` resolves its ladder *inside* the run, so the walk **cannot know before dispatching** which
+tier a run lands on, and must plan for the single-writer floor. Both were established by reading
+`sandcastle`'s `parallel-planner` template directly.
 
 ## One linear branch makes rejecting a single ticket surgery
 

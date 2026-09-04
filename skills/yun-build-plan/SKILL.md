@@ -18,8 +18,9 @@ out of git and the ticket store rather than remembering it, which makes **every 
 the first and the seventh run the same steps.
 
 [`LIMITS.md`](LIMITS.md) holds one shape this walk refuses to build, one judgment it cannot make and
-proceeds anyway, and every place the mechanism is weaker than it looks — including why a green gate,
-a chained branch, and a resolved ticket each mean less than they appear to.
+proceeds anyway, why the walk is serial rather than fanned out, and every place the mechanism is
+weaker than it looks — including why a green gate, a chained branch, and a resolved ticket each mean
+less than they appear to.
 
 ## Inputs
 
@@ -269,13 +270,3 @@ round; the whole-tree gate runs inside each ticket's own run where the source ru
 merge; a red gate stops the walk instead of being fixed forward, since the harness runs against
 repos it does not own; and the walk holds no state, deriving each pass from git and the ticket store
 where the source's planner carries its own.
-
-**Serial rests on the predicate, not on the floors.** The source's frontier treats file overlap as a
-blocking edge; ours are the dependency edges the slicing declared, so two of our frontier's tickets
-may well touch the same files — fanning out would generate exactly the conflicts the source's merge
-phase exists to resolve, minus the planning-time disjointness that keeps that phase tractable. And
-`yun-slice-plan:33` makes every slice cut "a narrow but complete path through every layer", so that
-overlap is structural: put the term back and the frontier collapses to roughly one ticket. Second,
-`isolate` resolves its ladder *inside* the run, so the walk **cannot know before dispatching** which
-tier a run lands on, and must plan for the single-writer floor.
-Both were established by reading `sandcastle`'s `parallel-planner` template directly.
