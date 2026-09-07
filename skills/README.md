@@ -98,7 +98,8 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
   files the work already opens). Practice governs form while the harness keeps discipline: the repo
   says what the work looks like, never whether the test gets written. Read-only on the repo — the
   digest is a mirror, never promoted into it, and re-reflected in place against the code each run
-  opens — corrected where that code contradicts a facet, sharpened where it settles a missing one. No upstream counterpart: Matt's `implement` reads no repo conventions and his
+  opens — corrected where that code contradicts a facet, sharpened where it settles a missing one.
+  No upstream counterpart: Matt's `implement` reads no repo conventions and his
   `codebase-design` is a portable vocabulary rather than reconnaissance, so this one is written from
   scratch.
 
@@ -106,9 +107,12 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
 
 - An unattended path for `yun-review-work` — bounded to one pass, so a dispatched run can be
   reviewed before the next run is chained onto it instead of only at the end.
-- `yun-resolve-conflict/` — a merge-conflict skill. Nothing inside a walk can hit one —
-  `yun-build-plan` is serial, so each run is cut from the last and the branches never diverge — but
-  the merge *out* of a walk can: the chain is cut from a mainline the walk reads once and never
-  refreshes, so the human merging it back meets whatever landed meanwhile. That merge, and a parallel walk, are the two
-  cases this would serve.
 - `yun-clean-worktree/` — the teardown half of `yun-spawn-worktree`.
+
+**Evaluated and parked** — a merge-conflict skill. The exposure is real and stated in
+`yun-build-plan/LIMITS.md`: nothing inside a serial walk can conflict, but the merge *out* of one
+is an ordinary merge with none of those guarantees. Parked all the same. Its generic half is
+behaviour the agent already has, and its harness-specific half — that resolving a conflict voids
+the walk's green, since the walk never re-baselines — is two sentences belonging in that skill's
+limits rather than a skill of its own. Letting the walk fan out instead would need the
+planning-time disjointness our frontier does not give it. Revisit when a real merge lands badly.

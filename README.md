@@ -73,14 +73,15 @@ To verify it took, your agent should list 16 skills prefixed `yun-`.
 
 ## Current state
 
-The harness is operational — 16 skills over five shared contracts: bring-in
+The harness is operational — 16 skills over six shared contracts: bring-in
 (`yun-sync-repo`), charting (`yun-chart-course`), planning (`yun-grill-plan` → `yun-write-spec` →
-`yun-slice-plan`), build (`yun-build-plan` orchestrating, `yun-implement`, `yun-tdd`), knowledge
-(`yun-research`, `yun-model-domain`), prototyping (`yun-build-prototype`), isolation
-(`yun-spawn-worktree`), adversarial review (`yun-review-work`), handoff (`yun-write-handoff`), and
-authoring (`yun-write-skill`). Contracts: `memory-`, `artifact-` (map/spec/ticket kinds, the plan
-at rest), `domain-`, `flow-convention` (walking a charted map — the plan in motion), and
-`execution-convention` (running one ticket, isolated, to done — the run of one).
+`yun-slice-plan`), build (`yun-build-plan` orchestrating, `yun-implement`, `yun-tdd`), repair
+(`yun-diagnose-bug`), knowledge (`yun-research`, `yun-model-domain`), prototyping
+(`yun-build-prototype`), isolation (`yun-spawn-worktree`), adversarial review (`yun-review-work`),
+handoff (`yun-write-handoff`), and authoring (`yun-write-skill`). Contracts: `memory-`, `artifact-`
+(map/spec/ticket kinds, the plan at rest), `domain-`, `flow-convention` (walking a charted map —
+the plan in motion), `execution-convention` (running one ticket, isolated, to done — the run of
+one), and `practice-convention` (writing code the way the target repo already writes it).
 
 The planning-to-build chain now closes end to end: charted → specced → sliced → built, with the
 walk cutting each run from the branch the last one produced and leaving that final branch for a

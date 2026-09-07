@@ -113,8 +113,9 @@ and degrades by its own rules, spelled out below:
   harness keeps **discipline**: the repo says what the work looks like, never whether the test gets
   written. The inferred half is a mirror — it rides memory-convention's ladder under the fixed topic
   `repo-practice`, is never promoted into the repo, and is re-reflected in place against the code
-  each run opens — correcting a facet that code contradicts, adding one it settles. Read-only on the repo: recording a practice there is a person's
-  deliberate act, through `domain-convention`'s capture or the repo's own conventions doc.
+  each run opens — correcting a facet that code contradicts, adding one it settles. Read-only on the
+  repo: recording a practice there is a person's deliberate act, through `domain-convention`'s
+  capture or the repo's own conventions doc.
 
 ## Structure
 
