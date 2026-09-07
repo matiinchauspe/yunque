@@ -72,8 +72,9 @@ If a spec or tickets were produced, `fetch` them through
 the task was described directly, the conversation is the brief. Any fact you can find by
 exploring the codebase, look up rather than ask. `consult` the project's domain model
 (`skills/_shared/domain-convention.md`) so the code you write names things in the **ubiquitous
-language** and respects the ADRs covering the area you touch. Done when what to build is in
-front of you, with the test seams for it where any exist.
+language** and respects the ADRs covering the area you touch, and **conform** to the repo's
+practice through `skills/_shared/practice-convention.md` so it also reads like the code already
+there. Done when what to build is in front of you, with the test seams for it where any exist.
 
 ### 2. Choose where the run happens
 

@@ -14,7 +14,10 @@ symptom through `skills/_shared/memory-convention.md` — a past cause and the l
 it is a head start on step 3's ranking, never a licence to skip building the loop. And
 **consult** the project's domain model through `skills/_shared/domain-convention.md` so you
 name modules and behaviour in its **ubiquitous language**, and respect the ADRs in the area
-you're touching. Both degrade silently when there is nothing to read.
+you're touching. And **conform** to the repo's practice through
+`skills/_shared/practice-convention.md` so the failing test you write and the fix you land are
+shaped the way this repo already shapes them. All three degrade silently when there is nothing
+to read.
 
 ## Redact
 

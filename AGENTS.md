@@ -105,6 +105,16 @@ and degrades by its own rules, spelled out below:
   ticket offers, else fail-fast. The run of one — it never counts (flow's) nor integrates the branch
   it leaves (`yun-build-plan`'s, which does that by cutting each run from the last one's branch);
   selection-agnostic, a dispatching skill hands it the ticket.
+- `practice-convention.md` — write code the way the target repo already writes it
+  (conform). Two halves: **declared** (a conventions doc, the linter and formatter
+  config, the repo's own agent instructions read as evidence about form) and **inferred** (naming,
+  layering, error handling, test style — taken as a by-product of the files the work already opens,
+  never a sweep of the repo). Declared beats inferred, and practice governs **form** while the
+  harness keeps **discipline**: the repo says what the work looks like, never whether the test gets
+  written. The inferred half is a mirror — it rides memory-convention's ladder under the fixed topic
+  `repo-practice`, is never promoted into the repo, and is re-reflected in place against the code
+  each run opens — correcting a facet that code contradicts, adding one it settles. Read-only on the repo: recording a practice there is a person's
+  deliberate act, through `domain-convention`'s capture or the repo's own conventions doc.
 
 ## Structure
 
@@ -117,7 +127,7 @@ yunque/
 ├─ assets/                   ← the Yunque mark (light/dark SVG for the README)
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.yun
 ├─ skills/yun-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
-├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-convention)
+├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-, practice-convention)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)

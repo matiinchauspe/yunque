@@ -12,8 +12,10 @@ on **every** cycle; consult them before and during the loop, not after.
 
 When exploring the codebase, **consult** the project's domain model through
 `skills/_shared/domain-convention.md` so test names and interface vocabulary match its
-**ubiquitous language**, and respect the ADRs in the area you're touching. No model yet? Test
-in the language you have and move on — the consult degrades silently.
+**ubiquitous language**, and respect the ADRs in the area you're touching. And **conform** to the
+repo's practice through `skills/_shared/practice-convention.md` so each test is shaped, named and
+placed the way this repo already shapes, names and places tests. Either one missing? Test in the
+language and the practice you do have and move on — both degrade silently.
 
 ## What a good test is
 

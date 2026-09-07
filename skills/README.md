@@ -91,6 +91,16 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
   selection-agnostic, never counts (flow's) nor integrates the branch it leaves (`yun-build-plan`'s,
   which does that by cutting each run from the last one's branch). Grounded in Matt Pocock's
   `sandcastle`.
+- `_shared/practice-convention.md` — how any skill writes code the way the target repo already
+  writes it: one intent, conform — the **declared** half (a conventions doc, the linter and
+  formatter config, the repo's own agent instructions read as evidence about form) outranking the
+  **inferred** half (naming, layering, error handling, test style, taken as a by-product of the
+  files the work already opens). Practice governs form while the harness keeps discipline: the repo
+  says what the work looks like, never whether the test gets written. Read-only on the repo — the
+  digest is a mirror, never promoted into it, and re-reflected in place against the code each run
+  opens — corrected where that code contradicts a facet, sharpened where it settles a missing one. No upstream counterpart: Matt's `implement` reads no repo conventions and his
+  `codebase-design` is a portable vocabulary rather than reconnaissance, so this one is written from
+  scratch.
 
 ## Next stage
 
