@@ -13,7 +13,12 @@ never the projects' code.
 ## Preconditions
 
 - You MUST be at the workspace root (the directory containing `CLAUDE.md` and `skills/`).
-  Verify it: `eza -a | rg -q '^CLAUDE.md$'` and a `skills/` directory both exist.
+  Verify it with the shell test `[ -e CLAUDE.md ] && [ -d skills ]` — a **test**, never a
+  listing matched by name. `CLAUDE.md` is a symlink, so a lister prints it as
+  `CLAUDE.md -> AGENTS.md`, and given no path argument may print nothing at all while
+  still exiting 0. Either way the match fails at the root, which is the one place this
+  skill is meant to run. A shell test is not the `ls` the workspace bans; it asks whether
+  the path exists rather than listing a directory to read a name back out of it.
   If you are not at the root, STOP and tell the user to open Claude Code from the
   workspace root (see CLAUDE.md rule 1). Do not clone from anywhere else.
 
@@ -35,7 +40,9 @@ never the projects' code.
      STOP and ask the user how to proceed. Never overwrite blindly.
 
 3. **Clone.** `git clone <url> repos/<name>` — a full clone (worktrees need full history;
-   do NOT use `--depth`).
+   do NOT use `--depth`). A GitHub shorthand is not a URL: expand `owner/repo` to
+   `https://github.com/owner/repo.git` first, or `git clone` reads it as a local path and
+   fails with `repository 'owner/repo' does not exist`.
 
 4. **Verify the clone.**
    - `git -C repos/<name> rev-parse --is-inside-work-tree` returns `true`.
