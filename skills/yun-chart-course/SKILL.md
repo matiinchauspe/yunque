@@ -110,10 +110,9 @@ beyond it is **Out of scope**, and never graduates.
    session ends before it resolves). Dispatch it to the skill its `Type:` names and resolve it
    there, zooming into the map only as needed — at the cadence `flow-convention.md` sets (one
    HITL ticket per session; research fans out AFK). Done when the question has its answer —
-   recording it is step 3's job, and a ticket closed here arrives there with nothing to carry.
+   recording it is step 3's job.
 3. **Record the resolution.** `resolve` the ticket to `resolved` through
-   `artifact-convention.md` **carrying the answer as its resolution** — the convention lands it
-   in the ticket's log, which is where a later reader finds the decision — and append a one-line
+   `artifact-convention.md` **carrying the answer as its resolution**, and append a one-line
    gist + link to the map's **Decisions so far**.
    Done when the resolved ticket is indexed on the map.
 4. **Graduate the fog.** A resolved ticket clears the fog ahead of it: promote whatever is now

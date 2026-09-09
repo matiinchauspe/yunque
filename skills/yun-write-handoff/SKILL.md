@@ -21,11 +21,11 @@ Before writing the baton, **persist** anything durable following `skills/_shared
 
 ## Retire the superseded baton
 
-`.yun/handoffs/` holds live work only. **List the directory before you name anything, and default to a path that is already there** — you invent a slug only when nothing in the list covers this work. Writing over the existing path is what retires the old baton; a fresh name silently keeps both, and the retire never fires.
+`.yun/handoffs/` holds live work only. **List it before you name anything and default to a path already there** — writing over that path is what retires the old baton; a fresh name silently keeps both. Invent a slug only when nothing in the list covers this work.
 
-**The trap is naming the baton after the session instead of the effort.** Moving to the next ticket, the next question, or the next phase of the same map is the SAME effort — it continues the live delta the existing baton handed you, so it takes that baton's path. Files accumulating as `…-parcial-2`, `…-v2`, or one per ticket are the defect, and it is only visible after the fact.
+**Name the baton after the effort, not the session.** The next ticket, question, or phase of the same map is the same effort — it takes that baton's path. A second file for one effort is the defect.
 
-A stale baton beside a fresh one is the expensive failure — the next session reads the loser as fact and works from a false picture. Retiring a baton whose effort has closed for good is the user's call: name the file and ask.
+A stale baton beside a fresh one is the expensive failure: the next session reads the loser as fact. Retiring one whose effort has closed for good is the user's call — name the file and ask.
 
 ## Guardrails
 

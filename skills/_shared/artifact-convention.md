@@ -19,11 +19,10 @@ agent has.
    or a ticket is the deliverable — it can never be skipped. When no tracker capability is
    present the floor is local files, which always work.
 4. **A ticket carries two kinds of content with different lifetimes.** Its **framing** is what
-   was asked the day it was written — published once and never rewritten. Its **log** is what
-   has been decided or learned since — append-only, ordered, and the ticket's CURRENT state. A
-   resolution therefore lands in the log; rewriting the framing to match it would erase the ask
-   the ticket recorded. Status, edges and type are neither — they are the ticket's metadata,
-   what `list` reads; of the three only the status is ever rewritten, by `resolve`.
+   was asked the day it was written — published once, never rewritten. Its **log** is what has
+   been decided since — append-only, ordered, the ticket's CURRENT state; a resolution lands
+   there. Status, edges and type are neither: they are metadata, what `list` reads, and of the
+   three only the status is ever rewritten.
 
 ## Mechanism
 
@@ -78,19 +77,16 @@ publish(artifact, project, feature):        # artifact is a map, a spec, or a ti
                                     out-of-scope: scope is settled while charting, not while
                                     building.
 
-log(ticket):  where a ticket's LOG lives — NOT an intent a skill declares, but the resolution
-     `fetch` reads through and `resolve` appends through. Resolved per ticket and INDEPENDENTLY
-     of the rung the ticket itself landed on, so a store with no discussion channel still keeps
-     its log:
-  1. The store gives a ticket its own append-only channel AND the capability can both read and
-       write it → that channel, read in order. A channel you cannot both read and write is a
-       FAILED rung, not a rung with a wrong label — fall through rather than treat the framing
-       as the log.
-  2. Else → a delimited, append-only section inside the ticket itself, below the framing: a
-       `## Log` heading, each entry dated and appended beneath the last. **The first append
-       creates the heading** — `publish` writes no empty one, and a ticket without one has an
-       empty log, not a missing one.
-  No third rung — a ticket always has a body, so the log always lands.
+log(ticket):  where a ticket's LOG lives — NOT an intent a skill declares, but what `fetch`
+     reads through and `resolve` appends through. Resolved per ticket, INDEPENDENTLY of the rung
+     the ticket itself landed on:
+  1. The store gives the ticket an append-only channel the capability can both read AND write
+       → that channel, in order. Read-only or write-only is a FAILED rung — fall through rather
+       than treat the framing as the log.
+  2. Else → a `## Log` heading inside the ticket, below the framing, each entry dated and
+       appended beneath the last. **The first append creates the heading**; a ticket without
+       one has an empty log, not a missing one.
+  No third rung — a ticket always has a body.
 
 fetch(reference, project):  try each mechanism until one YIELDS the artifact — a present but
      empty capability falls through, it does not short-circuit:
@@ -102,12 +98,10 @@ fetch(reference, project):  try each mechanism until one YIELDS the artifact —
           say the referenced artifact is unreachable and stop — never proceed on nothing.
      The reference names the artifact's feature, plus the ticket number — and, for a ticket,
      whether it is a decision or implementation ticket.
-     **A ticket reached on rung 1 or 2 yields BOTH its framing and its log** — as DISTINCT
-     parts, never concatenated, so a caller scanning a ticket for a marker `publish` put there
-     reads the framing alone and a log entry quoting that marker cannot be mistaken for one.
-     The log is read through `log` above (rung 3 has no store to read, so it yields what it found).
-     Where the two disagree the log is the current state and the framing is the original ask —
-     a fetch returning the framing alone hands back a stale picture that reads like a fresh one.
+     **A ticket reached on rung 1 or 2 yields BOTH its framing and its log** — DISTINCT parts,
+     never concatenated, so a caller scanning for a marker `publish` put there reads the framing
+     alone. The log is read through `log` above. Where the two disagree the log is the current
+     state.
 
 list(project, feature, namespace):  enumerate a feature's tickets in ONE namespace — decision
      or implementation, never both. They are two separate sets on independent counters, so a
@@ -134,21 +128,19 @@ list(project, feature, namespace):  enumerate a feature's tickets in ONE namespa
 
 resolve(reference, project, state, resolution):  move ONE ticket to a terminal state —
      `resolved`, or `out-of-scope` where its namespace allows it — carrying the `resolution`
-     that earned it. The reference resolves as in `fetch`. **Append the resolution to the
-     ticket's log FIRST, through `log` above**, then set the state: a state change is cheap to
-     repeat, an answer that landed nowhere is gone. WHETHER a ticket has a resolution to log is
-     the walking skill's call, the same way WHEN it earns its state is — a ticket that answered
-     a question carries one; a ticket that only built what it already specified may carry none,
-     and then nothing is appended. Then:
+     that earned it. The reference resolves as in `fetch`. **Append the resolution to the log
+     FIRST, through `log` above**, then set the state: a state change is cheap to repeat, an
+     answer that landed nowhere is gone. WHETHER there is a resolution to log is the walking
+     skill's call, the same way WHEN it earns its state is — with none, nothing is appended.
+     Then:
        1. capability → close the ticket the tracker's own way, marking out-of-scope with its
                        own label or resolution reason where that is the state.
        2. files      → rewrite the ticket file's `Status:` line in place, leaving the framing
                        untouched.
-     This contract owns only that both land and stay readable — the resolution by a later
-     `fetch`, the state by `fetch` and `list`, which does not return logs; the judgment that a
-     ticket has EARNED the state belongs to the skill that walks that namespace. A ticket
-     already in the asked-for state is left alone — resolving twice is neither an error nor a
-     second log entry.
+     This contract owns only that both stay readable — the resolution by `fetch`, the state by
+     `fetch` and `list`, which does not return logs; the judgment that a ticket has EARNED the
+     state belongs to the skill that walks that namespace. A ticket already in the asked-for
+     state is left alone — resolving twice is neither an error nor a second log entry.
 ```
 
 - **Capability** = any issue-tracker tool the agent has loaded (an MCP tracker server, a
@@ -173,6 +165,6 @@ share one, or the second `publish` overwrites the first.
 
 An artifact's **content** — map, spec, or ticket, framing or log — is backend-independent: the
 skill that produces it owns what it says; this convention owns only where it lands, how its
-edges are drawn, and that a terminal state persists — never WHEN a ticket earns one. The tickets `list`
-returns are the authoritative record in either namespace; the map's Decisions-so-far index is a
-derived, human-readable view — if the two diverge, repair the index, not the tickets.
+edges are drawn, and that a terminal state persists — never WHEN a ticket earns one. The tickets
+`list` returns are the authoritative record in either namespace; the map's Decisions-so-far
+index is a derived, human-readable view — if the two diverge, repair the index, not the tickets.

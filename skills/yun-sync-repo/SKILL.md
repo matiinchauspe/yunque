@@ -12,15 +12,11 @@ never the projects' code.
 
 ## Preconditions
 
-- You MUST be at the workspace root (the directory containing `CLAUDE.md` and `skills/`).
-  Verify it with the shell test `[ -e CLAUDE.md ] && [ -d skills ]` — a **test**, never a
-  listing matched by name. `CLAUDE.md` is a symlink, so a lister prints it as
-  `CLAUDE.md -> AGENTS.md`, and given no path argument may print nothing at all while
-  still exiting 0. Either way the match fails at the root, which is the one place this
-  skill is meant to run. A shell test is not the `ls` the workspace bans; it asks whether
-  the path exists rather than listing a directory to read a name back out of it.
-  If you are not at the root, STOP and tell the user to open Claude Code from the
-  workspace root (see CLAUDE.md rule 1). Do not clone from anywhere else.
+- You MUST be at the workspace root (the directory containing `AGENTS.md` and `skills/`).
+  Verify with the shell test `[ -e AGENTS.md ] && [ -d skills ]`, never a lister piped to a
+  matcher — given no path argument it prints nothing and still exits 0.
+  If you are not at the root, STOP and tell the user to open their agent from the
+  workspace root (see AGENTS.md rule 1). Do not clone from anywhere else.
 
 ## Inputs
 
@@ -40,9 +36,8 @@ never the projects' code.
      STOP and ask the user how to proceed. Never overwrite blindly.
 
 3. **Clone.** `git clone <url> repos/<name>` — a full clone (worktrees need full history;
-   do NOT use `--depth`). A GitHub shorthand is not a URL: expand `owner/repo` to
-   `https://github.com/owner/repo.git` first, or `git clone` reads it as a local path and
-   fails with `repository 'owner/repo' does not exist`.
+   do NOT use `--depth`). Expand a GitHub shorthand first — `owner/repo` →
+   `https://github.com/owner/repo.git` — or `git clone` reads it as a local path.
 
 4. **Verify the clone.**
    - `git -C repos/<name> rev-parse --is-inside-work-tree` returns `true`.
@@ -58,5 +53,5 @@ never the projects' code.
 
 - Never clone into the workspace root or into `skills/`. Only into `repos/<name>/`.
 - Do NOT `cd` into `repos/<name>/` to keep working — stay at the workspace root so the
-  harness stays loaded (CLAUDE.md rule 1). Operate on the repo via `git -C repos/<name>`,
+  harness stays loaded (AGENTS.md rule 1). Operate on the repo via `git -C repos/<name>`,
   or spawn an isolated worktree with `yun-spawn-worktree`.

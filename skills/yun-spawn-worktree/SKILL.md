@@ -13,8 +13,8 @@ pure git, local, no sandbox — the seam a heavier execution substrate plugs in 
 
 ## Preconditions
 
-- You MUST be at the workspace root (the dir with `CLAUDE.md` and `skills/`). Stay there —
-  operate with `git -C`, never `cd` into the repo or the worktree (CLAUDE.md rule 1).
+- You MUST be at the workspace root (the dir with `AGENTS.md` and `skills/`). Stay there —
+  operate with `git -C`, never `cd` into the repo or the worktree (AGENTS.md rule 1).
 - `repos/<repo>/` exists and is a FULL clone — worktrees need full history, so a shallow
   clone won't do (`yun-sync-repo` clones full by default).
 
@@ -55,4 +55,4 @@ pure git, local, no sandbox — the seam a heavier execution substrate plugs in 
 
 The caller's job once the work lands, not this skill's: `git -C repos/<repo> worktree remove
 .worktrees/<repo>/<task>`. Run `git worktree prune` BEFORE deleting a source repo, and
-`git worktree repair` if the workspace moves (CLAUDE.md rule 4).
+`git worktree repair` if the workspace moves (AGENTS.md rule 4).

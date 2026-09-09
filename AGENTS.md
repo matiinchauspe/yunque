@@ -78,21 +78,19 @@ and degrades by its own rules, spelled out below:
 
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
   `.yun/memory/<project>/` → skip. A capability that cannot scope to the resolved project is a
-  **failed** first step, not a first step with a wrong label. The **subject** decides the project,
-  not the session: harness friction noticed mid-project files under the harness's own `friction`
-  topic — a running list, recalled and written back whole rather than overwritten by one note.
+  **failed** first step. The **subject** decides the project, not the session: harness friction
+  noticed mid-project files under the harness's own `friction` topic — a running list, recalled
+  and written back whole.
 - `artifact-convention.md` — record tracked work in three kinds: the map an effort is charted
   onto, the spec a plan is written into, and the tickets it breaks into (publish/fetch/resolve;
   list one ticket **namespace** — decision or implementation, never both, since they are separate
   sets on independent counters, joined by the ticket **number**) →
   `.yun/artifacts/<project>/<feature>/` (`map.md` + `spec.md` + decision tickets under
   `decisions/` + numbered implementation ticket files; the floor — publishing is a deliverable,
-  so it never skips). A ticket's **framing** is what was asked the day it was written and its
-  **log** is what was decided since — append-only, and the current state. The log resolves on its
-  own ladder (a per-ticket append-only channel → a `## Log` section inside the ticket), so
-  `resolve` appends the resolution before setting the state and `fetch` returns the two as
-  distinct parts. WHETHER a ticket has a resolution to log is the walking skill's call, the same
-  way WHEN it earns its state is.
+  so it never skips). A ticket's **framing** is the original ask and its **log** is the current
+  state — append-only, on its own ladder (a per-ticket channel → a `## Log` section in the
+  ticket). `resolve` appends the resolution before setting the state; `fetch` returns the two as
+  distinct parts. WHETHER there is a resolution is the walking skill's call.
 - `domain-convention.md` — capture/consult a project's domain model: its ubiquitous-language
   glossary and the ADRs behind its shape (capture/consult) → committed in the target repo
   (`CONTEXT.md` + `docs/adr/`) → `.yun/domain/<project>/` (same layout) when there is no repo. It

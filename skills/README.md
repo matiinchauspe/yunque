@@ -1,12 +1,12 @@
 # Skills — The harness
 
 This is where the workspace harness lives. These skills are **always active** when you
-open Claude Code from the workspace root, and they rule over any repo you bring in.
+open your agent from the workspace root, and they rule over any repo you bring in.
 
 ## Naming convention
 
 Every harness skill follows `yun-<verb>-<noun>` (kebab-case). The `yun-` prefix marks it
-as part of the workspace harness. See `CLAUDE.md` for the full rule.
+as part of the workspace harness. See `AGENTS.md` for the full rule.
 
 ## Skills
 
@@ -74,13 +74,12 @@ as part of the workspace harness. See `CLAUDE.md` for the full rule.
   an effort is charted onto, the spec a plan is written into, the tickets it is sliced into)
   without naming a tracker: declare intent, degrade from an available capability → per-project
   files under `.yun/artifacts/<project>/<feature>/` (the floor — publishing never skips), and
-  `resolve` moves one ticket to a terminal state, first appending the resolution that earned it
-  where the walking skill has one to give.
+  `resolve` moves one ticket to a terminal state, first appending the resolution that earned it.
   `list` takes a ticket **namespace** — decision or implementation — since the two are separate
   sets on independent counters, and the ticket **number** is the join key its blocking edges
-  name. A ticket's **framing** is the original ask and its **log** is the current state; the log
-  has its own ladder (a per-ticket append-only channel → a `## Log` section in the ticket
-  itself), so `fetch` returns the two as distinct parts.
+  name. A ticket's **framing** is the original ask and its **log** is the current state, on its
+  own ladder (a per-ticket channel → a `## Log` section), so `fetch` returns the two as distinct
+  parts.
 - `_shared/domain-convention.md` — how any skill captures or consults a project's domain
   model (glossary + ADRs) without naming a tool: committed in the target repo, with an
   `.yun/domain/<project>/` fallback for repo-less work; capture never skips, consult degrades
