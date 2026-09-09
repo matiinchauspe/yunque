@@ -77,7 +77,10 @@ intent and never binds a specific tool; each contract resolves that intent to a 
 and degrades by its own rules, spelled out below:
 
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
-  `.yun/memory/<project>/` → skip.
+  `.yun/memory/<project>/` → skip. A capability that cannot scope to the resolved project is a
+  **failed** first step, not a first step with a wrong label. The **subject** decides the project,
+  not the session: harness friction noticed mid-project files under the harness's own `friction`
+  topic — a running list, recalled and written back whole rather than overwritten by one note.
 - `artifact-convention.md` — record tracked work in three kinds: the map an effort is charted
   onto, the spec a plan is written into, and the tickets it breaks into (publish/fetch/resolve;
   list one ticket **namespace** — decision or implementation, never both, since they are separate
