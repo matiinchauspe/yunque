@@ -87,7 +87,12 @@ and degrades by its own rules, spelled out below:
   sets on independent counters, joined by the ticket **number**) →
   `.yun/artifacts/<project>/<feature>/` (`map.md` + `spec.md` + decision tickets under
   `decisions/` + numbered implementation ticket files; the floor — publishing is a deliverable,
-  so it never skips).
+  so it never skips). A ticket's **framing** is what was asked the day it was written and its
+  **log** is what was decided since — append-only, and the current state. The log resolves on its
+  own ladder (a per-ticket append-only channel → a `## Log` section inside the ticket), so
+  `resolve` appends the resolution before setting the state and `fetch` returns the two as
+  distinct parts. WHETHER a ticket has a resolution to log is the walking skill's call, the same
+  way WHEN it earns its state is.
 - `domain-convention.md` — capture/consult a project's domain model: its ubiquitous-language
   glossary and the ADRs behind its shape (capture/consult) → committed in the target repo
   (`CONTEXT.md` + `docs/adr/`) → `.yun/domain/<project>/` (same layout) when there is no repo. It

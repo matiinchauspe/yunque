@@ -109,14 +109,17 @@ beyond it is **Out of scope**, and never graduates.
    through `flow-convention.md` so a concurrent session skips it (and release it there if the
    session ends before it resolves). Dispatch it to the skill its `Type:` names and resolve it
    there, zooming into the map only as needed — at the cadence `flow-convention.md` sets (one
-   HITL ticket per session; research fans out AFK). Done when the ticket is resolved.
-3. **Record the resolution.** Post the answer to the ticket, `resolve` it to `resolved` through
-   `artifact-convention.md`, and append a one-line gist + link to the map's **Decisions so far**.
+   HITL ticket per session; research fans out AFK). Done when the question has its answer —
+   recording it is step 3's job, and a ticket closed here arrives there with nothing to carry.
+3. **Record the resolution.** `resolve` the ticket to `resolved` through
+   `artifact-convention.md` **carrying the answer as its resolution** — the convention lands it
+   in the ticket's log, which is where a later reader finds the decision — and append a one-line
+   gist + link to the map's **Decisions so far**.
    Done when the resolved ticket is indexed on the map.
 4. **Graduate the fog.** A resolved ticket clears the fog ahead of it: promote whatever is now
    sharp from **Not yet specified** into fresh tickets, and rescope anything that turned out to
-   sit past the destination — `resolve` those to `out-of-scope` and move them under the map's
-   **Out of scope**. Done when the map reflects the new frontier.
+   sit past the destination — `resolve` those to `out-of-scope`, carrying what put them past it,
+   and move them under the map's **Out of scope**. Done when the map reflects the new frontier.
 
 When no tickets remain, the way is clear: hand the cleared map to `yun-write-spec`, which
 collapses its decisions into a buildable spec. Chart, then spec — never loop the map straight
