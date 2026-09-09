@@ -16,7 +16,9 @@ This is a harness skill. Two workspace rules bind every skill you author here �
 - **Naming:** follow the `yun-<verb>-<noun>` convention in `CLAUDE.md`. The directory name must match the skill `name`.
 - **Home:** harness skills live in `skills/`; they are always active when Claude opens from the workspace root. A repo's own skills are secondary.
 
-The rest of this skill is the quality bar those skills are judged against.
+**Before authoring or diagnosing, `recall` the harness's `friction` topic** (through `skills/_shared/memory-convention.md`). Sessions working *other* projects file there what the harness got wrong — a skill that misfired, a contract that did not cover the case, a step done by hand. It is the harness's only supply of measured pain, and the one input no harness session sees unless it goes looking.
+
+The rest of this skill is the quality bar those skills — and the `skills/_shared/` contracts they lean on — are judged against. A contract is authored, disclosed, pruned and traversed by the same rules as a skill; it just declares intent for others to resolve instead of driving a run itself.
 
 ## Invocation
 
