@@ -78,7 +78,8 @@ and degrades by its own rules, spelled out below:
 
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
   `.yun/memory/<project>/` → skip. A capability that cannot scope to the resolved project is a
-  **failed** first step. The **subject** decides the project, not the session: harness friction
+  **failed** first step, and an empty recall is not proof of absence — retry with the shortest
+  distinctive term. The **subject** decides the project, not the session: harness friction
   noticed mid-project files under the harness's own `friction` topic — a running list, recalled
   and written back whole.
 - `artifact-convention.md` — record tracked work in three kinds: the map an effort is charted

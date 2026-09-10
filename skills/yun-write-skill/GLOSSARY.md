@@ -172,7 +172,7 @@ _Avoid_: dead end, broken path, unreachable branch
 
 ### Traversal
 
-Following one **branch** end to end — every step in order, as a run taking that path would — and checking that each **completion criterion** along it is reachable and each reference along it resolves. The defence against a **dead branch**, and the closest a skill gets to being run rather than read. The trigger is the skill's _shape_, not your edit: traverse every branch of any skill you touch that carries more than one, including the branches no edit went near. A linear skill has no path to follow, so traversing it is a **no-op**.
+Following one **branch** end to end — every step in order, as a run taking that path would — and checking that each **completion criterion** along it is reachable and each reference along it resolves. The defence against a **dead branch**, and the closest a skill gets to being run rather than read. The trigger is the skill's _shape_, not your edit: traverse every branch of any skill you touch that carries more than one, including the branches no edit went near. A traversal is not one-shot: every repair made during one invalidates it, so re-run until it converges — a pass that finds nothing and changes nothing. A linear skill has no path to follow, so traversing it is a **no-op**.
 
 _Avoid_: walk, walkthrough, dry run, path check
 

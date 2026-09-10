@@ -70,8 +70,10 @@ Adapted for this workspace from **Matt Pocock's `prototype`** (github.com/mattpo
 MIT). Changes: switched to model-invocation with harness trigger phrasing; the two
 branches stay as **disclosed reference files** (`LOGIC.md` / `UI.md`) because they are
 mutually exclusive paths — a run loads only the branch it takes; capture is rebound to the
-harness seams that exist today — the prototype is parked on a throwaway branch off the
-mainline and its verdict `persist`ed through `memory-convention` — rather than the source's
-"commit + leave a context pointer on the implementation issue", since the harness has no
-ticket-resolve seam yet. The question-routes-the-shape spine, the pure-module /
-throwaway-shell split, and the structurally-different-variants rule are preserved.
+harness's own seams — the prototype is parked on a throwaway branch off the mainline, its
+verdict `persist`ed through `memory-convention`, and an architectural verdict handed to
+`yun-model-domain` — rather than the source's "commit + leave a context pointer on the
+implementation issue": the harness has that ticket seam, but a charted prototype's verdict is
+recorded by the walk that dispatched it, not here. The question-routes-the-shape spine, the
+pure-module / throwaway-shell split, and the structurally-different-variants rule are
+preserved.

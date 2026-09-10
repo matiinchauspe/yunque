@@ -16,7 +16,8 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   creates only; the caller tears it down.
 - `yun-write-skill/` — the quality bar for authoring harness skills and the `_shared/`
   contracts (invocation, information hierarchy, pruning, failure modes), opening on a recall
-  of the `friction` topic. Adapted from Matt Pocock's `writing-great-skills`.
+  of the `friction` topic and closing on the index sync. Adapted from Matt Pocock's
+  `writing-great-skills`.
 - `yun-chart-course/` — charts an effort too big for one session as a live map of decision
   tickets, cleared one at a time until the way to the destination is clear. Adapted from Matt
   Pocock's `wayfinder`.
@@ -69,7 +70,8 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 
 - `_shared/memory-convention.md` — how any skill remembers or recalls without naming a
   memory tool: declare intent, degrade from an available capability **that can actually scope
-  to the project** → per-project files under `.yun/memory/<project>/` → skip. The subject
+  to the project** → per-project files under `.yun/memory/<project>/` → skip. An empty recall is
+  not proof of absence — retry with the shortest distinctive term. The subject
   decides the project, so harness friction found mid-project lands on the harness's `friction`
   topic instead of the project's.
 - `_shared/artifact-convention.md` — how any skill records tracked work in three kinds (the map

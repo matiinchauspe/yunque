@@ -38,6 +38,9 @@ recall(query, project):  symmetric — capability → files → none.
 - **File fallback** scopes by path: `.yun/memory/<project>/<topic>.md`. This mirrors
   the `.worktrees/<repo>/<task>/` namespacing — same shape, one level for project,
   the rest for the topic.
+- **An empty `recall` is not proof of absence.** A capability can miss what it holds: a long,
+  specific query returns nothing where one short distinctive term returns the answer. Retry
+  with the shortest distinctive term before concluding nothing is stored.
 
 ## Project resolution
 
