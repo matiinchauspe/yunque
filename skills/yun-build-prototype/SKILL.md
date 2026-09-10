@@ -54,9 +54,15 @@ discard the scaffold.
 - **Persist the answer.** Persist a short digest — the verdict and the question it settled —
   through `skills/_shared/memory-convention.md`, scoped to the project, so a later session
   recalls what this prototype decided without re-deriving it.
+- **Hand over an architectural verdict.** When the verdict changed the system's
+  **architecture** — how it is built, not just what it does — it has earned an ADR: hand it to
+  `yun-model-domain`, which owns whether it qualifies and writes it. In doubt, hand it over.
+  Entered carrying a map's decision ticket, you were dispatched by a walk: the walk records the
+  resolution and owns that hand-off.
 
 Done when the code reflects the answer to the question, the prototype is committed off the
-mainline, and its digest is persisted through the memory convention.
+mainline, its digest is persisted through the memory convention, and an architectural verdict
+you own is handed over.
 
 ## Attribution
 

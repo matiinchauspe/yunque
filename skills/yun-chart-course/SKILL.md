@@ -113,8 +113,12 @@ beyond it is **Out of scope**, and never graduates.
    recording it is step 3's job.
 3. **Record the resolution.** `resolve` the ticket to `resolved` through
    `artifact-convention.md` **carrying the answer as its resolution**, and append a one-line
-   gist + link to the map's **Decisions so far**.
-   Done when the resolved ticket is indexed on the map.
+   gist + link to the map's **Decisions so far**. Then ask of the answer: did it change the
+   system's **architecture** — how it is built — or only what it does? An architectural answer
+   has earned an ADR: hand it to `yun-model-domain`, which owns whether it qualifies and writes
+   it. In doubt, hand it over.
+   Done when the resolved ticket is indexed on the map and every architectural answer is handed
+   over.
 4. **Graduate the fog.** A resolved ticket clears the fog ahead of it: promote whatever is now
    sharp from **Not yet specified** into fresh tickets, and rescope anything that turned out to
    sit past the destination — `resolve` those to `out-of-scope`, carrying what put them past it,

@@ -55,8 +55,10 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   or rival UI variants side by side, thrown away once it has ruled. Adapted from Matt Pocock's
   `prototype`.
 - `yun-model-domain/` — builds and sharpens a project's domain model: a ubiquitous-language
-  glossary (`CONTEXT.md`) and one-paragraph ADRs, captured through the domain convention.
-  Adapted from Matt Pocock's `domain-modeling`.
+  glossary (`CONTEXT.md`) and one-paragraph ADRs, captured through the domain convention. It
+  also receives architectural decisions handed over by the skills that produce them —
+  `yun-chart-course`, `yun-grill-plan` and `yun-build-prototype` — and owns whether each
+  qualifies for an ADR. Adapted from Matt Pocock's `domain-modeling`.
 - `yun-write-handoff/` — compacts a session into a disposable baton for the next agent:
   labelled pointers into durable memory plus the live delta. Adapted from Matt Pocock's `handoff`.
 - `yun-review-work/` — runs two blind independent reviewers over a decision, plan, spec,

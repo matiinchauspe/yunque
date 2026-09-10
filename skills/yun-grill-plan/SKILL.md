@@ -21,6 +21,8 @@ The *decisions* themselves are the user's. Put each one to them and wait for the
 
 **Persist** each settled decision as it lands — not at the end — following `skills/_shared/memory-convention.md`. The grilling front-loads the questions so the work afterwards runs autonomously; the record is what makes a later session (or a fresh agent) able to pick it up without re-asking.
 
+A decision that changed the system's **architecture** — how it is built, not just what it does — has earned an ADR: hand it to `yun-model-domain`, which owns whether it qualifies and writes it. In doubt, hand it over. Entered carrying a map's decision ticket, you were dispatched by a walk: the walk records the resolution and owns that hand-off, so grill on.
+
 ## Done
 
 Do not act on the plan until the user confirms you have reached a shared understanding. The bar: an implementer could execute the result without asking a single question.

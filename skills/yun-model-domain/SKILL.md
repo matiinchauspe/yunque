@@ -16,6 +16,9 @@ The model has two kinds, and only two — a **glossary** of terms and a log of *
 land and when they commit; this skill owns what they say. Create files **lazily** — only when a term or a decision
 actually resolves. Never scaffold an empty model upfront, and never nag that one is missing.
 
+**Handed a decision another skill already settled**, go straight to **The decisions (ADRs)**:
+apply the gate, write the ADR, done. The reflexes below reach decisions; this one is reached.
+
 ## During the session
 
 Not a pipeline — a set of reflexes applied continuously while designing. Ask one question at
