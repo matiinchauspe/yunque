@@ -102,7 +102,7 @@ snapshot instead, and the human merging knows what the green did and did not cov
 blocking edge; ours are the dependency edges the slicing declared, so two of our frontier's tickets
 may well touch the same files — fanning out would generate exactly the conflicts the source's merge
 phase exists to resolve, minus the planning-time disjointness that keeps that phase tractable. And
-`yun-slice-plan:33` makes every slice cut "a narrow but complete path through every layer", so that
+`yun-slice-plan` makes every slice cut "a narrow but complete path through every layer", so that
 overlap is structural: put the term back and the frontier collapses to roughly one ticket. Second,
 `isolate` resolves its ladder *inside* the run, so the walk **cannot know before dispatching** which
 tier a run lands on, and must plan for the single-writer floor. Both were established by reading
