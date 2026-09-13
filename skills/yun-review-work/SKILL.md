@@ -86,8 +86,7 @@ do not fix, do not re-review.
   findings.
 
 v1 assumes a user is present at these convergence points. An unattended path — driving to a
-verdict without prompting — is future work (see the design's AFK note); do not improvise it
-here.
+verdict without prompting — is future work; do not improvise it here.
 
 ## Blocking rules (do not skip)
 
