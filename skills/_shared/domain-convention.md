@@ -17,10 +17,10 @@ reaches them.
 
 ## Rules
 
-1. **The model is a project deliverable, not harness scratch.** Unlike memory digests or
-   tracked-work tickets, it lives committed in the target repo, versioned with the code it
-   describes — the ubiquitous language travels with the code. It only leaves the repo when
-   there is no repo to hold it.
+1. **The model is a target project's deliverable — the harness has none of its own.**
+   Unlike memory digests or tracked-work tickets, it lives committed in the target repo,
+   versioned with the code it describes — the ubiquitous language travels with the code. It
+   only leaves the repo when there is no repo to hold it.
 2. **Scoped to a project** — one model per project, never global, never cross-repo.
 3. **Capture always writes; consult degrades silently.** Capturing a term or a decision is a
    deliverable, so it always writes to the working tree and never skips — though the files
