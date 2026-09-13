@@ -13,7 +13,7 @@ Write a handoff document that lets a fresh agent continue this work without re-d
 
 - **The world-state it describes, first.** Open with the state that makes the rest true — the commit it was written against, where the work has one — and tell the reader to verify it before trusting anything below. The baton is read by an agent that does not load this skill, so the instruction has to travel inside the baton.
 - **Labelled pointers, not copies.** Settled facts already captured — memory references (ids, topic-keys), specs, commits, diffs — get a one-line label plus a reference (e.g. `#502 — chosen rate-limit algorithm`), never a restatement. The label lets the next agent triage without opening every link.
-- **The live delta, in full.** What exists only in this conversation: half-done edits, and the open threads you are handing forward (even if you also persisted them). This is the next agent's marching order — write it out, do not reduce it to a pointer.
+- **The live delta, in full.** What exists only in this conversation — half-done edits, and the open threads you are handing forward (even if you also persisted them) — **and whatever the baton you replace still leaves open**. This is the next agent's marching order — write it out, do not reduce it to a pointer.
 - **Suggested skills.** Which harness skills fit the open work — e.g. `yun-grill-plan` for an unresolved decision, `yun-write-skill` when authoring.
 
 ## Persist the durable part first
@@ -30,12 +30,13 @@ A stale baton beside a fresh one is the expensive failure: the next session read
 
 ## Close by stating what you wrote
 
-State two things the user can refute at a glance:
+State each of these in a form the user can refute at a glance:
 
 - **the slug you wrote, and whether it replaced an existing baton** — if you invented a new one, what in the listing you ruled out
 - **the ids the baton points at** — where nothing was persisted there is nothing to point at, and the baton carries it in full.
+- **what the baton you replaced left open** — each thread carried into this one, or closed; where you replaced none there is nothing to carry.
 
-Both failures this catches are silent: a create looks like an overwrite, and a copy looks like a pointer.
+Every failure this catches is silent: a create looks like an overwrite, a copy looks like a pointer, and a dropped thread looks like a closed one.
 
 ## Guardrails
 
@@ -45,4 +46,4 @@ If the user passed an argument, treat it as the next session's focus and shape t
 
 ## Attribution
 
-Adapted for this workspace from Matt Pocock's `handoff` (github.com/mattpocock/skills, MIT). Changes: durable content is persisted to and referenced from the workspace memory convention rather than restated, so the baton stays a thin pointer-plus-delta; the baton opens with the world-state it describes; and the write closes by stating the slug it wrote and the ids it points at.
+Adapted for this workspace from Matt Pocock's `handoff` (github.com/mattpocock/skills, MIT). Changes: durable content is persisted to and referenced from the workspace memory convention rather than restated, so the baton stays a thin pointer-plus-delta; the baton opens with the world-state it describes; and the write closes by stating the slug it wrote, the ids it points at, and what the baton it replaced left open.
