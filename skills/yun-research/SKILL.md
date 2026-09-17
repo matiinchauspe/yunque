@@ -3,6 +3,8 @@ name: yun-research
 description: Investigate a question against primary sources and leave a cited Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, a claim verified, or reading legwork delegated while they keep working.
 ---
 
+# yun-research
+
 Research is **legwork you delegate**, not thinking you outsource: a background agent
 does the reading, you keep working, and you get back a cited document to react to.
 

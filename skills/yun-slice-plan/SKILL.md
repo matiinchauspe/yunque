@@ -3,6 +3,8 @@ name: yun-slice-plan
 description: Slice an approved plan or spec into tracer-bullet tickets. Use when the user has a plan, spec, or decision ready and wants it broken into executable tickets to build.
 ---
 
+# yun-slice-plan
+
 A **tracer bullet** is a thin path fired end to end — one ticket you can grab and finish
 in a single sitting. Slicing a plan into tracer bullets, each declaring its **blocking
 edges**, is what turns an airtight spec into executable work.
