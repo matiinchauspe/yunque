@@ -74,6 +74,8 @@ harness's own seams — the prototype is parked on a throwaway branch off the ma
 verdict `persist`ed through `memory-convention`, and an architectural verdict handed to
 `yun-model-domain` — rather than the source's "commit + leave a context pointer on the
 implementation issue": the harness has that ticket seam, but a charted prototype's verdict is
-recorded by the walk that dispatched it, not here. The question-routes-the-shape spine, the
-pure-module / throwaway-shell split, and the structurally-different-variants rule are
-preserved.
+recorded by the walk that dispatched it, not here; and the logic module loses the source's
+exemption from throwaway — the source folds the validated reducer itself into the mainline,
+while capture here admits only the decision, which `LOGIC.md` names as the state model. The
+question-routes-the-shape spine, the pure-module / throwaway-shell split, and the
+structurally-different-variants rule are preserved.

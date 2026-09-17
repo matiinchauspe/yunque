@@ -4,11 +4,7 @@ For the kind of design that looks reasonable on paper but only feels wrong once 
 through real cases. Build a tiny interactive terminal app that lets the user drive the state
 model by hand, one action at a time, until it either feels right or breaks.
 
-## The load-bearing split: portable module, throwaway shell
-
-Put the actual logic behind a small, **pure** interface that could be lifted out and dropped
-into the real codebase later. The TUI around it is throwaway; **the logic module is not** —
-it is the one thing that survives.
+## The load-bearing split: pure module, hand-driven shell
 
 - **Pick the shape that best fits the question** — a pure reducer, a state machine, a set of
   pure functions, or a small class/module — *not* whichever is easiest to wire to a terminal.
@@ -30,3 +26,6 @@ Drive real cases through it by hand and watch for the human's *"wait, that shoul
 possible"* moment. Those are bugs in the **idea** — the whole reason to prototype the logic
 before building on it. The prototype is done when the model has been pushed through the cases
 that worried you and either holds up or reveals the flaw.
+
+**The decision is the state model** — the interface and the transitions it allows, not the
+module that hosted it.
