@@ -13,5 +13,6 @@
 # Research notes — kept locally, not published.
 /docs/
 
-# Plugin scratch state.
+# Plugin and tool scratch state.
 /.superpowers/
+/.playwright-mcp/
