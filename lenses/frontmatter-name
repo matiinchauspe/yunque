@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# Lens: frontmatter-name
+#
+# Question: does every skill's frontmatter `name:` match its directory name?
+#
+# The Agent Skills spec requires the two to be identical. When they drift, the
+# skill does not degrade and does not complain — it silently stops being
+# discoverable, and every other lens in this suite still reads CLEAN. Measured by
+# planting `name: yun-reserch` in `yun-research`: the suite reported CLEAN while
+# the skill was uninvocable.
+#
+# Read from the FRONTMATTER ONLY, for the reason `invocation-flag` spells out: a
+# whole-file read matches prose that documents the key and manufactures a finding.
+# That bug has been rebuilt from scratch four times in this workspace. No skill
+# body carries a `name:` line TODAY, so here it would be LATENT rather than loud —
+# which is worse, and is exactly why the `clean-documents-the-name` fixture exists.
+#
+# `name:` present but empty collapses into NO-NAME on purpose: both states leave
+# the skill without a declared name, and both take the same repair.
+#
+# Not in scope: a trailing YAML comment (`name: yun-x  # why`). Nothing in this
+# corpus writes one, and a branch that cannot be grounded cannot be proven.
+#
+# Usage: lenses/frontmatter-name [root]   (root defaults to the workspace root)
+# Exit:  0 = clean · 1 = findings · 2 = the lens could not run
+
+set -uo pipefail
+
+root="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+skills="$root/skills"
+
+[ -d "$skills" ] || { echo "frontmatter-name: no skills/ under $root" >&2; exit 2; }
+
+findings=""
+count=0
+
+for f in "$skills"/yun-*/SKILL.md; do
+  [ -f "$f" ] || continue
+  name="$(basename "$(dirname "$f")")"
+  count=$((count + 1))
+
+  declared="$(awk '
+    NR == 1 && $0 == "---" { inf = 1; next }
+    inf && $0 == "---"     { exit }
+    inf && /^name:/ {
+      v = $0
+      sub(/^name:[[:space:]]*/, "", v)
+      sub(/[[:space:]]+$/, "", v)
+      print v
+      exit
+    }
+  ' "$f")"
+
+  # One layer of matching quotes. `name: "yun-x"` is valid YAML and spec-legal;
+  # a lens that flagged it would be reporting a defect that does not exist.
+  case "$declared" in
+    '"'*'"') declared="${declared#\"}"; declared="${declared%\"}" ;;
+    "'"*"'") declared="${declared#\'}"; declared="${declared%\'}" ;;
+  esac
+
+  if [ -z "$declared" ]; then
+    findings="${findings}NO-NAME  ${name}  no name: key in its frontmatter — nothing declares what this skill is called"$'\n'
+  elif [ "$declared" != "$name" ]; then
+    findings="${findings}MISMATCH  ${name}  frontmatter says \"${declared}\", directory says \"${name}\""$'\n'
+  fi
+done
+
+if [ -n "$findings" ]; then
+  printf '%s' "$findings" | sort
+  exit 1
+fi
+
+echo "CLEAN  $count skills, every name matches its directory"
