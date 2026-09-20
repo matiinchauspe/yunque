@@ -3,8 +3,8 @@
 #
 # A lens whose fixtures fail is a BROKEN INSTRUMENT, and its reading of the harness
 # is discarded rather than printed. A broken check does not disable a verification;
-# it invents one (friction #23). This is the only thing standing between that entry
-# and a third occurrence.
+# it invents one, wearing the costume of a rigorous finding with file names
+# attached. That has happened twice here, and this gate is what stops a third.
 #
 # Usage: lenses/run [lens-name ...]   (default: every lens)
 # Exit:  0 = every lens clean · 1 = findings in the harness · 2 = a lens is broken
@@ -88,7 +88,8 @@ done
 echo
 # The two failure modes are NOT the same and must never share a message: an
 # uncalibrated lens measures confidently and wrongly, an errored one measures
-# nothing. Reporting the second as the first is the shape of friction #23.
+# nothing. Reporting the second as the first is the same defect this suite exists
+# to catch, committed by the suite itself.
 if [ "$uncalibrated" -eq 1 ]; then
   echo "UNCALIBRATED — a lens failed its own fixtures. Fix the LENS before believing it."
   exit 2

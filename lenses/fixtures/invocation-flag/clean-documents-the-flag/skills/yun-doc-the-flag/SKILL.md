@@ -27,4 +27,4 @@ defeats a lens that reads the whole file even when its regex is anchored.
 
 Both forms are here on purpose. A lens that reports this skill as user-invoked is
 broken; the skill is model-invoked and its frontmatter is clean. That false positive
-is friction #23, measured twice in the wild, and this fixture is what stops a third.
+was measured twice in the wild, and this fixture is what stops a third.

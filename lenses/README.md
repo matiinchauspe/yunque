@@ -20,11 +20,11 @@ Exit: `0` clean · `1` findings in the harness · `2` a lens is uncalibrated or 
 
 A lens with no fixtures is not trusted and `run` refuses to report its reading.
 
-The reason is measured, not theoretical. Friction **#23**: a broken check does not
-disable a verification — it *invents* one, and it arrives wearing the costume of a
-rigorous finding, with file names attached. It happened on 2026-09-17, and again on
-2026-09-20 when a fresh agent with no memory of the first rebuilt the same broken
-instrument from scratch. Discipline caught both. Discipline does not scale.
+The reason is measured, not theoretical: a broken check does not disable a
+verification — it *invents* one, and it arrives wearing the costume of a rigorous
+finding, with file names attached. It happened on 2026-09-17, and again on 2026-09-20
+when a fresh agent with no memory of the first rebuilt the same broken instrument from
+scratch. Discipline caught both. Discipline does not scale.
 
 A fixture is the **calibration block**: a planted case whose correct reading is
 obvious by inspection. That is where the who-checks-the-checker recursion stops —
@@ -40,8 +40,8 @@ lens — found only by mutating, and fixed by planting the missing form.
 
 | Lens | The question it asks | Fixtures | Caught in the wild |
 | ---- | -------------------- | -------- | ------------------ |
-| `invocation-flag` | Does each skill's invocation mode, read from **frontmatter only**, agree with the `AGENTS.md` index? Also: any skill missing from the index, any index row with no skill. | 4 | The #23 false positive, twice — an unanchored whole-file match reporting `yun-write-skill` as user-invoked when its frontmatter is clean. |
-| `structural-form` | Does every `SKILL.md` open with an H1 that is **its own name**? First H1 only, outside the frontmatter and outside code fences. | 4 | Friction #22 — `yun-research` carried no H1 at all, and `yun-slice-plan`'s only heading was `# <NN> — <Ticket title>`, a form field from inside its own template. |
+| `invocation-flag` | Does each skill's invocation mode, read from **frontmatter only**, agree with the `AGENTS.md` index? Also: any skill missing from the index, any index row with no skill. | 4 | Twice, three days apart and by two agents who never met, an unanchored whole-file match reported `yun-write-skill` as user-invoked when its frontmatter is clean. |
+| `structural-form` | Does every `SKILL.md` open with an H1 that is **its own name**? First H1 only, outside the frontmatter and outside code fences. | 4 | `yun-research` carried no H1 at all, and `yun-slice-plan`'s only heading was `# <NN> — <Ticket title>`, a form field from inside its own template. |
 | `line-citations` | Does every line citation resolve — the cited file present in the corpus, and the cited line or **range** inside its length? Reports `DANGLING` / `AMBIGUOUS` / `OUT-OF-RANGE`. **It never checks that the line still SAYS what the citing sentence claims** — content drift is not mechanical, and a lens implying otherwise would be inventing a verification rather than performing one. | 5 | `plan-prompt.md:25` in `yun-build-plan/LIMITS.md` — a line number pointing into a file this workspace does not hold, missed by two hand sweeps whose regex did not match ranges. |
 
 `structural-form`'s three exclusions are each grounded in this corpus, not imagined, and
@@ -83,23 +83,25 @@ one break:
 | accepts a target absent from the corpus | `dangling` |
 | off-by-one at the boundary (`-gt` → `-ge`) | `clean-range-and-single` |
 
-**That last row is the whole reason this page insists on mutation.** The first `clean-range-and-single` cited only an
-interior line and a range, and the off-by-one passed **all five fixtures** — a green suite hiding
-a lens that rejects every citation to a file's last line. Found by mutating, fixed by citing the
-last line on purpose. **A clean fixture must exercise the boundary, not just the happy middle.**
+**That last row is the whole reason this page insists on mutation.** The first
+`clean-range-and-single` cited only an interior line and a range, and the off-by-one passed
+**all five fixtures** — a green suite hiding a lens that rejects every citation to a file's
+last line. Found by mutating, fixed by citing the last line on purpose. **A clean fixture
+must exercise the boundary, not just the happy middle.**
 
 ### Lenses already run by hand, not yet mechanised
 
 From the traversals of 2026-09-13 and 2026-09-17. Listed so the set is a file rather
-than something an agent has to remember — friction **#21** is that a traversal converges
-per-lens and its stopping rule never said so.
+than something an agent has to remember: a traversal converges per LENS, and its
+stopping rule never said so — so a run that "converged" had converged on the two
+questions someone happened to remember.
 
 | Lens | Question | Status |
 | ---- | -------- | ------ |
-| references | Does every cross-reference resolve? | ran clean by hand (131 refs); the `sd` pipeline that ran it collapsed its matches and reported one empty row — #23's second face |
+| references | Does every cross-reference resolve? | ran clean by hand (131 refs); the `sd` pipeline that ran it collapsed its matches and reported one empty row — the instrument failed, not the corpus |
 | branches | Does every branch of every decision tree terminate? | ran clean by hand |
 | counters | Does every "N things" in prose match the count that follows? | ran clean by hand |
-| consumers · attribution · duplication · prior-decisions · negation · completion-criteria | see obs `#854` and the 2026-09-17 traversal | ran by hand |
+| consumers · attribution · duplication · prior-decisions · negation · completion-criteria | recorded in the 2026-09-17 traversal | ran by hand |
 
 Mechanising one is worth it when it has caught something, has failed silently, or is
 cheap. Four lenses ran clean on 2026-09-17 and only the cheapest found anything — the
@@ -116,7 +118,7 @@ which is exactly why the second exists.
 | `.githooks/pre-commit` | **everything else** — a line changed in `AGENTS.md` mid-conversation, an edit made by hand | at commit, against the **staged** tree | it is git |
 
 The assertion is a closing one, never a precondition: the precondition form is
-measured 8-for-8 broken (friction `#851`), and mid-edit the suite is *expected* to
+measured 8-for-8 broken across this harness, and mid-edit the suite is *expected* to
 report — an index that does not yet list the skill being added is correct.
 
 Activate the hook once per clone:
