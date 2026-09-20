@@ -39,9 +39,10 @@ for lens in "${lenses[@]}"; do
   # Cases are COUNTED, never inferred from the directory existing. A
   # `fixtures/<lens>/` that is present but holds no case with an `expected` file
   # ran this loop zero times and left `calibrated` at 1 — an uncalibrated lens
-  # whose reading was then printed as trustworthy. That is #23's shape a third
-  # time, inside the guard written to stop it, and the path there is this
-  # suite's own "Adding a lens" step 2 → step 3. Absent and empty are one verdict.
+  # whose reading was then printed as trustworthy, which is the exact failure
+  # this gate exists to prevent. The way in is the suite's own "Adding a lens"
+  # step 2 → step 3, where the directory is already there and still empty.
+  # Absent and empty are one verdict.
   cases=0
   if [ -d "$fixdir" ]; then
     for fix in "$fixdir"/*/; do
