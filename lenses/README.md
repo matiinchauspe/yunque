@@ -41,6 +41,20 @@ lens — found only by mutating, and fixed by planting the missing form.
 | Lens | The question it asks | Fixtures | Caught in the wild |
 | ---- | -------------------- | -------- | ------------------ |
 | `invocation-flag` | Does each skill's invocation mode, read from **frontmatter only**, agree with the `AGENTS.md` index? Also: any skill missing from the index, any index row with no skill. | 4 | The #23 false positive, twice — an unanchored whole-file match reporting `yun-write-skill` as user-invoked when its frontmatter is clean. |
+| `structural-form` | Does every `SKILL.md` open with an H1 that is **its own name**? First H1 only, outside the frontmatter and outside code fences. | 4 | Friction #22 — `yun-research` carried no H1 at all, and `yun-slice-plan`'s only heading was `# <NN> — <Ticket title>`, a form field from inside its own template. |
+
+`structural-form`'s three exclusions are each grounded in this corpus, not imagined, and
+each has a fixture that a naive lens fails:
+
+- **fences** — `yun-model-domain` carries `# Event-sourced orders` inside one. Fixture:
+  `fenced-h1-only`, a skill whose *only* `#` line sits in a fence; a fence-blind lens
+  calls it CLEAN.
+- **the space in `^# `** — without it `##` and `###` match too. Fixture: `no-h1`, which
+  has section headings and no H1; a `^#` lens reports WRONG-H1 instead of NO-H1, describing
+  a true defect falsely.
+- **first H1 only** — `yun-slice-plan` and `yun-write-spec` legitimately carry a second H1,
+  the title of the document they *produce*. Fixture: `clean-template-second-h1`; a lens
+  that checks "exactly one H1" flags both real skills.
 
 ### Lenses already run by hand, not yet mechanised
 
@@ -52,7 +66,6 @@ per-lens and its stopping rule never said so.
 | ---- | -------- | ------ |
 | references | Does every cross-reference resolve? | ran clean by hand (131 refs); the `sd` pipeline that ran it collapsed its matches and reported one empty row — #23's second face |
 | line-citations | Does the harness cite itself by line number, **including ranges** (`:114-123`)? | three live; two earlier sweeps missed all three because the regex did not match ranges — friction #17 |
-| structural-form | Does every `SKILL.md` open with an H1 that is its own name? | ran, found #22 (two skills), cost one grep, now fixed |
 | branches | Does every branch of every decision tree terminate? | ran clean by hand |
 | counters | Does every "N things" in prose match the count that follows? | ran clean by hand |
 | consumers · attribution · duplication · prior-decisions · negation · completion-criteria | see obs `#854` and the 2026-09-17 traversal | ran by hand |
