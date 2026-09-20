@@ -36,9 +36,17 @@ for lens in "${lenses[@]}"; do
   # --- calibrate: every fixture is a planted case the lens MUST read correctly
   fixdir="$here/fixtures/$lens"
   calibrated=1
+  # Cases are COUNTED, never inferred from the directory existing. A
+  # `fixtures/<lens>/` that is present but holds no case with an `expected` file
+  # ran this loop zero times and left `calibrated` at 1 — an uncalibrated lens
+  # whose reading was then printed as trustworthy. That is #23's shape a third
+  # time, inside the guard written to stop it, and the path there is this
+  # suite's own "Adding a lens" step 2 → step 3. Absent and empty are one verdict.
+  cases=0
   if [ -d "$fixdir" ]; then
     for fix in "$fixdir"/*/; do
       [ -f "$fix/expected" ] || continue
+      cases=$((cases + 1))
       name="$(basename "$fix")"
       actual="$("$script" "${fix%/}" 2>&1)"; code=$?
       expected="$(awk 'NF || NR < 1' "$fix/expected")"
@@ -53,7 +61,9 @@ for lens in "${lenses[@]}"; do
         echo "     actual   (exit $code):"; printf '       %s\n' "$actual"
       fi
     done
-  else
+  fi
+
+  if [ "$cases" -eq 0 ]; then
     calibrated=0
     echo "   NO FIXTURES — an uncalibrated lens is not trusted"
   fi
