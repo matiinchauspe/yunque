@@ -14,7 +14,9 @@ lenses/run invocation-flag # just one
 lenses/<lens> <root>       # one lens against an arbitrary tree
 ```
 
-Exit: `0` clean · `1` findings in the harness · `2` a lens is uncalibrated or could not run.
+Exit: `0` clean · `1` findings in the harness · `2` a lens is uncalibrated, could not run,
+arrived without its executable bit, or there were no lenses to run at all. **Anything but
+`0` and `1` means nothing was measured, which is never a clean result.**
 
 ## Every lens carries fixtures, and that is the point
 
@@ -138,6 +140,10 @@ shape. Two consumers do not justify one; promote on the third, measured, not bef
 
 1. Write the question down here first. One question.
 2. `lenses/<name>` — takes a root, prints findings, `0` clean / `1` findings / `2` cannot run.
+   **`chmod +x` it.** `run` collects lenses by their executable bit, so a lens without one
+   used to drop out of the suite with no message while the verdict still spoke for "every
+   lens". It now reports `NOT EXECUTABLE` and refuses to read clean — but the bit is still
+   yours to set.
 3. `lenses/fixtures/<name>/<case>/` — a tree plus an `expected` file, one per condition
    the lens reports, **plus at least one case that must read CLEAN**. The clean case is
    the one that catches a lens gone greedy.
