@@ -3,8 +3,8 @@
 #
 # A lens whose fixtures fail is a BROKEN INSTRUMENT, and its reading of the harness
 # is discarded rather than printed. A broken check does not disable a verification;
-# it invents one (friction #23). This is the only thing standing between that entry
-# and a third occurrence.
+# it invents one, wearing the costume of a rigorous finding with file names
+# attached. That has happened twice here, and this gate is what stops a third.
 #
 # Usage: lenses/run [lens-name ...]   (default: every lens)
 # Exit:  0 = every lens clean · 1 = findings in the harness · 2 = a lens is broken
@@ -14,12 +14,26 @@ set -uo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root="$(cd "$here/.." && pwd)"
 
+skipped=""   # files that ARE lenses but cannot run — never silently dropped
+
 if [ "$#" -gt 0 ]; then
   lenses=("$@")
 else
   lenses=()
   for l in "$here"/*; do
-    [ -f "$l" ] && [ -x "$l" ] && [ "$(basename "$l")" != "run" ] && lenses+=("$(basename "$l")")
+    [ -f "$l" ] || continue                     # fixtures/ is a directory
+    b="$(basename "$l")"
+    case "$b" in run | *.md) continue ;; esac   # the runner itself, and its prose
+    if [ -x "$l" ]; then
+      lenses+=("$b")
+    else
+      # A lens that lost its executable bit used to VANISH from the run without
+      # a single message, while the verdict at the bottom went on speaking for
+      # "every lens". Silent coverage loss reads exactly like coverage, and it
+      # is the more dangerous of the two because it reads BETTER: fewer lines,
+      # same green word. Measured by chmod -x on a working lens.
+      skipped="${skipped}${b} "
+    fi
   done
 fi
 
@@ -27,7 +41,21 @@ uncalibrated=0   # a lens failed its own fixtures — it is measuring wrong
 errored=0        # a lens could not run at all
 findings=0       # the harness has defects
 
-for lens in "${lenses[@]}"; do
+# Nothing to measure is not a clean result. Without this, an empty `lenses/` — or
+# a checkout where every lens arrived without its executable bit — walks straight
+# to the CLEAN verdict at the bottom, which would then be speaking for a set of
+# zero.
+if [ "${#lenses[@]}" -eq 0 ] && [ -z "$skipped" ]; then
+  echo "run: no lenses found under $here — nothing could be measured." >&2
+  exit 2
+fi
+
+# `${arr[@]+"${arr[@]}"}` and not `"${lenses[@]}"`: bash 3.2, which is what macOS
+# ships, treats the plain form on an EMPTY array as an unbound variable under
+# `set -u`. With every lens non-executable this loop died with `lenses[@]:
+# unbound variable` and exit 1 — a crash wearing the exit code that means
+# "findings in the harness". Measured on bash 3.2.57.
+for lens in ${lenses[@]+"${lenses[@]}"}; do
   script="$here/$lens"
   [ -x "$script" ] || { echo "run: no such lens: $lens" >&2; errored=1; continue; }
 
@@ -39,9 +67,10 @@ for lens in "${lenses[@]}"; do
   # Cases are COUNTED, never inferred from the directory existing. A
   # `fixtures/<lens>/` that is present but holds no case with an `expected` file
   # ran this loop zero times and left `calibrated` at 1 — an uncalibrated lens
-  # whose reading was then printed as trustworthy. That is #23's shape a third
-  # time, inside the guard written to stop it, and the path there is this
-  # suite's own "Adding a lens" step 2 → step 3. Absent and empty are one verdict.
+  # whose reading was then printed as trustworthy, which is the exact failure
+  # this gate exists to prevent. The way in is the suite's own "Adding a lens"
+  # step 2 → step 3, where the directory is already there and still empty.
+  # Absent and empty are one verdict.
   cases=0
   if [ -d "$fixdir" ]; then
     for fix in "$fixdir"/*/; do
@@ -84,10 +113,19 @@ for lens in "${lenses[@]}"; do
   fi
 done
 
+# Reported as loudly as a lens that ran, because the alternative is a shorter,
+# greener report that covers less and says nothing about the difference.
+for b in $skipped; do
+  echo "── $b"
+  echo "   NOT EXECUTABLE — a lens that cannot run measured nothing.  chmod +x lenses/$b"
+  errored=1
+done
+
 echo
 # The two failure modes are NOT the same and must never share a message: an
 # uncalibrated lens measures confidently and wrongly, an errored one measures
-# nothing. Reporting the second as the first is the shape of friction #23.
+# nothing. Reporting the second as the first is the same defect this suite exists
+# to catch, committed by the suite itself.
 if [ "$uncalibrated" -eq 1 ]; then
   echo "UNCALIBRATED — a lens failed its own fixtures. Fix the LENS before believing it."
   exit 2

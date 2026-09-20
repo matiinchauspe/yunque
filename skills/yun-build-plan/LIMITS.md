@@ -140,6 +140,7 @@ means new tickets, or hand-editing statuses in a store the harness otherwise tre
 authoritative.
 
 The source template earns free resumption a different way — deterministic branch names
-(`plan-prompt.md:25`) — which trades against `yun-spawn-worktree` refusing to reuse a name, a real
-decision rather than an oversight. Deriving from the namespace buys the same resumption without that
-trade, and pays for it with the cases above.
+(`plan-prompt.md`, which this workspace does not hold) — which trades against
+`yun-spawn-worktree` refusing to reuse a name, a real decision rather than an oversight.
+Deriving from the namespace buys the same resumption without that trade, and pays for it with
+the cases above.

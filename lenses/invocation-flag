@@ -25,7 +25,8 @@ trap 'rm -rf "$work"' EXIT
 # --- source 1: the frontmatter, and ONLY the frontmatter ------------------
 # The string also appears in prose that documents the flag. Reading the whole
 # file matches that prose and manufactures a finding — measured twice, three
-# days apart, by two different agents. See friction #23.
+# days apart, by two different agents who never met. Reading the whole file is the
+# instrument that fails here, not the skill it reports on.
 for f in "$skills"/yun-*/SKILL.md; do
   [ -f "$f" ] || continue
   name="$(basename "$(dirname "$f")")"
