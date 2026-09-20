@@ -45,6 +45,7 @@ lens — found only by mutating, and fixed by planting the missing form.
 | `invocation-flag` | Does each skill's invocation mode, read from **frontmatter only**, agree with the `AGENTS.md` index? Also: any skill missing from the index, any index row with no skill. | 4 | Twice, three days apart and by two agents who never met, an unanchored whole-file match reported `yun-write-skill` as user-invoked when its frontmatter is clean. |
 | `structural-form` | Does every `SKILL.md` open with an H1 that is **its own name**? First H1 only, outside the frontmatter and outside code fences. | 4 | `yun-research` carried no H1 at all, and `yun-slice-plan`'s only heading was `# <NN> — <Ticket title>`, a form field from inside its own template. |
 | `line-citations` | Does every line citation resolve — the cited file present in the corpus, and the cited line or **range** inside its length? Reports `DANGLING` / `AMBIGUOUS` / `OUT-OF-RANGE`. **It never checks that the line still SAYS what the citing sentence claims** — content drift is not mechanical, and a lens implying otherwise would be inventing a verification rather than performing one. | 5 | `plan-prompt.md:25` in `yun-build-plan/LIMITS.md` — a line number pointing into a file this workspace does not hold, missed by two hand sweeps whose regex did not match ranges. |
+| `frontmatter-name` | Does every skill's frontmatter `name:` match its **directory name**? Frontmatter only; one layer of matching quotes is stripped, because `name: "yun-x"` is valid YAML and flagging it would invent a defect. Reports `MISMATCH` / `NO-NAME`. | 4 | **Nothing yet, and that is the point** — a drifted name does not fail, it makes the skill undiscoverable in silence while every other lens goes on reading `CLEAN`. Measured by planting `name: yun-reserch` in `yun-research`. |
 
 `structural-form`'s three exclusions are each grounded in this corpus, not imagined, and
 each has a fixture that a naive lens fails:
@@ -90,6 +91,34 @@ one break:
 **all five fixtures** — a green suite hiding a lens that rejects every citation to a file's
 last line. Found by mutating, fixed by citing the last line on purpose. **A clean fixture
 must exercise the boundary, not just the happy middle.**
+
+`frontmatter-name` is the first lens here written **before** its defect appeared in the
+corpus, and the failure's shape is the reason. A name that drifts from its directory does
+not break loudly: the skill stops being discoverable, nothing reports it, and the other
+three lenses stay green. Measured by planting `name: yun-reserch` in `yun-research` — the
+suite read `CLEAN` while the skill was uninvocable.
+
+**No skill body carries a `name:` line today**, so the whole-file read — the instrument bug
+rebuilt from scratch four times in this workspace — would not fire here. It would sit latent
+until someone documents the key in `yun-write-skill`, which is precisely where it belongs.
+`clean-documents-the-name` plants all three prose shapes now, so the lens cannot acquire that
+bug quietly later.
+
+**Six mutations, four fixtures, none redundant:**
+
+| Mutation of the lens | Caught only by |
+| -------------------- | -------------- |
+| loses the `^` anchor and matches `name:` mid-line | `clean-documents-the-name` |
+| stops stripping quotes (`name: "yun-x"`) | `clean-quoted-name` |
+| stops comparing the two names at all | `mismatch` |
+| reads the whole file, first match | `no-name` |
+| treats a missing name as clean | `no-name` |
+| reads the whole file, every match | `clean-documents-the-name` (+1) |
+
+**`no-name`'s planted key points at its own directory on purpose.** A whole-file lens reads
+the body's `name: yun-anon`, finds it matching, and reports `CLEAN` — a *false* clean, which
+is the silent direction and the one a green suite hides. A plant that disagreed would have
+produced a loud `MISMATCH` and proved strictly less.
 
 ### Lenses already run by hand, not yet mechanised
 
