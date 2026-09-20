@@ -18,7 +18,7 @@ This is a harness skill. Two workspace rules bind every skill you author here �
 
 **Before authoring or diagnosing, `recall` the harness's `friction` topic** (through `skills/_shared/memory-convention.md`) — sessions working *other* projects file there what the harness got wrong. It is the harness's only supply of measured pain.
 
-**Close an edit by syncing the index.** `AGENTS.md`'s skill table and its `skills/_shared/` list, and `skills/README.md`, are a derived view of `skills/`. Sync them as the **last** edit, once the **traversal** has converged — a traversal keeps editing what the index describes.
+**Close an edit by syncing the index.** `AGENTS.md`'s skill table and its `skills/_shared/` list, and `skills/README.md`, are a derived view of `skills/`. Sync them as the **last** edit, once the **traversal** has converged — a traversal keeps editing what the index describes. **The view is derived, so derive it: do not declare the index synced until `lenses/run` has read `CLEAN`, and quote its last line.** An assertion you can satisfy by saying you ran it is a precondition in disguise. Mid-edit the suite is *expected* to report — an index that does not yet list the skill you are adding is correct — so this is a closing assertion and never a gate on the work.
 
 The rest of this skill is the quality bar those skills — and the `skills/_shared/` contracts they lean on — are judged against; a contract is authored, disclosed, pruned and traversed by the same rules.
 

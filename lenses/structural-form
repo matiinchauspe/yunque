@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Lens: structural-form
+#
+# Question: does every SKILL.md open with an H1 that is its own name?
+#
+# Scope is SKILL.md only. A disclosed file (LIMITS.md, GLOSSARY.md, UI.md) is named
+# for what it holds, not for its skill, so the rule does not reach it.
+#
+# Usage: lenses/structural-form [root]   (root defaults to the workspace root)
+# Exit:  0 = clean · 1 = findings · 2 = the lens could not run
+
+set -uo pipefail
+
+root="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+skills="$root/skills"
+
+[ -d "$skills" ] || { echo "structural-form: no skills/ under $root" >&2; exit 2; }
+
+findings=""
+count=0
+
+for f in "$skills"/yun-*/SKILL.md; do
+  [ -f "$f" ] || continue
+  name="$(basename "$(dirname "$f")")"
+  count=$((count + 1))
+
+  # The FIRST H1 outside the frontmatter and outside any code fence.
+  #
+  # Three exclusions, each of which a naive `rg '^#'` gets wrong, and each of
+  # which is grounded in this corpus rather than imagined:
+  #   - frontmatter, which is metadata and not the document body
+  #   - code fences: `yun-model-domain` carries `# Event-sourced orders` inside
+  #     one, and a fence-blind count reads it as a second heading
+  #   - the trailing space in `^# `, without which `##` and `###` match too and
+  #     a missing H1 is reported as a wrong one
+  #
+  # Only the FIRST is checked. A later H1 is legitimate: `yun-slice-plan` and
+  # `yun-write-spec` each carry the H1 of the DOCUMENT they produce
+  # (`# <NN> — <Ticket title>`, `# <Feature title>`). That is the template's
+  # title, not the skill's, and flagging it would be a false positive.
+  h1="$(awk '
+    NR == 1 && $0 == "---" { fm = 1; next }
+    fm && $0 == "---"      { fm = 0; next }
+    fm                     { next }
+    /^```/                 { fence = !fence; next }
+    !fence && /^# /        { print; exit }
+  ' "$f")"
+
+  if [ -z "$h1" ]; then
+    findings="${findings}NO-H1  ${name}  no H1 outside a code fence — the document has no top-level heading"$'\n'
+  elif [ "$h1" != "# $name" ]; then
+    findings="${findings}WRONG-H1  ${name}  opens with \"${h1}\", not \"# ${name}\""$'\n'
+  fi
+done
+
+if [ -n "$findings" ]; then
+  printf '%s' "$findings" | sort
+  exit 1
+fi
+
+echo "CLEAN  $count skills, every one opens with its own name"

@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# Runs every lens — each against its own fixtures FIRST, then against the harness.
+#
+# A lens whose fixtures fail is a BROKEN INSTRUMENT, and its reading of the harness
+# is discarded rather than printed. A broken check does not disable a verification;
+# it invents one (friction #23). This is the only thing standing between that entry
+# and a third occurrence.
+#
+# Usage: lenses/run [lens-name ...]   (default: every lens)
+# Exit:  0 = every lens clean · 1 = findings in the harness · 2 = a lens is broken
+
+set -uo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root="$(cd "$here/.." && pwd)"
+
+if [ "$#" -gt 0 ]; then
+  lenses=("$@")
+else
+  lenses=()
+  for l in "$here"/*; do
+    [ -f "$l" ] && [ -x "$l" ] && [ "$(basename "$l")" != "run" ] && lenses+=("$(basename "$l")")
+  done
+fi
+
+uncalibrated=0   # a lens failed its own fixtures — it is measuring wrong
+errored=0        # a lens could not run at all
+findings=0       # the harness has defects
+
+for lens in "${lenses[@]}"; do
+  script="$here/$lens"
+  [ -x "$script" ] || { echo "run: no such lens: $lens" >&2; errored=1; continue; }
+
+  echo "── $lens"
+
+  # --- calibrate: every fixture is a planted case the lens MUST read correctly
+  fixdir="$here/fixtures/$lens"
+  calibrated=1
+  # Cases are COUNTED, never inferred from the directory existing. A
+  # `fixtures/<lens>/` that is present but holds no case with an `expected` file
+  # ran this loop zero times and left `calibrated` at 1 — an uncalibrated lens
+  # whose reading was then printed as trustworthy. That is #23's shape a third
+  # time, inside the guard written to stop it, and the path there is this
+  # suite's own "Adding a lens" step 2 → step 3. Absent and empty are one verdict.
+  cases=0
+  if [ -d "$fixdir" ]; then
+    for fix in "$fixdir"/*/; do
+      [ -f "$fix/expected" ] || continue
+      cases=$((cases + 1))
+      name="$(basename "$fix")"
+      actual="$("$script" "${fix%/}" 2>&1)"; code=$?
+      expected="$(awk 'NF || NR < 1' "$fix/expected")"
+      if [ "$expected" = "${expected#CLEAN}" ]; then want=1; else want=0; fi
+
+      if [ "$actual" = "$expected" ] && [ "$code" -eq "$want" ]; then
+        echo "   fixture ok    $name"
+      else
+        calibrated=0
+        echo "   FIXTURE FAIL  $name"
+        echo "     expected (exit $want):"; printf '       %s\n' "$expected"
+        echo "     actual   (exit $code):"; printf '       %s\n' "$actual"
+      fi
+    done
+  fi
+
+  if [ "$cases" -eq 0 ]; then
+    calibrated=0
+    echo "   NO FIXTURES — an uncalibrated lens is not trusted"
+  fi
+
+  if [ "$calibrated" -eq 0 ]; then
+    echo "   BROKEN INSTRUMENT — its reading of the harness is discarded, not reported"
+    uncalibrated=1
+    continue
+  fi
+
+  # --- measure: only now is the reading worth anything
+  out="$("$script" "$root" 2>&1)"; code=$?
+  printf '   %s\n' "$out"
+  [ "$code" -eq 1 ] && findings=1
+  if [ "$code" -gt 1 ]; then
+    echo "   COULD NOT RUN — calibrated, but it failed against the harness itself"
+    errored=1
+  fi
+done
+
+echo
+# The two failure modes are NOT the same and must never share a message: an
+# uncalibrated lens measures confidently and wrongly, an errored one measures
+# nothing. Reporting the second as the first is the shape of friction #23.
+if [ "$uncalibrated" -eq 1 ]; then
+  echo "UNCALIBRATED — a lens failed its own fixtures. Fix the LENS before believing it."
+  exit 2
+elif [ "$errored" -eq 1 ]; then
+  echo "ERRORED — a lens could not run. Nothing was measured; this is not a clean result."
+  exit 2
+elif [ "$findings" -eq 1 ]; then
+  echo "FINDINGS — every lens is calibrated, and the harness has defects above."
+  exit 1
+else
+  echo "CLEAN — every lens calibrated, no findings."
+fi
