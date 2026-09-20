@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# The net under the hole prose cannot reach.
+#
+# `yun-write-skill` closes an edit with an assertion: run the lens suite before
+# declaring the index synced. That reaches harness text authored THROUGH a skill.
+# It does not reach harness text edited without one — a line changed in AGENTS.md
+# mid-conversation, an edit made by hand in an editor. If no skill is invoked, no
+# prose is read. That path has no trigger, and this hook is it.
+#
+# Tool-agnostic by construction: this is git. It fires the same from Claude Code,
+# from Cursor, or from a terminal.
+#
+# Bypass with `git commit --no-verify`.
+
+set -uo pipefail
+
+root="$(git rev-parse --show-toplevel)" || exit 0
+
+# Only harness text is in scope. A commit touching repos/ or docs/ walks past.
+if ! git -C "$root" diff --cached --name-only | rg -q '^(skills/|lenses/|AGENTS\.md$)'; then
+  exit 0
+fi
+
+# Check what is BEING COMMITTED, not what happens to be in the working tree.
+# A partially staged change would otherwise be measured against unstaged edits
+# that are not entering history — a check answering about the wrong world.
+staged="$(mktemp -d)"
+trap 'rm -rf "$staged"' EXIT
+git -C "$root" checkout-index -a -f --prefix="$staged/"
+
+# The staged tree carries its own suite, so it checks itself: a commit that
+# changes a lens is verified by the lens it is committing, not by the old one.
+if [ ! -x "$staged/lenses/run" ]; then
+  echo "pre-commit: lenses/run is not in the staged tree — nothing could be checked." >&2
+  echo "            That is not a clean result. Stage it, or bypass with --no-verify." >&2
+  exit 1
+fi
+
+out="$("$staged/lenses/run" 2>&1)"; code=$?
+[ "$code" -eq 0 ] && exit 0
+
+printf '%s\n' "$out" >&2
+echo >&2
+echo "pre-commit: the lens suite did not read CLEAN against the staged tree." >&2
+echo "            Fix it, or bypass with --no-verify." >&2
+exit 1

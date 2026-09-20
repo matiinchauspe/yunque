@@ -136,6 +136,8 @@ yunque/
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.yun
 ├─ skills/yun-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
 ├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-, practice-convention)
+├─ lenses/                   ← the harness's own check suite; `lenses/run` calibrates then measures
+├─ .githooks/pre-commit      ← runs the suite over the staged tree (`git config core.hooksPath .githooks`)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)
@@ -165,8 +167,9 @@ directory name must match the skill name (Agent Skills spec).
 
 ## What this repo versions
 
-Only the harness: `skills/` (including `skills/_shared/`), `AGENTS.md`, the `CLAUDE.md`
-symlink, the `.claude/skills` and `.cursor/skills` symlinks, `README.md`, `LICENSE`,
-`assets/` and `.gitignore`. Research notes under `docs/` stay local and are gitignored.
+Only the harness: `skills/` (including `skills/_shared/`), `lenses/`, `.githooks/`,
+`AGENTS.md`, the `CLAUDE.md` symlink, the `.claude/skills` and `.cursor/skills` symlinks,
+`README.md`, `LICENSE`, `assets/` and `.gitignore`. Research notes under `docs/` stay local
+and are gitignored.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
 artifact, domain-model and handoff files (`.yun/`) are NOT versioned.
