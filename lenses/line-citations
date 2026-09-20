@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# Lens: line-citations
+#
+# Question: does every line citation in the harness resolve — the cited file
+# present in the corpus, and the cited line or RANGE inside that file's length?
+#
+# Why this is a script and not a habit: two hand sweeps over this corpus each
+# missed every live citation, both times for the same reason — the regex did not
+# match RANGES (`:114-123`), only single lines. A tested script cannot regress
+# that way, and the fixture that proves it is `range-out-of-bounds`.
+#
+# WHAT THIS LENS DOES NOT DO, and must never be read as doing: it verifies the
+# line EXISTS. It does NOT verify the line still SAYS what the citing sentence
+# claims. Content drift is not mechanical, and a lens that implied otherwise
+# would be inventing a verification rather than performing one.
+#
+# Usage: lenses/line-citations [root]   (root defaults to the workspace root)
+# Exit:  0 = clean · 1 = findings · 2 = the lens could not run
+
+set -uo pipefail
+
+root="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+
+[ -d "$root/skills" ] || { echo "line-citations: no skills/ under $root" >&2; exit 2; }
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+# --- the corpus a citation may point INTO -------------------------------
+# Everything the harness versions. A citation to `lenses/run:12` is as real as
+# one to a SKILL.md, so resolution is not limited to the scanned set below.
+find "$root" \
+  \( -name .git -o -name .worktrees -o -name repos -o -name .yun -o -name node_modules \) -prune \
+  -o -type f -print > "$work/corpus" 2>/dev/null
+
+# --- the files SCANNED for citations ------------------------------------
+# `skills/` and the index, matching `invocation-flag`'s scope. `lenses/README.md`
+# is deliberately OUT: it is the registry, it QUOTES citations as worked
+# examples, and scanning it would manufacture findings from its own
+# documentation. A check that reads the prose describing it reports defects that
+# do not exist — measured twice in this workspace, and both false findings
+# arrived with a file name attached and read as rigorous.
+{
+  find "$root/skills" -type f -name '*.md' -print
+  [ -f "$root/AGENTS.md" ] && echo "$root/AGENTS.md"
+} > "$work/scanned" 2>/dev/null
+
+findings=""
+count=0
+
+while IFS= read -r f; do
+  [ -f "$f" ] || continue
+  rel="${f#"$root"/}"
+
+  # A citation outside any code fence. The fence exclusion is carried over from
+  # `structural-form`, where it is grounded: `yun-model-domain` keeps markup
+  # inside a fence that a fence-blind reader takes for the real thing. Terminal
+  # output pasted into a fence (`SKILL.md:199: ...`) is the same shape here.
+  while IFS=$'\t' read -r lineno cite; do
+    [ -n "$cite" ] || continue
+    count=$((count + 1))
+
+    target="${cite%:*}"
+    spec="${cite##*:}"
+    start="${spec%%-*}"
+    end="${spec##*-}"
+
+    # Resolve by basename, with or without the `.md` the corpus omits half the
+    # time: `execution-convention:114-123` and `plan-prompt.md:25` are both live.
+    matches="$(awk -v t="$target" -v tmd="$target.md" '
+      { n = split($0, p, "/"); base = p[n]
+        if (base == t || base == tmd) print }
+    ' "$work/corpus")"
+
+    n="$(printf '%s' "$matches" | awk 'NF { c++ } END { print c + 0 }')"
+
+    if [ "$n" -eq 0 ]; then
+      findings="${findings}DANGLING  ${cite}  cited in ${rel}:${lineno} — no file named ${target} in the corpus"$'\n'
+      continue
+    fi
+    if [ "$n" -gt 1 ]; then
+      findings="${findings}AMBIGUOUS  ${cite}  cited in ${rel}:${lineno} — ${n} files share that name, so it cannot be verified"$'\n'
+      continue
+    fi
+
+    lines="$(awk 'END { print NR }' "$matches")"
+    if [ "$end" -gt "$lines" ]; then
+      findings="${findings}OUT-OF-RANGE  ${cite}  cited in ${rel}:${lineno} — ${target} has ${lines} lines"$'\n'
+    fi
+  done < <(awk '
+    /^```/ { fence = !fence; next }
+    fence  { next }
+    {
+      line = $0
+      while (match(line, /[A-Za-z_][A-Za-z0-9_.-]*:[0-9]+(-[0-9]+)?/)) {
+        printf "%d\t%s\n", FNR, substr(line, RSTART, RLENGTH)
+        line = substr(line, RSTART + RLENGTH)
+      }
+    }
+  ' "$f")
+done < "$work/scanned"
+
+if [ -n "$findings" ]; then
+  printf '%s' "$findings" | sort
+  exit 1
+fi
+
+# The COUNT is part of the clean reading on purpose. A lens that silently stopped
+# matching ranges would still print CLEAN; it would print a smaller number.
+echo "CLEAN  $count line citations, all resolve"

@@ -42,6 +42,7 @@ lens — found only by mutating, and fixed by planting the missing form.
 | ---- | -------------------- | -------- | ------------------ |
 | `invocation-flag` | Does each skill's invocation mode, read from **frontmatter only**, agree with the `AGENTS.md` index? Also: any skill missing from the index, any index row with no skill. | 4 | The #23 false positive, twice — an unanchored whole-file match reporting `yun-write-skill` as user-invoked when its frontmatter is clean. |
 | `structural-form` | Does every `SKILL.md` open with an H1 that is **its own name**? First H1 only, outside the frontmatter and outside code fences. | 4 | Friction #22 — `yun-research` carried no H1 at all, and `yun-slice-plan`'s only heading was `# <NN> — <Ticket title>`, a form field from inside its own template. |
+| `line-citations` | Does every line citation resolve — the cited file present in the corpus, and the cited line or **range** inside its length? Reports `DANGLING` / `AMBIGUOUS` / `OUT-OF-RANGE`. **It never checks that the line still SAYS what the citing sentence claims** — content drift is not mechanical, and a lens implying otherwise would be inventing a verification rather than performing one. | 5 | `plan-prompt.md:25` in `yun-build-plan/LIMITS.md` — a line number pointing into a file this workspace does not hold, missed by two hand sweeps whose regex did not match ranges. |
 
 `structural-form`'s three exclusions are each grounded in this corpus, not imagined, and
 each has a fixture that a naive lens fails:
@@ -56,6 +57,37 @@ each has a fixture that a naive lens fails:
   the title of the document they *produce*. Fixture: `clean-template-second-h1`; a lens
   that checks "exactly one H1" flags both real skills.
 
+`line-citations` carries two decisions worth knowing before trusting its reading:
+
+- **It scans `skills/` and `AGENTS.md`, and deliberately NOT this file.** The registry quotes
+  citations as worked examples, so scanning it would manufacture findings out of its own
+  documentation. A check that reads the prose describing it reports defects that do not exist —
+  that has happened twice in this workspace, and both times the false finding arrived with a
+  file name attached and looked rigorous. Resolution, by contrast, searches the WHOLE corpus:
+  a citation into `lenses/run` is as real as one into a `SKILL.md`.
+- **A missing target is a FINDING, not a warning, even though some targets are external.** The
+  lens cannot tell "cites the source template we do not hold" from "cites a harness file that was
+  renamed" — and the second is the rot it exists to catch. Making the first silent would blind it
+  to the second. So the practice is to repair an unverifiable line number into a file-level
+  reference, per the running list's own rule: name the file, quote the sentence, never a line number.
+
+**Six mutations, five fixtures, none redundant** — each fixture is the sole catcher of at least
+one break:
+
+| Mutation of the lens | Caught only by |
+| -------------------- | -------------- |
+| stops matching ranges (`:114-123` → `:114`) — **the bug both hand sweeps had** | `range-out-of-bounds` |
+| stops skipping code fences | `fenced-citation-only` |
+| resolves a target only WITH its extension, never without | `clean-range-and-single` (+2) |
+| accepts a basename two files share | `ambiguous` |
+| accepts a target absent from the corpus | `dangling` |
+| off-by-one at the boundary (`-gt` → `-ge`) | `clean-range-and-single` |
+
+**That last row is the whole reason this page insists on mutation.** The first `clean-range-and-single` cited only an
+interior line and a range, and the off-by-one passed **all five fixtures** — a green suite hiding
+a lens that rejects every citation to a file's last line. Found by mutating, fixed by citing the
+last line on purpose. **A clean fixture must exercise the boundary, not just the happy middle.**
+
 ### Lenses already run by hand, not yet mechanised
 
 From the traversals of 2026-09-13 and 2026-09-17. Listed so the set is a file rather
@@ -65,7 +97,6 @@ per-lens and its stopping rule never said so.
 | Lens | Question | Status |
 | ---- | -------- | ------ |
 | references | Does every cross-reference resolve? | ran clean by hand (131 refs); the `sd` pipeline that ran it collapsed its matches and reported one empty row — #23's second face |
-| line-citations | Does the harness cite itself by line number, **including ranges** (`:114-123`)? | three live; two earlier sweeps missed all three because the regex did not match ranges — friction #17 |
 | branches | Does every branch of every decision tree terminate? | ran clean by hand |
 | counters | Does every "N things" in prose match the count that follows? | ran clean by hand |
 | consumers · attribution · duplication · prior-decisions · negation · completion-criteria | see obs `#854` and the 2026-09-17 traversal | ran by hand |
