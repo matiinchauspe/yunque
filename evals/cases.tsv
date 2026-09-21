@@ -1,0 +1,75 @@
+# The frozen corpus. expected <TAB> origin <TAB> prompt
+#
+# FROZEN ON PURPOSE. This file is the answer key, and a reading is only comparable
+# to another reading taken against the SAME key — which is why `evals/run` prints
+# this file's hash beside every verdict. Regenerating it RESETS THE BASELINE: every
+# earlier percentage stops being comparable, so do it deliberately, never as a
+# side effect of editing a skill.
+#
+# The trap this guards: if the cases were derived from each description at run time,
+# improving a description would move the skill AND the test together, and the delta
+# — the entire product of this instrument — would mean nothing.
+#
+# origin:
+#   quoted           the phrase appears IN QUOTES inside the skill's own description.
+#                    A failure here is unambiguous: the skill will not fire on its
+#                    own literal declared words.
+#   derived          the skill declares this branch in prose but quotes no phrase, so
+#                    the wording is a faithful reading of that branch rather than a
+#                    copy. A failure here is softer — the wording is one of several
+#                    the branch admits.
+#   control-negative must fire NO harness skill. If one fires, the INSTRUMENT is wrong.
+#   control-positive a skill is named outright, so a Skill call is near-certain. It
+#                    asks "can this instrument SEE a Skill call?", never "is the
+#                    harness good" — keeping instrument health separate from the
+#                    reading, so a real harness regression is never mis-reported as
+#                    a broken instrument.
+#
+# Only the 12 model-invocable skills appear. The 4 user-invoked ones
+# (yun-build-plan, yun-chart-course, yun-sync-repo, yun-write-handoff) carry
+# disable-model-invocation, so a model cannot fire them at all and measuring them
+# would be asking a question with a known, uninteresting answer.
+#
+# The language is each description's own. Where a skill quotes Spanish triggers the
+# case is Spanish; where its prose is English the derived case is English. This
+# corpus deliberately measures the phrases the harness ALREADY DECLARES, not the way
+# a person actually talks — see evals/README.md.
+yun-build-prototype	quoted	what should this look like
+yun-build-prototype	derived	a decision hangs on whether this state model feels right — I want to try it
+yun-build-prototype	derived	I want to sanity-check this shape by running it before committing
+yun-diagnose-bug	quoted	diagnose this bug
+yun-diagnose-bug	quoted	no entiendo por qué falla
+yun-diagnose-bug	quoted	está lento
+yun-grill-plan	quoted	grillame
+yun-grill-plan	quoted	cuestioname
+yun-grill-plan	quoted	poné a prueba esto
+yun-implement	quoted	implementá
+yun-implement	quoted	buildeá
+yun-implement	derived	the next step is writing code
+yun-model-domain	derived	I want to pin down a domain term that keeps getting used two different ways
+yun-model-domain	derived	let's agree on the canonical vocabulary for this project
+yun-model-domain	derived	record an ADR for this hard-to-reverse decision
+yun-research	derived	research this topic for me
+yun-research	derived	gather the API facts and verify that claim
+yun-research	derived	delegate this reading legwork while I keep working
+yun-review-work	quoted	revisá este trabajo
+yun-review-work	quoted	revisá esto
+yun-review-work	quoted	review this work
+yun-slice-plan	derived	this plan is approved — break it into tickets to build
+yun-slice-plan	derived	slice this spec into tracer-bullet tickets
+yun-slice-plan	derived	the decision is ready, I want executable tickets out of it
+yun-spawn-worktree	derived	I want to work this task in isolation
+yun-spawn-worktree	derived	let's parallelize this so the work doesn't collide
+yun-spawn-worktree	derived	run this ticket on its own branch
+yun-tdd	quoted	let's do this with TDD
+yun-tdd	quoted	red-green this fix
+yun-tdd	derived	build this feature test-first
+yun-write-skill	derived	I want to author a new skill in this workspace
+yun-write-skill	derived	this skill misfires — help me diagnose why
+yun-write-skill	derived	should this live in SKILL.md or a linked file?
+yun-write-spec	quoted	escribí el spec
+yun-write-spec	quoted	write the spec
+yun-write-spec	derived	the decisions are settled, consolidate them into one document
+NONE	control-negative	qué hora es
+NONE	control-negative	what is 2 + 2
+yun-write-skill	control-positive	usá la skill yun-write-skill

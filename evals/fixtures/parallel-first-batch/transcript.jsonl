@@ -1,0 +1,2 @@
+{"type":"system","subtype":"init","skills":["yun-write-skill"],"mcp_servers":[{"name":"some-server","status":"connected"}],"model":"claude-opus-5"}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"t1","name":"Bash","input":{"command":"git status"}},{"type":"tool_use","id":"t2","name":"Skill","input":{"skill":"yun-write-skill"}}]}}
