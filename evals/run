@@ -1,0 +1,351 @@
+#!/usr/bin/env bash
+# The first eval: does the skill that should fire, fire?
+#
+# The lens suite is a linter for the harness TEXT. This is the other instrument —
+# it measures BEHAVIOUR, by running a real agent against the real harness and
+# reading which skill it reached for first. The text can be perfectly consistent,
+# perfectly indexed, perfectly named, and never fire.
+#
+# WHAT IT REPORTS, AND WHAT IT DOES NOT. A percentage per skill, and nothing else.
+# It is a REGRESSION instrument, not a grade: "is 70% good?" is unanswerable, while
+# "was 70%, changed the description, now 90%" is actionable. The delta is the whole
+# product, which is why the corpus is frozen and its hash is printed beside every
+# reading — two readings taken against different corpora are not comparable and the
+# hash is how you can tell.
+#
+# WHY IT DOES NOT MEASURE THE HARNESS. It measures a RUNNER READING the harness.
+# Behaviour only exists inside a tool, so there is no tool-agnostic way to observe
+# it. The split that keeps the workspace's tool-agnostic claim intact: the CORPUS is
+# pure harness vocabulary, the RUNNER is the only tool-specific part, and the VERDICT
+# names its runner and its model rather than speaking for "the harness" in general.
+# A second runner (cursor-agent has the same -p / stream-json shape) is a second
+# reading, and the two can DISAGREE — that disagreement is the information, since the
+# tool-agnostic claim has never been measured.
+#
+# FIRED means the expected skill is the FIRST tool call. A skill exists to govern the
+# PROCESS; one invoked after the work is done governed nothing, and a process that
+# already happened cannot be governed retroactively. Bash counts as an action even
+# when the command is `git status` — classifying shell commands read-vs-write is model
+# judgment, and a measuring instrument that needs a model to read its own output is
+# the guard needing the same treatment as the thing it guards.
+#
+# HOW IT STAYS CHEAP, AND THE TRAP IN IT. Reading stops at the first tool call, so the
+# run is killed there: ~6s instead of ~70s, the strict definition and the cheap one
+# turning out to be the same thing. MEASURED: closing the pipe is NOT enough — an awk
+# that exits on the first match left the runner going for 52 seconds. The kill must be
+# explicit, by PID. The polling ceiling below is also load-bearing: macOS ships no
+# `timeout` and no `gtimeout`, so a hung run has nothing else to stop it.
+#
+# CALIBRATION, in the same shape as lenses/run: a reading nobody calibrated is not a
+# reading. FOUR gates, all before any measurement, and a failure of any of them
+# reports NOTHING rather than reporting something wrong.
+#
+# Usage: evals/run [--runs N] [skill ...]    (default: 5 runs, every skill)
+# Exit:  0 = measured · 1 = measured, and some skill fired 0 of N · 2 = not measured
+
+set -uo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root="$(cd "$here/.." && pwd)"
+cases="$here/cases.tsv"
+
+runner="claude"
+runs=5
+poll=0.2      # seconds between reads of the partial transcript
+ceiling=300   # 300 x 0.2s = 60s per run. macOS has no `timeout`; this is its stand-in.
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --runs) runs="${2:-}"; shift 2 ;;
+    --runs=*) runs="${1#--runs=}"; shift ;;
+    *) break ;;
+  esac
+done
+only="$*"   # a space-separated filter, empty for "every skill"
+
+case "$runs" in
+  '' | *[!0-9]*) echo "evals/run: --runs needs a number, got \"$runs\"" >&2; exit 2 ;;
+esac
+[ "$runs" -ge 1 ] || { echo "evals/run: --runs must be at least 1" >&2; exit 2; }
+
+[ -f "$cases" ] || { echo "evals/run: no cases.tsv beside this script" >&2; exit 2; }
+command -v "$runner" >/dev/null 2>&1 || {
+  echo "evals/run: runner \"$runner\" is not on PATH — nothing can be measured" >&2
+  exit 2
+}
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+# ---------------------------------------------------------------- reading a run
+
+# Every tool call in the transcript's FIRST BATCH — the first assistant message that
+# carries any — one "TOOL<TAB>SKILL" per line, SKILL empty unless the tool was Skill.
+#
+# THE BATCH, NOT THE BLOCK. An assistant message can carry several tool_use blocks at
+# once, and the agent chose all of them simultaneously, before seeing a single result.
+# Reading only the first block would mark a run that reached for the skill in its very
+# first action as a miss because something else sat beside it in the same decision.
+#
+# Read by SPLITTING on the tool_use marker rather than by stripping a prefix. The
+# obvious `sub(/.*"type":"tool_use"/, "", line)` is GREEDY and skips to the LAST
+# occurrence on the line, so a parallel batch would report its last tool as its first.
+# Found by mutation, and the fixture that holds it down is parallel-first-batch.
+#
+# The `/"type":"tool_use"/` line filter is what keeps the init event out. That event
+# carries a `"name"` per MCP server, and a reader that matched those would report a
+# tool call that never happened — the instrument bug this workspace has rebuilt from
+# scratch four separate times, each time arriving with a file name attached and
+# looking rigorous.
+#
+# The `/\}$/` guard is not cosmetic. This is read from a transcript still being
+# written, so a line can be half-flushed: the tool_use marker present, the name or
+# the skill argument not yet. Accepting one would silently score a real firing as a
+# miss, and nothing downstream could tell. Only a complete JSON line is read.
+first_batch() {
+  awk '
+    /"type":"tool_use"/ && /\}$/ {
+      n = split($0, parts, /"type":"tool_use"/)
+      for (i = 2; i <= n; i++) {
+        seg = parts[i]
+        tool = ""; skill = ""
+        if (match(seg, /"name":"[^"]*"/))  tool  = substr(seg, RSTART + 8,  RLENGTH - 9)
+        if (match(seg, /"skill":"[^"]*"/)) skill = substr(seg, RSTART + 9, RLENGTH - 10)
+        print tool "\t" skill
+      }
+      exit
+    }
+  ' "$1"
+}
+
+# Run one prompt, stop at the first tool call, leave the partial transcript behind.
+probe() {
+  local prompt="$1" out="$2" pid found i
+  : > "$out"
+  "$runner" -p "$prompt" --output-format stream-json --verbose \
+      --setting-sources project < /dev/null > "$out" 2>/dev/null &
+  pid=$!
+  found=""
+  i=0
+  while [ "$i" -lt "$ceiling" ]; do
+    found="$(first_batch "$out")"
+    [ -n "$found" ] && break
+    # The runner finishing without a tool call is a legitimate outcome, not a fault:
+    # the agent answered in prose. Read once more so the exit is not a race.
+    kill -0 "$pid" 2>/dev/null || { found="$(first_batch "$out")"; break; }
+    sleep "$poll"
+    i=$((i + 1))
+  done
+  kill "$pid" 2>/dev/null
+  wait "$pid" 2>/dev/null
+  printf '%s' "$found"
+}
+
+fired_skills() { printf '%s\n' "$1" | awk -F'\t' '$1 == "Skill" && $2 != "" { print $2 }'; }
+first_named()  { printf '%s\n' "$1" | head -1 | cut -f1; }
+
+# The scorer. Measurement and calibration gate 3 both go through THIS function, on
+# purpose: a scorer exercised only by the measurement is a scorer nothing can catch
+# going wrong. A mutation making it always answer 1 reads as a flawless harness —
+# the silent direction, the one a green report hides — and gate 3 is what sees it,
+# because it asks the scorer a question whose answer must be 0.
+score() {
+  printf '%s\n' "$1" | awk -v want="$2" '
+    want != "" && $0 == want { f = 1 }
+    END { print (f ? 1 : 0) }
+  '
+}
+
+# ------------------------------------------------------------------ calibration
+
+echo "calibrating..."
+
+# Gate 0 — the transcript reader, against planted transcripts whose correct reading
+# is obvious by eye. This half of the instrument is DETERMINISTIC text handling, so
+# unlike everything below it can be proven without spending a single API call. It
+# runs first for that reason: a reader that cannot read makes every later gate a
+# coin toss wearing a verdict.
+fixtures="$here/fixtures"
+fx_count=0
+fx_failed=""
+for fx in "$fixtures"/*/; do
+  [ -f "$fx/transcript.jsonl" ] && [ -f "$fx/expected" ] || continue
+  fx_count=$((fx_count + 1))
+  want="$(cat "$fx/expected")"
+  have="$(first_batch "$fx/transcript.jsonl")"
+  [ "$have" = "$want" ] || fx_failed="${fx_failed}$(basename "$fx") wanted [${want}] got [${have}]; "
+done
+# Absent and empty collapse to one verdict on purpose: a fixtures directory that
+# exists but holds no case would otherwise run the loop zero times and report the
+# reader as trustworthy. That exact hole was found inside this workspace's other
+# calibration gate.
+if [ "$fx_count" -eq 0 ]; then
+  echo "UNCALIBRATED  no reader fixtures under evals/fixtures/ — the transcript reader" >&2
+  echo "              is untested, so nothing it reports can be trusted." >&2
+  exit 2
+fi
+if [ -n "$fx_failed" ]; then
+  echo "UNCALIBRATED  the transcript reader failed its own fixtures: ${fx_failed}" >&2
+  echo "              Nothing was measured." >&2
+  exit 2
+fi
+
+expected_skills="$(awk -F'\t' '
+  !/^#/ && NF >= 3 && $1 != "NONE" { print $1 }
+' "$cases" | sort -u)"
+
+pos_prompt="$(awk -F'\t' '!/^#/ && $2 == "control-positive" { print $3; exit }' "$cases")"
+pos_expect="$(awk -F'\t' '!/^#/ && $2 == "control-positive" { print $1; exit }' "$cases")"
+[ -n "$pos_prompt" ] || { echo "evals/run: cases.tsv carries no control-positive" >&2; exit 2; }
+
+pos_out="$work/control-positive.jsonl"
+pos_got="$(probe "$pos_prompt" "$pos_out")"
+
+# Gate 1 — the instrument can SEE a Skill call. This asks nothing about the harness's
+# quality: the prompt names the skill outright. Separating the two is what stops a
+# genuine harness regression from being mis-reported as a broken instrument.
+if [ "$(fired_skills "$pos_got")" != "$pos_expect" ]; then
+  echo "UNCALIBRATED  control-positive asked for $pos_expect and got \"${pos_got:-no tool call}\"" >&2
+  echo "              Either the runner changed or the transcript reader broke." >&2
+  echo "              Nothing was measured." >&2
+  exit 2
+fi
+
+# Gate 2 — the corpus under test actually loaded. The init event enumerates the
+# skills the runner discovered, so this is read from the world rather than assumed.
+# Without it a reading of zero is indistinguishable from a harness that never loaded.
+init_skills="$(sed -n 's/.*"skills":\[\([^]]*\)\].*/\1/p' "$pos_out" | head -1)"
+if [ -z "$init_skills" ]; then
+  echo "UNCALIBRATED  the runner's init event declared no skills list — cannot confirm" >&2
+  echo "              which corpus was measured. Nothing was measured." >&2
+  exit 2
+fi
+missing=""
+for s in $expected_skills; do
+  case "$init_skills" in
+    *"\"$s\""*) ;;
+    *) missing="${missing}${s} " ;;
+  esac
+done
+if [ -n "$missing" ]; then
+  echo "UNCALIBRATED  the runner did not load: ${missing}" >&2
+  echo "              The corpus under test is not the corpus on disk. Nothing was measured." >&2
+  exit 2
+fi
+
+# Gate 3 — the instrument does not invent findings. A prompt with no business firing
+# anything must fire nothing. A broken check does not disable a verification; it
+# invents one, and it arrives wearing the costume of a rigorous finding.
+probe_skill="$(printf '%s' "$expected_skills" | head -1)"
+neg_failed=""
+while IFS="$(printf '\t')" read -r expect origin prompt; do
+  case "$origin" in control-negative) ;; *) continue ;; esac
+  got="$(fired_skills "$(probe "$prompt" "$work/control-negative.jsonl")")"
+  case "$got" in
+    yun-*) neg_failed="${neg_failed}\"${prompt}\" fired ${got}; " ;;
+  esac
+  # And the scorer itself, asked a question whose answer must be 0. This run fired
+  # no harness skill, so scoring it AS one must not count. A scorer that says 1 here
+  # would say 1 everywhere, and the report would read 100% while measuring nothing.
+  if [ "$(score "$got" "$probe_skill")" != 0 ]; then
+    neg_failed="${neg_failed}the scorer counted \"${got:-no tool call}\" as ${probe_skill}; "
+  fi
+done < <(grep -v '^#' "$cases")
+if [ -n "$neg_failed" ]; then
+  echo "UNCALIBRATED  a control-negative fired a harness skill: ${neg_failed}" >&2
+  echo "              The instrument is reporting firings that should not happen." >&2
+  echo "              Nothing was measured." >&2
+  exit 2
+fi
+
+# --------------------------------------------------------------------- measuring
+
+results="$work/results.tsv"
+: > "$results"
+
+total_cases=0
+while IFS="$(printf '\t')" read -r expect origin prompt; do
+  [ -n "${expect:-}" ] || continue
+  case "$origin" in control-*) continue ;; esac
+  if [ -n "$only" ]; then
+    case " $only " in *" $expect "*) ;; *) continue ;; esac
+  fi
+  total_cases=$((total_cases + 1))
+  n=0
+  while [ "$n" -lt "$runs" ]; do
+    n=$((n + 1))
+    batch="$(probe "$prompt" "$work/case.jsonl")"
+    hit="$(score "$(fired_skills "$batch")" "$expect")"
+    # What it reached for instead, as ONE field — a batch is several lines and would
+    # otherwise split the row it is written into.
+    reached="$(first_named "$batch")"
+    printf '%s\t%s\t%s\t%s\t%s\n' "$expect" "$origin" "$prompt" "$hit" "${reached:-no tool call}" >> "$results"
+    printf '  %s  %s  %s\n' "$([ "$hit" = 1 ] && echo '+' || echo '.')" "$expect" "$prompt" >&2
+  done
+done < <(grep -v '^#' "$cases")
+
+if [ "$total_cases" -eq 0 ]; then
+  echo "evals/run: no cases matched${only:+ \"$only\"} — nothing was measured" >&2
+  exit 2
+fi
+
+# ---------------------------------------------------------------------- the report
+
+corpus_hash="$(shasum "$cases" | cut -c1-7)"
+runner_version="$("$runner" --version 2>/dev/null | head -1)"
+model="$(sed -n 's/.*"model":"\([^"]*\)".*/\1/p' "$pos_out" | head -1)"
+
+echo
+echo "runner: ${runner_version:-$runner} · model: ${model:-unknown} · ${runs} runs/case · corpus ${corpus_hash} (evals/cases.tsv)"
+echo
+
+awk -F'\t' -v runs="$runs" '
+  { cases[$1]++; if ($4 == 1) hit[$1]++; tot++; if ($4 == 1) tothit++
+    if ($2 == "quoted") { q[$1]++; if ($4 == 1) qhit[$1]++ } else { d[$1]++; if ($4 == 1) dhit[$1]++ } }
+  END {
+    printf "%-22s %6s %9s %7s   %9s %9s\n", "skill", "cases", "fired", "pct", "quoted", "derived"
+    n = 0
+    for (s in cases) order[n++] = s
+    for (i = 0; i < n; i++) for (j = i + 1; j < n; j++) if (order[j] < order[i]) { t = order[i]; order[i] = order[j]; order[j] = t }
+    for (i = 0; i < n; i++) {
+      s = order[i]
+      printf "%-22s %6d %9s %6d%%   %9s %9s\n", s, cases[s] / runs, \
+        (hit[s] + 0) "/" cases[s], (hit[s] + 0) * 100 / cases[s], \
+        (q[s] ? (qhit[s] + 0) "/" q[s] : "—"), (d[s] ? (dhit[s] + 0) "/" d[s] : "—")
+    }
+    printf "%-22s %6d %9s %6d%%\n", "TOTAL", tot / runs, (tothit + 0) "/" tot, (tothit + 0) * 100 / tot
+  }
+' "$results"
+
+echo
+# WHAT IT REACHED FOR INSTEAD, not just that it missed. The first real reading of this
+# instrument could not answer the question that decided the diagnosis — when a skill
+# scores zero, did a SIBLING skill fire instead? That would be correct routing, not a
+# miss, and the two want opposite repairs. It had to be re-measured by hand to find out.
+echo "cases that did not fire every run  (→ what it reached for instead):"
+awk -F'\t' '
+  {
+    k = $1 "\t" $2 "\t" $3
+    c[k]++
+    if ($4 == 1) { h[k]++; next }
+    seen = k "\001" $5
+    if (!(seen in dup)) { dup[seen] = 1; miss[k] = miss[k] (miss[k] ? ", " : "") $5 }
+  }
+  END { for (k in c) if ((h[k] + 0) < c[k]) printf "  %s/%s  %s   → %s\n", (h[k] + 0), c[k], k, miss[k] }
+' "$results" | sort -t'	' -k2
+
+floor="$(awk -F'\t' '
+  { cases[$1]++; if ($4 == 1) hit[$1]++ }
+  END { for (s in cases) if ((hit[s] + 0) == 0) printf "%s ", s }
+' "$results")"
+
+if [ -n "$floor" ]; then
+  echo
+  echo "FLOOR  these skills fired 0 of ${runs} on every case: ${floor}"
+  echo "       Zero is the one non-arbitrary point on this scale: a skill that will not"
+  echo "       fire on its own declared phrasing will not fire on how a person talks."
+  exit 1
+fi
+
+echo
+echo "MEASURED  ${total_cases} cases, ${runs} runs each. No skill fired zero."

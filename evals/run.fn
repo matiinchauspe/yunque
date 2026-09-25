@@ -1,0 +1,15 @@
+first_batch() {
+  awk '
+    /"type":"tool_use"/ && /\}$/ {
+      n = split($0, parts, /"type":"tool_use"/)
+      for (i = 2; i <= n; i++) {
+        seg = parts[i]
+        tool = ""; skill = ""
+        if (match(seg, /"name":"[^"]*"/))  tool  = substr(seg, RSTART + 8,  RLENGTH - 9)
+        if (match(seg, /"skill":"[^"]*"/)) skill = substr(seg, RSTART + 9, RLENGTH - 10)
+        print tool "\t" skill
+      }
+      exit
+    }
+  ' "$1"
+}

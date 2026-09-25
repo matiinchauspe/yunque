@@ -1,0 +1,2 @@
+{"type":"system","subtype":"init","skills":["yun-write-skill","yun-tdd"],"mcp_servers":[{"name":"some-server","status":"connected"}],"model":"claude-opus-5"}
+{"type":"assistant","message":{"content":[{"type":"text","text":"On it."},{"type":"tool_use","id":"toolu_01","name":"Skill","input":{"skill":"yun-write-skill"}}]}}

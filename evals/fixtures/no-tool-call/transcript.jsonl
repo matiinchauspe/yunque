@@ -1,0 +1,2 @@
+{"type":"system","subtype":"init","skills":["yun-write-skill"],"mcp_servers":[{"name":"some-server","status":"connected"}],"model":"claude-opus-5"}
+{"type":"assistant","message":{"content":[{"type":"text","text":"Son las tres de la tarde."}]}}
