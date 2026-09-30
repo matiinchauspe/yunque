@@ -22,8 +22,9 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   tickets, cleared one at a time until the way to the destination is clear. Adapted from Matt
   Pocock's `wayfinder`.
 - `yun-grill-plan/` — relentless one-question-at-a-time interview that front-loads the open
-  decisions into an airtight spec, recalling prior decisions before asking. Adapted from Matt
-  Pocock's `grilling`.
+  decisions into an airtight spec, recalling prior decisions before asking; in a domain plan it
+  runs `yun-model-domain`'s reflexes alongside, sharpening and capturing the ubiquitous
+  language as terms resolve. Adapted from Matt Pocock's `grilling` + `grill-with-docs`.
 - `yun-write-spec/` — synthesizes a large task's settled decisions into one durable spec
   document (no interview), published through the artifact convention. Adapted from Matt
   Pocock's `to-spec`.

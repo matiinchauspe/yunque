@@ -17,6 +17,10 @@ Surface only decisions an implementer couldn't safely default on their own; skip
 
 The *decisions* themselves are the user's. Put each one to them and wait for the answer.
 
+## The language
+
+A plan that lives in a project's domain is grilled in that domain's **ubiquitous language**. Before the first question, **consult** the model (follow `skills/_shared/domain-convention.md`), then grill with `yun-model-domain` loaded and its session reflexes running alongside every question: challenge a term against the glossary, sharpen a fuzzy one, probe it with a scenario, cross-check the code, and **capture** each term the moment it resolves. A plan about tooling or the harness itself has no domain to sharpen — grill it on decisions alone.
+
 ## As decisions resolve
 
 **Persist** each settled decision as it lands — not at the end — following `skills/_shared/memory-convention.md`. The grilling front-loads the questions so the work afterwards runs autonomously; the record is what makes a later session (or a fresh agent) able to pick it up without re-asking.
@@ -25,8 +29,8 @@ A decision that changed the system's **architecture** — how it is built, not j
 
 ## Done
 
-Do not act on the plan until the user confirms you have reached a shared understanding. The bar: an implementer could execute the result without asking a single question.
+Do not act on the plan until the user confirms you have reached a shared understanding. The bar: an implementer could execute the result without asking a single question — and, in a domain grill, could name every concept in the glossary's own words. Close by listing the terms captured this session, or stating that none resolved.
 
 ## Attribution
 
-Adapted for this workspace from **Matt Pocock's `grilling`** (github.com/mattpocock/skills, MIT). Change: facts-lookup extended to recall prior decisions, and settled decisions are persisted as they resolve — both via `skills/_shared/memory-convention.md`.
+Adapted for this workspace from **Matt Pocock's `grilling`** (github.com/mattpocock/skills, MIT). Change: facts-lookup extended to recall prior decisions, and settled decisions are persisted as they resolve — both via `skills/_shared/memory-convention.md`. The domain-language pass composes `yun-model-domain` into the grill the way Matt's `grill-with-docs` composes `grilling` with `domain-modeling`, but conditionally and model-invoked rather than as a separate hand-typed skill.
