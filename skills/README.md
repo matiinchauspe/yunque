@@ -22,8 +22,9 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   tickets, cleared one at a time until the way to the destination is clear. Adapted from Matt
   Pocock's `wayfinder`.
 - `yun-grill-plan/` — relentless one-question-at-a-time interview that front-loads the open
-  decisions into an airtight spec, recalling prior decisions before asking. Adapted from Matt
-  Pocock's `grilling`.
+  decisions into an airtight spec, recalling prior decisions before asking; in a domain plan it
+  runs `yun-model-domain`'s reflexes alongside, sharpening and capturing the ubiquitous
+  language as terms resolve. Adapted from Matt Pocock's `grilling` + `grill-with-docs`.
 - `yun-write-spec/` — synthesizes a large task's settled decisions into one durable spec
   document (no interview), published through the artifact convention. Adapted from Matt
   Pocock's `to-spec`.
@@ -56,7 +57,8 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   or rival UI variants side by side, thrown away once it has ruled. Adapted from Matt Pocock's
   `prototype`.
 - `yun-model-domain/` — builds and sharpens a project's domain model: a ubiquitous-language
-  glossary (`CONTEXT.md`) and one-paragraph ADRs, captured through the domain convention. It
+  glossary (the repo's own, else `CONTEXT.md`) and one-paragraph ADRs, captured through the
+  domain convention. It
   also receives architectural decisions handed over by the skills that produce them —
   `yun-chart-course`, `yun-grill-plan` and `yun-build-prototype` — and owns whether each
   qualifies for an ADR. Adapted from Matt Pocock's `domain-modeling`.

@@ -13,7 +13,8 @@ model, not consuming it.**
 
 The model has two kinds, and only two — a **glossary** of terms and a log of **decisions**
 (ADRs). Both are captured through `domain-convention.md` (`capture`), which owns where they
-land and when they commit; this skill owns what they say. Create files **lazily** — only when a term or a decision
+land and when they commit; this skill owns what they say. Written into a glossary or log the
+repo already keeps, an entry says the same things in that file's format. Create files **lazily** — only when a term or a decision
 actually resolves. Never scaffold an empty model upfront, and never nag that one is missing.
 
 **Handed a decision another skill already settled**, go straight to **The decisions (ADRs)**:

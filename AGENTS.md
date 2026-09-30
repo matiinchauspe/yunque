@@ -94,7 +94,8 @@ and degrades by its own rules, spelled out below:
   distinct parts. WHETHER there is a resolution is the walking skill's call.
 - `domain-convention.md` — capture/consult a project's domain model: its ubiquitous-language
   glossary and the ADRs behind its shape (capture/consult) → committed in the target repo
-  (`CONTEXT.md` + `docs/adr/`) → `.yun/domain/<project>/` (same layout) when there is no repo. It
+  (the glossary and decision log it already keeps, else `CONTEXT.md` + `docs/adr/`) →
+  `.yun/domain/<project>/` (default layout) when there is no repo. It
   is a project deliverable, so capture never skips; consulting an absent model proceeds silently.
 - `flow-convention.md` — walk a charted map: which ticket is takeable now, who holds it, at what
   pace, what runs unattended (frontier/claim/release + cadence, autonomy, auto-dispatch,
@@ -149,8 +150,9 @@ yunque/
 └─ .yun/handoffs/            ← session batons, retired when superseded (gitignored)
 ```
 
-The domain model's real home is the target repo itself (`repos/<name>/CONTEXT.md` + `docs/adr/`),
-committed with the code; `.yun/domain/` only catches work not tied to a repo.
+The domain model's real home is the target repo itself (the glossary and decision log it
+already keeps, else `repos/<name>/CONTEXT.md` + `docs/adr/`), committed with the code;
+`.yun/domain/` only catches work not tied to a repo.
 
 ## Skill naming convention
 
