@@ -19,7 +19,9 @@ The *decisions* themselves are the user's. Put each one to them and wait for the
 
 ## The language
 
-A plan that lives in a project's domain is grilled in that domain's **ubiquitous language**. Before the first question, **consult** the model (follow `skills/_shared/domain-convention.md`), then grill with `yun-model-domain` loaded and its session reflexes running alongside every question: challenge a term against the glossary, sharpen a fuzzy one, probe it with a scenario, cross-check the code, and **capture** each term the moment it resolves. A plan about tooling or the harness itself has no domain to sharpen — grill it on decisions alone.
+A plan that lives in a project's domain is grilled in that domain's **ubiquitous language**. Before the first question, invoke `yun-model-domain` and **consult** the model (follow `skills/_shared/domain-convention.md`). Then open with the **terms at stake**: every domain term the plan uses, each beside the glossary's definition — or marked *missing* from it, or *colliding* with it. That list is where the grilling starts: a missing or colliding term is a question like any other, put before the decisions that lean on it.
+
+From there, keep `yun-model-domain`'s session reflexes running alongside every question — challenge, sharpen, probe with a scenario, cross-check the code — and **capture** each term the moment it resolves. A plan about tooling or the harness itself has no domain to sharpen — grill it on decisions alone.
 
 ## As decisions resolve
 

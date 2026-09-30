@@ -37,19 +37,24 @@ The agent resolves intent to the first mechanism that fits, in order:
 capture(entry, project):        # entry is a resolved term, or a decision
   The two homes are mutually exclusive — the work either targets a repo or it doesn't:
   1. project is a synced repo (project = <name>) → write in that repo:
-       - a term     → the glossary at the repo root (CONTEXT.md)
-       - a decision → docs/adr/<NNNN>-<slug>.md
+       - a term     → the glossary the repo already keeps, else one at the repo root (CONTEXT.md)
+       - a decision → the decision log the repo already keeps, else docs/adr/<NNNN>-<slug>.md
+     A glossary or log the repo already keeps — named by its own agent instructions or
+     conventions doc, or a file that plainly is one, wherever it lives — wins over the default
+     path, and an entry written there takes that file's existing format. Two glossaries in one
+     repo is a split language.
   2. project is not tied to a repo (project = _workspace) → write the SAME layout under
        .yun/domain/<project>/ (workspace root, gitignored): CONTEXT.md + docs/adr/<NNNN>-<slug>.md.
 
-  In both homes: a decision is a new file, numbered by scanning the active home's docs/adr/
+  In both homes, at the default path: a decision is a new file, numbered by scanning the active home's docs/adr/
   for the highest existing NNNN-prefixed file and incrementing by one — starting at 0001 when
   the directory is empty or absent — zero-padded to four digits.
   "Write" means land the file in the working tree — capture never skips — but the files
   commit with the branch only when the user asks; capture never commits on its own.
 
 consult(area, project):  read the glossary for vocabulary, and the ADRs touching the area.
-  1. capture's home for this project holds the files → read them.
+  1. capture's home for this project holds the files — the repo's own glossary or log
+     included — → read them.
   2. Absent → proceed silently. The model is created lazily; its absence is not a gap to fill.
 ```
 
