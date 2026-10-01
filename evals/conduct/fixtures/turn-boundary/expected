@@ -1,0 +1,11 @@
+# turn<TAB>invariant<TAB>verdict. Turn 1 writes x.md (hola) and y.md and invokes yun-a;
+# turn 2 appends chau to x.md and does nothing else. Nothing from turn 1 may leak into turn 2.
+1	wrote .yun/memory/control/x.md	1
+1	added .yun/memory/control/x.md ^hola$	1
+1	invoked yun-a	1
+2	invoked yun-a	0
+2	wrote .yun/memory/control/x.md	1
+2	wrote .yun/memory/control/y.md	0
+2	added .yun/memory/control/x.md ^chau$	1
+2	added .yun/memory/control/x.md ^hola$	0
+2	not added .yun/memory/control/x.md ^hola$	1

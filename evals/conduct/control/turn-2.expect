@@ -1,0 +1,4 @@
+# The prompt names no path: finding the file proves --resume carried turn 1 over.
+# hola must NOT read as added here — it landed in turn 1.
+added .yun/memory/control/x.md ^chau$
+not added .yun/memory/control/x.md ^hola$

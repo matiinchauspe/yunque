@@ -18,7 +18,9 @@ repo already keeps, an entry says the same things in that file's format. Create 
 actually resolves. Never scaffold an empty model upfront, and never nag that one is missing.
 
 **Handed a decision another skill already settled**, go straight to **The decisions (ADRs)**:
-apply the gate, write the ADR, done. The reflexes below reach decisions; this one is reached.
+apply the gate, write the ADR, done. **Handed a term it already resolved**, go straight to
+**The glossary**: write the entry, done. The reflexes below reach terms and decisions; these
+are reached.
 
 ## During the session
 

@@ -1,0 +1,8 @@
+# Lines the closed vocabulary must refuse. One per line.
+fired yun-a
+invoked
+invoked yun-a yun-b
+wrote
+added .yun/memory/*
+not not wrote x
+not

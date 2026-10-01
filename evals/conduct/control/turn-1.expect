@@ -1,0 +1,4 @@
+# Gate 1. Turn 1 writes the file; nothing of turn 2 may show up here.
+wrote .yun/memory/control/x.md
+added .yun/memory/control/x.md ^hola$
+not added .yun/memory/control/x.md ^chau$

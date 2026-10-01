@@ -1,0 +1,527 @@
+#!/usr/bin/env bash
+# The second eval: once a skill fires, does it DO what it says?
+#
+# `evals/run` stops at the first tool call — it asks "did the right skill fire?". A
+# skill can fire perfectly and then not do its job: the grill once answered "Decisión 1
+# registrada" and wrote nothing. That is CONDUCT, and it only shows across a whole run,
+# over several turns, in what actually landed on disk. This instrument pays for that:
+# full runs (~70 s and ~$1 per turn), multi-turn via --resume, real writes — inside a
+# disposable copy of the workspace so none of it touches the real one.
+#
+# WHAT IT JUDGES, AND WHAT IT NEVER READS. Each turn is judged against invariants the
+# CASE declares, from two sources only: the tool calls in that turn's transcript and
+# the files that changed in the sandbox during that turn. The agent's prose is never
+# read and no model sits in the measuring path. Accepted cost: a false claim about
+# something the case did not declare goes unseen.
+#
+# THE VOCABULARY IS CLOSED — four predicates, one per line in turn-N.expect:
+#   invoked <skill>        the turn made a Skill call for <skill>
+#   wrote <glob>           a file matching <glob> was created, modified or deleted
+#   added <glob> <regex>   a file matching <glob> gained a line matching <regex> (ERE)
+#   not <predicate>        the negation of one of the three above
+# Globs match paths relative to the sandbox root: `**` crosses directories, `*` and `?`
+# stay inside one segment.
+#
+# THE TURN BOUNDARY IS THE LIKELIEST BUG, so it is structural: every turn is judged
+# against the snapshot taken after the PREVIOUS turn and against its OWN transcript
+# file. A write from turn 1 can never count for turn 2.
+#
+# THE SANDBOX IS A WHOLE WORKSPACE ROOT. `.yun/memory/` resolves from the workspace
+# root and skills load from the agent's cwd, so a sandbox is the harness + the case's
+# repo pinned to a commit + an empty `.yun/`, in a temp dir. Edits are gated by
+# --permission-mode acceptEdits, which confines them to that cwd; gate 1 proves it.
+#
+# COMPARABLE MEANS THE SAME HARNESS HASH. The hash is a git tree hash over the harness
+# ONLY — skills/, AGENTS.md, CLAUDE.md and the .claude/.cursor skill symlinks — never
+# over evals/, so editing a case or this script never makes two readings of the same
+# harness look different. Content-addressed, so the working tree and a clean ref hash
+# alike.
+#
+# CALIBRATION, in the shape of evals/run: two gates before any measurement, and a
+# failure of either reports NOTHING rather than reporting something wrong.
+#
+# Usage: evals/conduct/run [--runs N] [--harness REF] [--model M] [--keep] [case ...]
+#        evals/conduct/run --gate0            (the evaluator alone — zero API calls)
+#        evals/conduct/run --calibrate        (both gates, no measurement — ~$1)
+# Exit:  0 = measured · 1 = measured, and some invariant held 0 of N · 2 = not measured
+
+set -uo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root="$(cd "$here/../.." && pwd)"
+
+runner="claude"
+runs=3
+harness_ref=""   # empty = the working tree
+model=""
+keep=0
+gate0_only=0
+calibrate_only=0
+ceiling=900      # seconds per turn. macOS has no `timeout`; this is its stand-in.
+
+harness_paths="skills AGENTS.md CLAUDE.md .claude/skills .cursor/skills"
+# Write and Edit are deliberately absent: acceptEdits grants them inside the sandbox
+# only. Listing them here would grant them everywhere.
+tools="Skill Read Glob Grep Bash(rg:*) Bash(fd:*) Bash(eza:*) Bash(bat:*) Bash(git status:*) Bash(git log:*)"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --runs) runs="${2:-}"; shift 2 ;;
+    --runs=*) runs="${1#--runs=}"; shift ;;
+    --harness) harness_ref="${2:-}"; shift 2 ;;
+    --harness=*) harness_ref="${1#--harness=}"; shift ;;
+    --model) model="${2:-}"; shift 2 ;;
+    --model=*) model="${1#--model=}"; shift ;;
+    --keep) keep=1; shift ;;
+    --gate0) gate0_only=1; shift ;;
+    --calibrate) calibrate_only=1; shift ;;
+    *) break ;;
+  esac
+done
+only="$*"
+
+case "$runs" in
+  '' | *[!0-9]*) echo "evals/conduct/run: --runs needs a number, got \"$runs\"" >&2; exit 2 ;;
+esac
+[ "$runs" -ge 1 ] || { echo "evals/conduct/run: --runs must be at least 1" >&2; exit 2; }
+
+work="$(mktemp -d)"
+if [ "$keep" = 1 ]; then
+  trap 'echo "kept: $work" >&2' EXIT
+else
+  trap 'rm -rf "$work"' EXIT
+fi
+
+tab="$(printf '\t')"
+
+# ------------------------------------------------------------------ the evaluator
+#
+# Everything from here to `judge` is deterministic text and file handling, which is
+# why gate 0 can prove it against planted fixtures without a single API call.
+
+# Every regular file under a snapshot, relative, sorted. .git never enters a snapshot.
+manifest() { (cd "$1" && find . -type f | sed 's|^\./||' | LC_ALL=C sort); }
+
+# Every path created, modified or deleted between two snapshots. Memoised per pair:
+# a turn is judged by several invariants and a snapshot can hold a thousand files.
+changes() {
+  local prev="$1" cur="$2" memo
+  memo="$work/changes/$(printf '%s|%s' "$prev" "$cur" | shasum | cut -c1-16)"
+  if [ ! -f "$memo" ]; then
+    mkdir -p "$work/changes"
+    manifest "$prev" > "$memo.prev"
+    manifest "$cur" > "$memo.cur"
+    {
+      LC_ALL=C comm -3 "$memo.prev" "$memo.cur" | sed "s/^$tab//"
+      LC_ALL=C comm -12 "$memo.prev" "$memo.cur" | while IFS= read -r p; do
+        cmp -s "$prev/$p" "$cur/$p" || printf '%s\n' "$p"
+      done
+    } | LC_ALL=C sort -u > "$memo"
+  fi
+  cat "$memo"
+}
+
+# The paths on stdin that match a glob, the whole path and nothing but. Built by hand
+# rather than with the shell's [[ == ]], whose `*` crosses `/` and would let
+# `.yun/memory/reservee/*` match a file three directories down.
+match_glob() {
+  awk -v g="$1" '
+    BEGIN {
+      re = "^"
+      for (i = 1; i <= length(g); i++) {
+        c = substr(g, i, 1)
+        if (c == "*" && substr(g, i + 1, 1) == "*") { re = re ".*"; i++ }
+        else if (c == "*") re = re "[^/]*"
+        else if (c == "?") re = re "[^/]"
+        else if (index(".+^$(){}|[]\\", c)) re = re "\\" c
+        else re = re c
+      }
+      re = re "$"
+    }
+    $0 ~ re
+  '
+}
+
+# Every skill the transcript made a Skill call for, one per line — EVERY batch, not
+# the first: conduct asks what happened during the turn, not what came first.
+#
+# Read by SPLITTING on the tool_use marker, never by stripping a prefix: awk's `.*` is
+# greedy, so `sub(/.*"type":"tool_use"/, ...)` would jump to the LAST call in a
+# parallel batch and lose the first. Only lines carrying the marker unescaped are read,
+# which keeps out the init event (it lists every skill discovered) and any tool_result
+# quoting a transcript back. The tool name must be Skill: another tool whose input
+# happens to carry a "skill" key is not an invocation.
+invoked_skills() {
+  awk '
+    /"type":"tool_use"/ && /\}$/ {
+      n = split($0, parts, /"type":"tool_use"/)
+      for (i = 2; i <= n; i++) {
+        seg = parts[i]
+        if (!match(seg, /"name":"[^"]*"/)) continue
+        if (substr(seg, RSTART + 8, RLENGTH - 9) != "Skill") continue
+        if (match(seg, /"skill":"[^"]*"/)) print substr(seg, RSTART + 9, RLENGTH - 10)
+      }
+    }
+  ' "$1"
+}
+
+# Is this line in the closed vocabulary? Checked for every case before a cent is spent,
+# and against fixtures/rejected in gate 0 — a validator that accepts anything would
+# let a typo'd invariant silently judge nothing.
+valid_invariant() {
+  local pred rest a b
+  read -r pred rest <<< "$1"
+  if [ "$pred" = not ]; then read -r pred rest <<< "$rest"; fi
+  case "$pred" in
+    invoked | wrote) [ -n "$rest" ] && [ "${rest#* }" = "$rest" ] ;;
+    added) read -r a b <<< "$rest"; [ -n "$a" ] && [ -n "$b" ] ;;
+    *) return 1 ;;
+  esac
+}
+
+# THE evaluator: one invariant, one turn → 1 or 0. Gate 0, gate 1 and the measurement
+# all go through this function and no other; a judge exercised only by the measurement
+# is a judge nothing can catch going wrong.
+#
+# NEVER decide on a pipeline's status here. Under pipefail, `diff | sed | grep -q` is
+# FALSE exactly when a line was added — diff exits 1 on any difference — and `… | grep -q`
+# can go false when grep closes the pipe early and the writer dies of SIGPIPE, which
+# only happens once the input is big enough. Gate 0 caught the first on its first run.
+# Every verdict is taken by capturing the text first and testing it with a here-string.
+judge() {
+  local prev="$1" cur="$2" transcript="$3" pred rest glob re p old found
+  read -r pred rest <<< "$4"
+  case "$pred" in
+    not)
+      if [ "$(judge "$prev" "$cur" "$transcript" "$rest")" = 1 ]; then echo 0; else echo 1; fi ;;
+    invoked)
+      found="$(invoked_skills "$transcript")"
+      if grep -qxF -- "$rest" <<< "$found"; then echo 1; else echo 0; fi ;;
+    wrote)
+      found="$(changes "$prev" "$cur" | match_glob "$rest")"
+      if [ -n "$found" ]; then echo 1; else echo 0; fi ;;
+    added)
+      read -r glob re <<< "$rest"
+      while IFS= read -r p; do
+        [ -f "$cur/$p" ] || continue          # deleted this turn: nothing was added
+        old="$prev/$p"
+        [ -f "$old" ] || old=/dev/null        # created this turn: every line is new
+        found="$(diff "$old" "$cur/$p" | sed -n 's/^> //p')"
+        if grep -Eq -- "$re" <<< "$found"; then echo 1; return; fi
+      done < <(changes "$prev" "$cur" | match_glob "$glob")
+      echo 0 ;;
+  esac
+}
+
+expect_lines() { grep -v '^[[:space:]]*#' "$1" | grep -v '^[[:space:]]*$'; }
+
+# ------------------------------------------------------------------ gate 0
+#
+# The evaluator against planted fixtures: per-turn snapshots and transcripts whose
+# correct reading is obvious by eye. Absent and empty collapse to one verdict — a
+# fixtures directory holding no case would otherwise run zero checks and pronounce
+# the evaluator sound.
+gate0() {
+  local fx count=0 failed="" turn inv want have prev cur line
+  for fx in "$here/fixtures"/*/; do
+    fx="${fx%/}"
+    [ -f "$fx/expected" ] || continue
+    count=$((count + 1))
+    while IFS="$tab" read -r turn inv want; do
+      case "$turn" in '' | \#*) continue ;; esac
+      prev="$fx/snap-$((turn - 1))"
+      cur="$fx/snap-$turn"
+      # A missing snapshot would read as an empty tree — every file "created" — and a
+      # missing transcript as a turn that called nothing. Both are fixture bugs.
+      if [ ! -d "$prev" ] || [ ! -d "$cur" ] || [ ! -f "$fx/turn-$turn.jsonl" ]; then
+        failed="${failed}$(basename "$fx") turn $turn is missing a snapshot or transcript; "
+        continue
+      fi
+      if ! valid_invariant "$inv"; then
+        failed="${failed}$(basename "$fx") [$inv] is not in the vocabulary; "
+        continue
+      fi
+      have="$(judge "$prev" "$cur" "$fx/turn-$turn.jsonl" "$inv")"
+      [ "$have" = "$want" ] || failed="${failed}$(basename "$fx") turn $turn [$inv] wanted $want got $have; "
+    done < "$fx/expected"
+  done
+  if [ -f "$here/fixtures/rejected" ]; then
+    while IFS= read -r line; do
+      case "$line" in '' | \#*) continue ;; esac
+      count=$((count + 1))
+      valid_invariant "$line" && failed="${failed}the validator accepted [$line]; "
+    done < "$here/fixtures/rejected"
+  fi
+  if [ "$count" -eq 0 ]; then
+    echo "UNCALIBRATED  no evaluator fixtures under evals/conduct/fixtures/ — nothing it" >&2
+    echo "              reports can be trusted." >&2
+    return 1
+  fi
+  if [ -n "$failed" ]; then
+    echo "UNCALIBRATED  the evaluator failed its own fixtures: ${failed}" >&2
+    echo "              Nothing was measured." >&2
+    return 1
+  fi
+}
+
+# ------------------------------------------------------------------ the sandbox
+
+stage="$work/harness"
+
+# The harness, copied ONCE into a staging dir and hashed there, then copied from the
+# stage into every sandbox — so an edit to the working tree mid-run cannot make runs
+# of one reading disagree about what they measured.
+stage_harness() {
+  mkdir -p "$stage"
+  if [ -n "$harness_ref" ]; then
+    git -C "$root" rev-parse -q --verify "$harness_ref^{commit}" >/dev/null || {
+      echo "evals/conduct/run: --harness \"$harness_ref\" is not a commit" >&2; return 1; }
+    # shellcheck disable=SC2086
+    git -C "$root" archive "$harness_ref" -- $harness_paths | tar -xf - -C "$stage"
+  else
+    # Tracked and untracked-not-ignored: what the working tree actually holds, minus
+    # the .DS_Store-class noise, and minus tracked files deleted from disk.
+    # shellcheck disable=SC2086
+    (cd "$root" && git ls-files -co --exclude-standard -- $harness_paths \
+      | while IFS= read -r p; do if [ -e "$p" ] || [ -L "$p" ]; then printf '%s\n' "$p"; fi; done \
+      | tar -cf - -T -) | tar -xf - -C "$stage"
+  fi
+}
+
+harness_hash() {
+  local gd="$work/hashrepo"
+  [ -d "$gd" ] || git init -q "$gd"
+  rm -f "$gd/.git/index"
+  # shellcheck disable=SC2086
+  git --git-dir="$gd/.git" --work-tree="$stage" add -A -- $harness_paths >/dev/null 2>&1 || return 1
+  git --git-dir="$gd/.git" write-tree | cut -c1-7
+}
+
+case_hash() { (cd "$1" && find . -type f | LC_ALL=C sort | xargs shasum) | shasum | cut -c1-7; }
+
+make_sandbox() {
+  local case="$1" sb="$2" kw repo commit
+  mkdir -p "$sb/.yun"
+  tar -C "$stage" -cf - . | tar -xf - -C "$sb"
+  [ -f "$case/case" ] || return 0
+  read -r kw repo commit < <(grep '^repo ' "$case/case")
+  [ -n "${repo:-}" ] || return 0
+  git clone -q --no-checkout "$root/repos/$repo" "$sb/repos/$repo" 2>/dev/null \
+    && git -C "$sb/repos/$repo" checkout -q --detach "$commit" 2>/dev/null
+}
+
+snapshot() { mkdir -p "$2" && rsync -a --exclude .git "$1"/ "$2"/; }
+
+session_of() { sed -n 's/.*"session_id":"\([^"]*\)".*/\1/p' "$1" | head -1; }
+
+# The turn ran to its end: a result event, not an error.
+turn_ok() { grep '"type":"result"' "$1" | tail -1 | grep -q '"is_error":false'; }
+
+run_turn() {
+  local sb="$1" prompt="$2" out="$3" sid="${4:-}" pid i=0
+  (
+    cd "$sb" || exit 1
+    exec "$runner" -p "$prompt" ${sid:+--resume "$sid"} ${model:+--model "$model"} \
+      --setting-sources project --permission-mode acceptEdits --allowedTools "$tools" \
+      --output-format stream-json --verbose
+  ) < /dev/null > "$out" 2> "$out.err" &
+  pid=$!
+  while kill -0 "$pid" 2>/dev/null; do
+    if [ "$i" -ge "$ceiling" ]; then
+      kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null
+      echo "turn hit the ${ceiling}s ceiling"; return 1
+    fi
+    sleep 1
+    i=$((i + 1))
+  done
+  wait "$pid" || { echo "runner exited non-zero (see $out.err)"; return 1; }
+}
+
+# One run of one case: build a sandbox, play every turn, snapshot after each, judge.
+# Leaves "<turn> TAB <invariant> TAB <0|1>" lines in $dir/verdicts.tsv. On failure it
+# prints why and returns 1 — a run that did not finish is not a reading.
+run_case() {
+  local case="$1" dir="$2" sb t sid="" tsid inv why
+  sb="$dir/sandbox"
+  mkdir -p "$dir"
+  : > "$dir/verdicts.tsv"
+  make_sandbox "$case" "$sb" || { echo "could not build the sandbox"; return 1; }
+  snapshot "$sb" "$dir/snap-0"
+  t=1
+  while [ -f "$case/turn-$t.prompt" ]; do
+    why="$(run_turn "$sb" "$(cat "$case/turn-$t.prompt")" "$dir/turn-$t.jsonl" "$sid")" \
+      || { echo "turn $t: $why"; return 1; }
+    turn_ok "$dir/turn-$t.jsonl" || { echo "turn $t ended without a clean result event"; return 1; }
+    # --resume must CONTINUE the session. A turn landing in a fresh one would be judged
+    # as if it knew what the previous turn said, when it did not.
+    tsid="$(session_of "$dir/turn-$t.jsonl")"
+    if [ -n "$sid" ] && [ "$tsid" != "$sid" ]; then
+      echo "turn $t ran in session ${tsid:-none}, not in $sid — --resume did not continue"
+      return 1
+    fi
+    sid="$tsid"
+    snapshot "$sb" "$dir/snap-$t"
+    while IFS= read -r inv; do
+      printf '%s\t%s\t%s\n' "$t" "$inv" \
+        "$(judge "$dir/snap-$((t - 1))" "$dir/snap-$t" "$dir/turn-$t.jsonl" "$inv")" >> "$dir/verdicts.tsv"
+    done < <(expect_lines "$case/turn-$t.expect")
+    t=$((t + 1))
+  done
+}
+
+# Refuse a malformed case before spending anything on it.
+check_case() {
+  local case="$1" t=1 inv bad=""
+  [ -f "$case/turn-1.prompt" ] || { echo "no turn-1.prompt"; return 1; }
+  while [ -f "$case/turn-$t.prompt" ]; do
+    [ -f "$case/turn-$t.expect" ] || { echo "turn-$t.prompt has no turn-$t.expect"; return 1; }
+    [ -n "$(expect_lines "$case/turn-$t.expect")" ] || { echo "turn-$t.expect declares nothing"; return 1; }
+    while IFS= read -r inv; do
+      valid_invariant "$inv" || bad="${bad}[$inv] "
+    done < <(expect_lines "$case/turn-$t.expect")
+    t=$((t + 1))
+  done
+  [ -z "$bad" ] || { echo "not in the vocabulary: $bad"; return 1; }
+  if [ -f "$case/case" ] && grep -q '^repo ' "$case/case"; then
+    local kw repo commit
+    read -r kw repo commit < <(grep '^repo ' "$case/case")
+    [ -n "${commit:-}" ] || { echo "repo line pins no commit"; return 1; }
+    git -C "$root/repos/$repo" cat-file -e "$commit^{commit}" 2>/dev/null \
+      || { echo "repos/$repo does not hold $commit — sync it first"; return 1; }
+  fi
+}
+
+# ------------------------------------------------------------------ calibration
+
+echo "calibrating..."
+gate0 || exit 2
+
+stage_harness || exit 2
+hh="$(harness_hash)" || { echo "evals/conduct/run: could not hash the harness" >&2; exit 2; }
+source_label="${harness_ref:-working tree}"
+
+if [ "$gate0_only" = 1 ]; then
+  echo "gate 0 CALIBRATED · harness ${hh} (${source_label})"
+  exit 0
+fi
+
+command -v "$runner" >/dev/null 2>&1 || {
+  echo "evals/conduct/run: runner \"$runner\" is not on PATH — nothing can be measured" >&2
+  exit 2
+}
+
+cases=""
+for c in "$here/cases"/*/; do
+  c="${c%/}"
+  name="$(basename "$c")"
+  if [ -n "$only" ]; then
+    case " $only " in *" $name "*) ;; *) continue ;; esac
+  fi
+  why="$(check_case "$c")" || { echo "evals/conduct/run: case $name: $why" >&2; exit 2; }
+  cases="$cases $c"
+done
+[ -n "$cases" ] || [ "$calibrate_only" = 1 ] || { echo "evals/conduct/run: no cases matched${only:+ \"$only\"} — nothing was measured" >&2; exit 2; }
+why="$(check_case "$here/control")" || { echo "evals/conduct/run: the control case: $why" >&2; exit 2; }
+
+# Gate 1 — the live control, through run_case like any case. Turn 1 writes `hola`,
+# turn 2 appends `chau`. It proves what gate 0 cannot: --resume continues the session
+# inside the sandbox, `.yun/` resolves in the sandbox and NOT in the real workspace,
+# and the snapshots are taken at the turn boundary.
+real_control() {
+  if [ -d "$root/.yun/memory/control" ]; then
+    (cd "$root/.yun/memory/control" && find . -type f -exec shasum {} + | LC_ALL=C sort)
+  else
+    echo absent
+  fi
+}
+before="$(real_control)"
+why="$(run_case "$here/control" "$work/control")" || {
+  echo "UNCALIBRATED  the control case did not complete: $why" >&2
+  echo "              Nothing was measured." >&2
+  exit 2
+}
+if [ "$(real_control)" != "$before" ]; then
+  echo "UNCALIBRATED  the control wrote into the REAL workspace's .yun/memory/control/." >&2
+  echo "              The sandbox does not hold. Nothing was measured." >&2
+  exit 2
+fi
+ctl_failed="$(awk -F'\t' '$3 != 1 { printf "turn %s [%s]; ", $1, $2 }' "$work/control/verdicts.tsv")"
+if [ -n "$ctl_failed" ]; then
+  echo "UNCALIBRATED  the control case broke its own invariants: ${ctl_failed}" >&2
+  echo "              Nothing was measured." >&2
+  exit 2
+fi
+model_seen="$(sed -n 's/.*"model":"\([^"]*\)".*/\1/p' "$work/control/turn-1.jsonl" | head -1)"
+runner_version="$("$runner" --version 2>/dev/null | head -1)"
+
+if [ "$calibrate_only" = 1 ]; then
+  echo "CALIBRATED  gate 0 and gate 1 · harness ${hh} (${source_label}) · runner ${runner_version:-$runner} · model ${model_seen:-unknown}"
+  exit 0
+fi
+
+# --------------------------------------------------------------------- measuring
+
+hist_dir="$root/.yun/evals/conduct"
+mkdir -p "$hist_dir"
+floor=""
+
+echo
+echo "runner: ${runner_version:-$runner} · model: ${model_seen:-unknown} · ${runs} runs/case · harness ${hh} (${source_label})"
+
+for c in $cases; do
+  name="$(basename "$c")"
+  ch="$(case_hash "$c")"
+  : > "$work/$name.all"
+  n=0
+  while [ "$n" -lt "$runs" ]; do
+    n=$((n + 1))
+    why="$(run_case "$c" "$work/$name-$n")" || {
+      echo "NOT MEASURED  $name run $n: $why" >&2
+      exit 2
+    }
+    cat "$work/$name-$n/verdicts.tsv" >> "$work/$name.all"
+    printf '  %s run %s/%s done\n' "$name" "$n" "$runs" >&2
+  done
+
+  # One "<turn> TAB <invariant> TAB <hits>/<runs>" per invariant, in declared order.
+  awk -F'\t' -v runs="$runs" '
+    { k = $1 "\t" $2; if (!(k in seen)) { seen[k] = 1; order[++m] = k } if ($3 == 1) h[k]++ }
+    END { for (i = 1; i <= m; i++) printf "%s\t%d/%d\n", order[i], h[order[i]] + 0, runs }
+  ' "$work/$name.all" > "$work/$name.frac"
+
+  hist="$hist_dir/$name.tsv"
+  prev_row=""
+  [ -f "$hist" ] && prev_row="$(awk -F'\t' -v c="$ch" -v h="$hh" '$3 == c && $2 != h { last = $0 } END { print last }' "$hist")"
+
+  echo
+  echo "case ${name} · case ${ch}"
+  if [ -n "$prev_row" ]; then
+    echo "before: harness $(printf '%s' "$prev_row" | cut -f2) on $(printf '%s' "$prev_row" | cut -f1) ($(printf '%s' "$prev_row" | cut -f5), k=$(printf '%s' "$prev_row" | cut -f6))"
+  else
+    echo "before: no earlier reading of this case under another harness"
+  fi
+  printf '%s\n' "$prev_row" | tr '\t' '\n' | tail -n +7 > "$work/$name.prev"
+  # A fraction beside its percentage, never the percentage alone: at k=5 one run moves
+  # the number by 20 points, and only the fraction says how few runs stand behind it.
+  awk -F'\t' '
+    function pct(f,   p) { split(f, p, "/"); return f " " sprintf("%3d%%", p[1] * 100 / p[2]) }
+    FILENAME == ARGV[1] { i = index($0, "="); if (i) before[substr($0, 1, i - 1)] = substr($0, i + 1); next }
+    { key = "t" $1 " " $2; b = (key in before) ? pct(before[key]) : "—"
+      printf "  %-5s %-62s %10s %10s\n", "t" $1, $2, pct($3), b }
+    BEGIN { printf "  %-5s %-62s %10s %10s\n", "turn", "invariant", "now", "before" }
+  ' "$work/$name.prev" "$work/$name.frac"
+
+  row="$(date -u +%Y-%m-%dT%H:%MZ)$tab$hh$tab$ch$tab${runner_version:-$runner}$tab${model_seen:-unknown}$tab$runs"
+  while IFS="$tab" read -r t inv frac; do
+    row="$row${tab}t$t $inv=$frac"
+    case "$frac" in 0/*) floor="$floor$name t$t [$inv]; " ;; esac
+  done < "$work/$name.frac"
+  printf '%s\n' "$row" >> "$hist"
+done
+
+echo
+if [ -n "$floor" ]; then
+  echo "FLOOR  held 0 of ${runs}: ${floor}"
+  exit 1
+fi
+echo "MEASURED  no invariant held zero. History: .yun/evals/conduct/"

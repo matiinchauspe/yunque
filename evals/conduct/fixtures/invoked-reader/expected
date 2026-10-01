@@ -1,0 +1,8 @@
+# A parallel batch with the Skill call FIRST, a later Skill call, the init event's skill list,
+# a tool_result quoting a Skill call back, and a non-Skill tool whose input carries a skill key.
+1	invoked yun-first	1
+1	invoked yun-later	1
+1	not invoked yun-first	0
+1	invoked yun-listed-only	0
+1	invoked yun-quoted	0
+1	invoked yun-not-a-skill-call	0
