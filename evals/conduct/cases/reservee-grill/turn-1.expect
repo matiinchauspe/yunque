@@ -1,2 +1,5 @@
 # The grill interviews; it writes nothing into the target repo on its opening turn.
 not wrote repos/reservee/**
+# "Before the first question, invoke yun-model-domain" — the act sits on THIS turn. Judged
+# on turn 2 instead, a run that loaded it here and needed no second call read as a miss.
+invoked yun-model-domain

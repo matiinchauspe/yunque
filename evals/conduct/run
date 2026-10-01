@@ -501,11 +501,14 @@ for c in $cases; do
     echo "before: no earlier reading of this case under another harness"
   fi
   printf '%s\n' "$prev_row" | tr '\t' '\n' | tail -n +7 > "$work/$name.prev"
+  # A fraction beside its percentage, never the percentage alone: at k=5 one run moves
+  # the number by 20 points, and only the fraction says how few runs stand behind it.
   awk -F'\t' '
+    function pct(f,   p) { split(f, p, "/"); return f " " sprintf("%3d%%", p[1] * 100 / p[2]) }
     FILENAME == ARGV[1] { i = index($0, "="); if (i) before[substr($0, 1, i - 1)] = substr($0, i + 1); next }
-    { key = "t" $1 " " $2; b = (key in before) ? before[key] : "—"
-      printf "  %-5s %-62s %6s %8s\n", "t" $1, $2, $3, b }
-    BEGIN { printf "  %-5s %-62s %6s %8s\n", "turn", "invariant", "now", "before" }
+    { key = "t" $1 " " $2; b = (key in before) ? pct(before[key]) : "—"
+      printf "  %-5s %-62s %10s %10s\n", "t" $1, $2, pct($3), b }
+    BEGIN { printf "  %-5s %-62s %10s %10s\n", "turn", "invariant", "now", "before" }
   ' "$work/$name.prev" "$work/$name.frac"
 
   row="$(date -u +%Y-%m-%dT%H:%MZ)$tab$hh$tab$ch$tab${runner_version:-$runner}$tab${model_seen:-unknown}$tab$runs"
