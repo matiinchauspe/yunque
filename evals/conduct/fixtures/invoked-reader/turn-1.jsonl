@@ -1,0 +1,6 @@
+{"type":"system","subtype":"init","session_id":"s1","skills":["yun-a","yun-listed-only"],"tools":["Skill","Read","Task"]}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"a","name":"Skill","input":{"skill":"yun-first"}},{"type":"tool_use","id":"b","name":"Read","input":{"file_path":"x"}}]}}
+{"type":"user","message":{"content":[{"type":"tool_result","tool_use_id":"a","content":"{\"type\":\"tool_use\",\"name\":\"Skill\",\"input\":{\"skill\":\"yun-quoted\"}}"}]}}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"c","name":"Task","input":{"skill":"yun-not-a-skill-call","prompt":"p"}}]}}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"d","name":"Skill","input":{"skill":"yun-later"}}]}}
+{"type":"result","subtype":"success","is_error":false,"session_id":"s1"}

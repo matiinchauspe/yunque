@@ -12,6 +12,10 @@ evals/run --runs 3 yun-review-work # one skill, fewer runs
 Exit: `0` measured · `1` measured, and some skill fired **0 of N** · `2` **not measured** —
 a gate failed and no reading was printed.
 
+**Its sibling, [`conduct/`](conduct/README.md), asks the next question** — once a skill fires,
+does it do what it says? Full multi-turn runs in a disposable workspace, judged per turn by what
+was invoked and what landed on disk. It shares this instrument's philosophy, not its code.
+
 **There is deliberately no threshold between 0 and 1.** This instrument reports a number, not
 a verdict, and inventing a passing mark would be inventing a finding. Zero is the one
 non-arbitrary point on the scale: a skill that will not fire on its own declared phrasing will

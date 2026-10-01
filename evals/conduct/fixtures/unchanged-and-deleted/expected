@@ -1,0 +1,8 @@
+# same.md untouched, gone.md deleted, edited.md gained a line. A deletion is a write; it adds nothing.
+1	wrote same.md	0
+1	added same.md s	0
+1	wrote gone.md	1
+1	added gone.md g	0
+1	wrote edited.md	1
+1	added edited.md ^new$	1
+1	added edited.md ^old$	0
