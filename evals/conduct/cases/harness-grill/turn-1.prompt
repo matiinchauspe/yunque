@@ -1,0 +1,1 @@
+grillame: quiero agregar a Yunque un script en tools/prune-worktrees que borre las worktrees de .worktrees/ cuyas ramas ya se mergearon a main

@@ -1,0 +1,4 @@
+# A harness plan has no domain: the language pass is skipped, so yun-model-domain is never loaded.
+not invoked yun-model-domain
+# The opening turn interviews. Nothing is settled yet, so nothing is persisted and nothing is built.
+not wrote **
