@@ -99,7 +99,9 @@ adapted skill names the work it learned from.
 
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT) — the skill-authoring bar,
   and the patterns behind charting, grilling, spec-writing, slicing, implementing, TDD, diagnosing, research,
-  prototyping, domain modeling and handoff.
+  prototyping, domain modeling, handoff, re-pitching and PR writing.
+- **[humanlayer/skills](https://github.com/humanlayer/skills)** (MIT) — Dex Horthy's `show-me`,
+  the visual vocabulary behind `yun-show-me` and `yun-write-pr`.
 - **[mattpocock/sandcastle](https://github.com/mattpocock/sandcastle)** (MIT) — the frontier walk
   and isolated per-ticket execution behind `yun-build-plan` and `execution-convention`.
 

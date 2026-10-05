@@ -67,6 +67,13 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 - `yun-review-work/` — runs two blind independent reviewers over a decision, plan, spec,
   design, skill, or code change, synthesizes their verdict and, on the user's go-ahead, fixes
   and re-reviews to convergence. Distilled from the global `judgment-day` skill.
+- `yun-show-me/` — re-pitches what did not land: a little context, Simplified Technical English
+  in the domain's own terms, and the smallest view that shows it, closing on the point in one
+  refutable sentence. `VISUALS.md` holds the visual vocabulary `yun-write-pr` reads too. Adapted
+  from Matt Pocock's `wait-what` and Dex Horthy's `show-me`.
+- `yun-write-pr/` — writes a PR body a reviewer can merge from: the change's shape, evidence as a
+  before and an after (saying so when nothing was run), and the merge danger as a door and a blast
+  radius, inside the repo's own PR form. Adapted from Matt Pocock's `pr`.
 
 ## Shared contracts
 
