@@ -1,0 +1,7 @@
+# A decision settled: it is persisted as it lands. The project name is not judged — in the
+# sandbox the workspace root is a temp dir, so only that SOME project's memory got the write.
+wrote .yun/memory/*/*
+# Still no domain, on the turn a decision resolves either.
+not invoked yun-model-domain
+# "Do not act on the plan until the user confirms you have reached a shared understanding."
+not wrote tools/**

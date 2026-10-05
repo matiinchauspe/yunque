@@ -1,10 +1,10 @@
-# One turn creates repos/reservee/src/deep/a.ts, .yun/memory/reservee/sub/n.md and notes/aXmd.
+# One turn creates repos/acme/src/deep/a.ts, .yun/memory/acme/sub/n.md and notes/aXmd.
 # ** crosses directories; * and ? stay in one segment; . is literal; the whole path must match.
-1	wrote repos/reservee/**	1
-1	not wrote repos/reservee/**	0
-1	wrote .yun/memory/reservee/*	0
-1	wrote .yun/memory/reservee/**	1
+1	wrote repos/acme/**	1
+1	not wrote repos/acme/**	0
+1	wrote .yun/memory/acme/*	0
+1	wrote .yun/memory/acme/**	1
 1	wrote notes/a.md	0
 1	wrote notes/a?md	1
 1	wrote repos/*	0
-1	wrote reservee/**	0
+1	wrote acme/**	0
