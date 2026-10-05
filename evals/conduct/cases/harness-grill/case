@@ -1,3 +1,4 @@
 # The grill on a plan about the harness itself: no target repo, no domain.
 # yun-grill-plan: "A plan about tooling or the harness itself has no domain to sharpen —
-# grill it on decisions alone." The counterpart of reservee-grill, which has a domain.
+# grill it on decisions alone." The counterpart of a case pinned to a project repo, which
+# has a domain — that kind lives under .yun/evals/conduct/cases/, never committed.

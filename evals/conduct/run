@@ -123,7 +123,7 @@ changes() {
 
 # The paths on stdin that match a glob, the whole path and nothing but. Built by hand
 # rather than with the shell's [[ == ]], whose `*` crosses `/` and would let
-# `.yun/memory/reservee/*` match a file three directories down.
+# `.yun/memory/acme/*` match a file three directories down.
 match_glob() {
   awk -v g="$1" '
     BEGIN {
@@ -410,15 +410,39 @@ command -v "$runner" >/dev/null 2>&1 || {
   exit 2
 }
 
+# Cases live in two homes: committed cases/ (harness-only, no `repo` line) and the
+# gitignored .yun/evals/conduct/cases/ (pinned to a project repo, never committed — a
+# fresh clone has no repos/ to run them against). A name is resolved against both; a
+# committed case caught carrying a `repo` line, or a name found in both homes, is refused
+# before anything runs.
+committed_cases_dir="$here/cases"
+local_cases_dir="$root/.yun/evals/conduct/cases"
+
 cases=""
-for c in "$here/cases"/*/; do
-  c="${c%/}"
-  name="$(basename "$c")"
-  if [ -n "$only" ]; then
-    case " $only " in *" $name "*) ;; *) continue ;; esac
-  fi
-  why="$(check_case "$c")" || { echo "evals/conduct/run: case $name: $why" >&2; exit 2; }
-  cases="$cases $c"
+seen_names=""
+for cases_dir in "$committed_cases_dir" "$local_cases_dir"; do
+  [ -d "$cases_dir" ] || continue
+  for c in "$cases_dir"/*/; do
+    [ -d "$c" ] || continue
+    c="${c%/}"
+    name="$(basename "$c")"
+    if [ "$cases_dir" = "$committed_cases_dir" ] && [ -f "$c/case" ] && grep -q '^repo ' "$c/case"; then
+      echo "evals/conduct/run: case $name is pinned to a project repo (a \`repo\` line in its" >&2
+      echo "  case file) — that kind of case lives under .yun/evals/conduct/cases/, never committed" >&2
+      exit 2
+    fi
+    if [ -n "$only" ]; then
+      case " $only " in *" $name "*) ;; *) continue ;; esac
+    fi
+    case " $seen_names " in
+      *" $name "*)
+        echo "evals/conduct/run: case $name exists under both cases/ and .yun/evals/conduct/cases/ — refusing, ambiguous" >&2
+        exit 2 ;;
+    esac
+    seen_names="$seen_names $name"
+    why="$(check_case "$c")" || { echo "evals/conduct/run: case $name: $why" >&2; exit 2; }
+    cases="$cases $c"
+  done
 done
 [ -n "$cases" ] || [ "$calibrate_only" = 1 ] || { echo "evals/conduct/run: no cases matched${only:+ \"$only\"} — nothing was measured" >&2; exit 2; }
 why="$(check_case "$here/control")" || { echo "evals/conduct/run: the control case: $why" >&2; exit 2; }

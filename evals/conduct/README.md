@@ -9,8 +9,8 @@ turns, in what actually landed on disk.
 evals/conduct/run --gate0                     # the evaluator alone — free, no API calls
 evals/conduct/run --calibrate                 # both gates, no measurement — ~$0.30
 evals/conduct/run                             # every case, 3 runs each, harness = working tree
-evals/conduct/run --harness main reservee-grill
-evals/conduct/run --runs 5 --keep reservee-grill
+evals/conduct/run --harness main harness-grill
+evals/conduct/run --runs 5 --keep harness-grill
 ```
 
 Exit: `0` measured · `1` measured, and some invariant held **0 of N** · `2` **not measured**.
@@ -34,7 +34,7 @@ The vocabulary is **closed** — four predicates, one per line of `turn-N.expect
 | `not <predicate>` | the negation of one of the three — once, never nested |
 
 Globs match paths relative to the sandbox root, **the whole path**: `**` crosses directories,
-`*` and `?` stay inside one segment, `.` is literal. So `.yun/memory/reservee/*` does not match
+`*` and `?` stay inside one segment, `.` is literal. So `.yun/memory/acme/*` does not match
 a file one directory further down.
 
 ## The sandbox is a whole workspace root
@@ -120,6 +120,17 @@ each prompt has its invariants, every invariant is in the vocabulary, the pinned
 
 Changing a case changes its **case hash**, and the before/after only pairs readings of the same
 case hash. Never change a case and a skill in the same breath.
+
+## Two homes for a case
+
+A case with no `repo` line depends on the harness alone and is committed under `cases/<name>/` —
+`control` and `harness-grill` are this kind. A case with a `repo` line is pinned to a project
+repo, and a project repo is not versioned here (`repos/` is gitignored): its prompts and expected
+files can carry that project's own content, and a fresh clone has no `repos/<name>` to run it
+against anyway. That kind lives under `<workspace root>/.yun/evals/conduct/cases/<name>/`,
+gitignored, never committed — the same reason its readings already sit under
+`.yun/evals/conduct/`. `run` resolves a name against both homes and refuses, before spending
+anything: a name present in both, or a `repo`-bearing case found under the committed one.
 
 ## Cost
 

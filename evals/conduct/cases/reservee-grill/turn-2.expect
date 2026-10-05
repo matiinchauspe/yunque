@@ -1,6 +1,0 @@
-# A decision settled and a term defined. "(a)" answers whatever turn 1 offered first —
-# the scripted answer of the original probe, kept verbatim so readings stay comparable.
-# The settled decision is persisted — friction #39: "Decisión 1 registrada", nothing written.
-wrote .yun/memory/reservee/*
-# The term lands in the glossary the repo already keeps.
-added repos/reservee/ai/domain/domain-terms.md \*\*Customer\*\*
