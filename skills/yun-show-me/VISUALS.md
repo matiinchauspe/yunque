@@ -56,9 +56,22 @@ sequenceDiagram
     Calendar-->>App: held
 ```
 
+**Contract** — for a schema, an endpoint or a key type: the shape other code builds against,
+only the fields and relations that matter:
+
+```text
+table booking
+  slot_id   → slot.id
+  status    held | confirmed | cancelled
+
+POST /bookings { slotId }
+  201 { bookingId }
+  409 { nextFreeSlot }
+```
+
 **Diff of the shape** — when the point is what *changes* and the surrounding shape already
 exists. Diff whichever view above carries the point — a component tree, a file tree, a call
-tree, a state flow — never the raw code when the shape says it faster:
+tree, a contract, a state flow — never the raw code when the shape says it faster:
 
 ```diff
  handleBooking
@@ -87,4 +100,5 @@ one view, sometimes two; a reply that uses most of the menu has stopped choosing
 
 The menu and its placement guidance are adapted from **Dex Horthy's `show-me`**
 (github.com/humanlayer/skills, MIT), rewritten around a neutral example; the HTML view drops its
-`open` command so the vocabulary binds no tool.
+`open` command so the vocabulary binds no tool. The contract view comes from his `visual-pr`
+(same repo).
