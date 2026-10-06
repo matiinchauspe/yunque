@@ -51,6 +51,8 @@ Index of the current harness (name — when to reach for it):
 | `yun-model-domain` | Pin down a project's ubiquitous language and record the ADRs behind its shape | auto |
 | `yun-write-handoff` | Compact a session into a baton for the next agent | user |
 | `yun-review-work` | Review a decision/plan/spec/design/skill/code with two blind adversarial reviewers | auto |
+| `yun-show-me` | Re-pitch what did not land — plain words, the domain's language, the smallest view | user |
+| `yun-write-pr` | Write a PR body that shows the change: its shape, evidence, and merge danger | user |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
 **user** = typed by name (Claude) / slash-command menu (Cursor).
