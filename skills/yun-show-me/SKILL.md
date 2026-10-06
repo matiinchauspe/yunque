@@ -19,8 +19,10 @@ who lost the thread.
    already decided, and the question this point answers. Done when a reader who skipped the
    last few turns could follow the next sentence.
 
-3. **Say it in Simplified Technical English.** Short sentences, one idea each, active voice,
-   one word per meaning. Name domain things by their canonical term: `consult` the project's
+3. **Say it by Simplified Technical English's rules, in the conversation's language.** Short
+   sentences, one idea each, active voice, one word per meaning. Name domain things by their
+   canonical term — kept as the glossary spells it, whatever language the prose around it is in:
+   `consult` the project's
    domain model through `skills/_shared/domain-convention.md` and use the glossary's word, never
    a synonym for it. Where there is no model, the plain word wins over the clever one.
 
