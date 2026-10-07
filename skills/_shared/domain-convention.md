@@ -37,14 +37,14 @@ The agent resolves intent to the first mechanism that fits, in order:
 capture(entry, project):        # entry is a resolved term, or a decision
   The two homes are mutually exclusive — the work either targets a repo or it doesn't:
   1. project is a synced repo (project = <name>) → write in that repo:
-       - a term     → the glossary the repo already keeps, else one at the repo root (CONTEXT.md)
+       - a term     → the glossary the repo already keeps, else one at the repo root (GLOSSARY.md)
        - a decision → the decision log the repo already keeps, else docs/adr/<NNNN>-<slug>.md
      A glossary or log the repo already keeps — named by its own agent instructions or
-     conventions doc, or a file that plainly is one, wherever it lives — wins over the default
-     path, and an entry written there takes that file's existing format. Two glossaries in one
-     repo is a split language.
+     conventions doc, or a file that plainly is one, wherever it lives (a `CONTEXT.md`, this
+     convention's former default, included) — wins over the default path, and an entry written
+     there takes that file's existing format. Two glossaries in one repo is a split language.
   2. project is not tied to a repo (project = _workspace) → write the SAME layout under
-       .yun/domain/<project>/ (workspace root, gitignored): CONTEXT.md + docs/adr/<NNNN>-<slug>.md.
+       .yun/domain/<project>/ (workspace root, gitignored): GLOSSARY.md + docs/adr/<NNNN>-<slug>.md.
 
   In both homes, at the default path: a decision is a new file, numbered by scanning the active home's docs/adr/
   for the highest existing NNNN-prefixed file and incrementing by one — starting at 0001 when
@@ -59,7 +59,7 @@ consult(area, project):  read the glossary for vocabulary, and the ADRs touching
 ```
 
 There is no tool-capability tier: a domain model *is* committed versioned files — a human reads
-`CONTEXT.md` in the repo — so unlike `memory-convention.md` and `artifact-convention.md`
+`GLOSSARY.md` in the repo — so unlike `memory-convention.md` and `artifact-convention.md`
 there is nothing to abstract a tool over.
 
 ## Using the model
@@ -75,5 +75,5 @@ there is nothing to abstract a tool over.
 
 `project` resolves exactly as in `memory-convention.md`. The floor is **single-context**: one
 root glossary per project. A monorepo of several bounded contexts — one glossary per context
-under its own directory, indexed by a root map — is a documented extension, not part of this
+under its own directory, indexed by a root `GLOSSARY-MAP.md` — is a documented extension, not part of this
 floor.
