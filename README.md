@@ -77,8 +77,8 @@ git config core.hooksPath .githooks
    planning chain.
 4. **Parallelize** when you need to: `yun-spawn-worktree <repo> <task>` → an isolated agent
    in `.worktrees/<repo>/<task>/` on its own branch. When done, `git worktree prune`.
-5. **Hand it over.** `/yun-write-pr` writes the PR body for the branch — its shape, the evidence
-   it works, how dangerous it is to merge. Ending a session mid-work → `/yun-write-handoff`
+5. **Hand it over.** `/yun-write-pr` writes the PR for the branch — a title led by its ticket, its
+   shape, the evidence it works, how dangerous it is to merge. Ending a session mid-work → `/yun-write-handoff`
    leaves a baton for the next one.
 
 Along the way: a bug that resisted the obvious fix → `yun-diagnose-bug`; an explanation that did
@@ -96,7 +96,7 @@ calls for them.
 | `/yun-build-plan` | Build a sliced plan to completion, leaving one branch to review |
 | `/yun-write-handoff` | Compact a session into a baton for the next agent |
 | `/yun-show-me` | Re-pitch what did not land, with the smallest view that shows it |
-| `/yun-write-pr` | Write a PR body that shows the change |
+| `/yun-write-pr` | Write a PR title and body that show the change |
 | `/yun-retro` | Run a retrospective on a session: what to improve in the harness and the repo |
 
 ## Current state
