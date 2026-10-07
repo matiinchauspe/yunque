@@ -74,6 +74,11 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 - `yun-write-pr/` — writes a PR body a reviewer can merge from: the change's shape, evidence as a
   before and an after (saying so when nothing was run), and the merge danger as a door and a blast
   radius, inside the repo's own PR form. Adapted from Matt Pocock's `pr`.
+- `yun-retro/` — a retrospective on a session: reads its transcript, weighs Matt's seven categories
+  (navigation, automated checks, coding standards, AGENTS.md bloat, tool economy, no-ops,
+  information access) over two layers, the harness and the target repo, and presents candidates by
+  severity. Files only what the user accepts — harness candidates to `friction`, repo candidates
+  handed to a person. Adapted from Matt Pocock's `retro`.
 
 ## Shared contracts
 

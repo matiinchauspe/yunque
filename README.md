@@ -10,7 +10,7 @@
 **The harness rules. Projects are interchangeable work material.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-D97706?style=flat-square)](LICENSE)
-![Skills](https://img.shields.io/badge/skills-18-1F2328?style=flat-square)
+![Skills](https://img.shields.io/badge/skills-19-1F2328?style=flat-square)
 ![Agents](https://img.shields.io/badge/agents-Claude%20Code%20%C2%B7%20Cursor-1F2328?style=flat-square)
 
 </div>
@@ -55,7 +55,7 @@ Then the rule the whole thing rests on:
 Open it in `repos/<project>/` and the agent loads *that project's* skills; the harness never
 loads. You don't go into the repo — you bring the repo into the workspace.
 
-To verify it took, your agent should list 18 skills prefixed `yun-`.
+To verify it took, your agent should list 19 skills prefixed `yun-`.
 
 If you will edit the harness itself, turn on its pre-commit hook, which runs the `lenses/` suite
 over the staged tree:
@@ -86,7 +86,7 @@ not land → `/yun-show-me`.
 
 ### Skills you type
 
-Six skills run only when you type them; the other twelve fire on their own when the work
+Seven skills run only when you type them; the other twelve fire on their own when the work
 calls for them.
 
 | Skill | When |
@@ -97,10 +97,11 @@ calls for them.
 | `/yun-write-handoff` | Compact a session into a baton for the next agent |
 | `/yun-show-me` | Re-pitch what did not land, with the smallest view that shows it |
 | `/yun-write-pr` | Write a PR body that shows the change |
+| `/yun-retro` | Run a retrospective on a session: what to improve in the harness and the repo |
 
 ## Current state
 
-The harness is operational — 18 skills over six shared contracts: bring-in
+The harness is operational — 19 skills over six shared contracts: bring-in
 (`yun-sync-repo`), charting (`yun-chart-course`), planning (`yun-grill-plan` → `yun-write-spec` →
 `yun-slice-plan`), build (`yun-build-plan` orchestrating, `yun-implement`, `yun-tdd`), repair
 (`yun-diagnose-bug`), knowledge (`yun-research`, `yun-model-domain`), prototyping
