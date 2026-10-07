@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+# Lens: readme-counts
+#
+# Question: does every skill count the root README states — and its "Skills you
+# type" table — agree with what skills/ actually holds?
+#
+# The README is a derived view of skills/ that no other lens reads. Adding
+# `yun-retro` meant hand-editing the same number in four places while the suite
+# read CLEAN throughout; a missed one would have been invisible (friction #45).
+#
+# Counts come from the corpus, never from the README: the total is every
+# skills/yun-*/SKILL.md, and a skill is user-invoked when its FRONTMATTER (only —
+# see `invocation-flag`) sets `disable-model-invocation: true`.
+#
+# It reads the phrasings the README uses today, anchored, and nothing looser: a
+# bare "<N> skills" anywhere would flag prose like "the two skills split by
+# situation". A new phrasing escapes this lens until it is added here — the
+# limit is named rather than hidden.
+#
+#   badge          skills-<N>-                       → total
+#   list           list <N> skills                   → total
+#   over           <N> skills over                   → total
+#   typed          <N> skills run only when you type → user-invoked
+#   others         the other <N> fire                → model-invoked
+#   table          rows under "### Skills you type"  → exactly the user-invoked set
+#
+# A number is digits or an English word up to thirty, either case.
+#
+# Usage: lenses/readme-counts [root]   (root defaults to the workspace root)
+# Exit:  0 = clean · 1 = findings · 2 = the lens could not run
+
+set -uo pipefail
+
+root="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+skills="$root/skills"
+readme="$root/README.md"
+
+[ -d "$skills" ] || { echo "readme-counts: no skills/ under $root" >&2; exit 2; }
+[ -f "$readme" ] || { echo "readme-counts: no README.md under $root" >&2; exit 2; }
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+total=0
+user=0
+: > "$work/user-set"
+for f in "$skills"/yun-*/SKILL.md; do
+  [ -f "$f" ] || continue
+  total=$((total + 1))
+  if awk 'NR==1 && $0 == "---" { inf=1; next } inf && $0 == "---" { exit } inf' "$f" \
+     | rg -q '^disable-model-invocation:[[:space:]]*true[[:space:]]*$'; then
+    user=$((user + 1))
+    basename "$(dirname "$f")" >> "$work/user-set"
+  fi
+done
+model=$((total - user))
+
+findings="$(awk -v total="$total" -v user="$user" -v model="$model" -v userset="$work/user-set" '
+  function num(w,   lw) {
+    lw = tolower(w)
+    if (lw ~ /^[0-9]+$/) return lw + 0
+    return (lw in words) ? words[lw] : -1
+  }
+  function check(label, said, want, line) {
+    n = num(said)
+    if (n != want)
+      printf "COUNT-DRIFT  %s  README line %d says %s, skills/ holds %d\n", label, line, said, want
+  }
+  BEGIN {
+    split("one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty", w, " ")
+    for (i = 1; i <= 20; i++) words[w[i]] = i
+    split("one two three four five six seven eight nine ten", u, " ")
+    for (i = 1; i <= 10; i++) words["twenty-" u[i]] = 20 + i
+    words["thirty"] = 30
+    while ((getline s < userset) > 0) want_typed[s] = 1
+    N = "([0-9]+|[A-Za-z]+(-[A-Za-z]+)?)"
+  }
+  {
+    line = $0
+    if (match(line, "skills-[0-9]+-")) {
+      v = substr(line, RSTART + 7, RLENGTH - 8); check("badge", v, total, NR)
+    }
+    if (match(line, "list " N " skills")) {
+      v = substr(line, RSTART + 5); sub(/ .*/, "", v); check("list", v, total, NR)
+    }
+    if (match(line, N " skills over")) {
+      v = substr(line, RSTART); sub(/ .*/, "", v); check("over", v, total, NR)
+    }
+    if (match(line, N " skills run only when you type")) {
+      v = substr(line, RSTART); sub(/ .*/, "", v); check("typed", v, user, NR)
+    }
+    if (match(line, "the other " N " fire")) {
+      v = substr(line, RSTART + 10); sub(/ .*/, "", v); check("others", v, model, NR)
+    }
+
+    if (line ~ /^### Skills you type[[:space:]]*$/) { intable = 1; next }
+    if (intable && line ~ /^#/) intable = 0
+    if (intable && line ~ /^\| `\/yun-/) {
+      s = line; sub(/^\| `\//, "", s); sub(/`.*/, "", s)
+      seen[s] = 1
+      if (!(s in want_typed))
+        printf "TABLE-EXTRA  %s  under \"Skills you type\" but model-invoked, or not a skill\n", s
+    }
+  }
+  END {
+    for (s in want_typed)
+      if (!(s in seen))
+        printf "TABLE-MISSING  %s  user-invoked but absent from \"Skills you type\"\n", s
+  }
+' "$readme")"
+
+if [ -n "$findings" ]; then
+  printf '%s\n' "$findings" | sort
+  exit 1
+fi
+
+echo "CLEAN  $total skills ($user typed, $model model-invoked), every README count and the typed table agree"

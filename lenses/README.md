@@ -15,8 +15,9 @@ lenses/<lens> <root>       # one lens against an arbitrary tree
 ```
 
 Exit: `0` clean · `1` findings in the harness · `2` a lens is uncalibrated, could not run,
-arrived without its executable bit, or there were no lenses to run at all. **Anything but
-`0` and `1` means nothing was measured, which is never a clean result.**
+arrived without its executable bit, there were no lenses to run at all, or the runner itself
+failed mid-run and finished fewer lenses than it started. **Anything but `0` and `1` means
+nothing was measured, which is never a clean result.**
 
 ## Every lens carries fixtures, and that is the point
 
@@ -45,6 +46,7 @@ lens — found only by mutating, and fixed by planting the missing form.
 | `invocation-flag` | Does each skill's invocation mode, read from **frontmatter only**, agree with the `AGENTS.md` index? Also: any skill missing from the index, any index row with no skill. | 4 | Twice, three days apart and by two agents who never met, an unanchored whole-file match reported `yun-write-skill` as user-invoked when its frontmatter is clean. |
 | `structural-form` | Does every `SKILL.md` open with an H1 that is **its own name**? First H1 only, outside the frontmatter and outside code fences. | 4 | `yun-research` carried no H1 at all, and `yun-slice-plan`'s only heading was `# <NN> — <Ticket title>`, a form field from inside its own template. |
 | `line-citations` | Does every line citation resolve — the cited file present in the corpus, and the cited line or **range** inside its length? Reports `DANGLING` / `AMBIGUOUS` / `OUT-OF-RANGE`. **It never checks that the line still SAYS what the citing sentence claims** — content drift is not mechanical, and a lens implying otherwise would be inventing a verification rather than performing one. | 5 | `plan-prompt.md:25` in `yun-build-plan/LIMITS.md` — a line number pointing into a file this workspace does not hold, missed by two hand sweeps whose regex did not match ranges. |
+| `readme-counts` | Does every skill count the root `README.md` states — badge, "list N skills", "N skills over", "N skills run only when you type", "the other N fire" — and its **"Skills you type" table** agree with `skills/`? Reports `COUNT-DRIFT` / `TABLE-EXTRA` / `TABLE-MISSING`. | 4 | **Nothing yet.** Adding `yun-retro` hand-edited one number in four places while the suite read `CLEAN`; a missed one would have been invisible. |
 | `frontmatter-name` | Does every skill's frontmatter `name:` match its **directory name**? Frontmatter only; one layer of matching quotes is stripped, because `name: "yun-x"` is valid YAML and flagging it would invent a defect. Reports `MISMATCH` / `NO-NAME`. | 4 | **Nothing yet, and that is the point** — a drifted name does not fail, it makes the skill undiscoverable in silence while every other lens goes on reading `CLEAN`. Measured by planting `name: yun-reserch` in `yun-research`. |
 
 `structural-form`'s three exclusions are each grounded in this corpus, not imagined, and
@@ -120,6 +122,28 @@ the body's `name: yun-anon`, finds it matching, and reports `CLEAN` — a *false
 is the silent direction and the one a green suite hides. A plant that disagreed would have
 produced a loud `MISMATCH` and proved strictly less.
 
+`readme-counts` reads the one derived view no other lens touched: the root `README.md`. It
+reads only the phrasings the README uses today, anchored — a bare "N skills" would flag prose
+like "the two skills split by situation", and `clean-with-decoys` plants exactly that. A new
+phrasing escapes the lens until it is added to the lens's header, which names the list.
+
+**Eight mutations, four fixtures, none redundant:**
+
+| Mutation of the lens | Caught only by |
+| -------------------- | -------------- |
+| reads the whole file for the flag, not the frontmatter | `clean-with-decoys` (a fenced `disable-model-invocation: true` on its own line) |
+| table not bounded by its heading | `clean-with-decoys` (+2) |
+| digits only, no number words | `clean-with-decoys` (+1) |
+| loose `N skills` match | `clean-with-decoys` (+2) |
+| typed count compared to the total | `clean-with-decoys` (+2) |
+| no missing-row check | `table-drift` |
+| no extra-row check | `table-drift` |
+| a missing README reads clean | `no-readme` |
+
+**`count-drift`'s first version was wrong, not the lens:** it planted "list three skills"
+against three skills and expected a finding. The first run calibrates the case as much as the
+instrument.
+
 ### Lenses already run by hand, not yet mechanised
 
 From the traversals of 2026-09-13 and 2026-09-17. Listed so the set is a file rather
@@ -175,6 +199,9 @@ shape. Two consumers do not justify one; promote on the third, measured, not bef
    yours to set.
 3. `lenses/fixtures/<name>/<case>/` — a tree plus an `expected` file, one per condition
    the lens reports, **plus at least one case that must read CLEAN**. The clean case is
-   the one that catches a lens gone greedy.
+   the one that catches a lens gone greedy. The exit code is inferred from `expected`
+   (`CLEAN…` → 0, else 1); an `exit` file overrides it, which is how a case plants the
+   cannot-run path (`2`). The fixture's own path reads back as `<fixture>` in the output,
+   so a message naming the root matches in any clone.
 4. **Mutate the lens and confirm the fixtures go red.** Skip this and you have written a
    check that has never been observed to fail, which is not a check.
