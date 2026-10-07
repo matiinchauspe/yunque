@@ -188,7 +188,7 @@ Done when every box is checked.
 
 Adapted for this workspace from **Matt Pocock's `diagnosing-bugs`**
 (github.com/mattpocock/skills, MIT). Changes: renamed to the `yun-<verb>-<noun>` convention; the
-phases become numbered steps, each closing on a **Done when** criterion; reading `CONTEXT.md` and
+phases become numbered steps, each closing on a **Done when** criterion; reading `GLOSSARY.md` and
 ADRs becomes a `consult` through `skills/_shared/domain-convention.md`, and the correct hypothesis
 a `persist` through `skills/_shared/memory-convention.md`, with a `recall` at the head to read it
 back. The write-test-watch-it-fail-apply-fix loop is handed to `yun-tdd`, the single source of

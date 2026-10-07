@@ -85,7 +85,7 @@ Adapted for this workspace from **Matt Pocock's `domain-modeling`**
 externalised — this skill is the producer, while the rules for *reading* the model (which
 Matt keeps in a per-repo `docs/agents/domain.md` plus an inline `tdd` rule) live once in
 `skills/_shared/domain-convention.md`; the glossary and ADR formats are inlined rather than
-shipped as separate `CONTEXT-FORMAT.md` / `ADR-FORMAT.md` reference files (self-contained,
-matching `yun-tdd`); multi-context (`CONTEXT-MAP.md`) is deferred to a documented extension;
+shipped as separate `GLOSSARY-FORMAT.md` / `ADR-FORMAT.md` reference files (self-contained,
+matching `yun-tdd`); multi-context (`GLOSSARY-MAP.md`) is deferred to a documented extension;
 renamed to the `yun-<verb>-<noun>` family. The active-modeling reflexes, the glossary format,
 and the three-part ADR gate are preserved.
