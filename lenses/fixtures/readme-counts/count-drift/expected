@@ -1,0 +1,5 @@
+COUNT-DRIFT  badge  README line 1 says 4, skills/ holds 3
+COUNT-DRIFT  list  README line 3 says four, skills/ holds 3
+COUNT-DRIFT  others  README line 7 says two, skills/ holds 1
+COUNT-DRIFT  over  README line 18 says 30, skills/ holds 3
+COUNT-DRIFT  typed  README line 7 says Three, skills/ holds 2

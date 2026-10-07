@@ -40,6 +40,7 @@ fi
 uncalibrated=0   # a lens failed its own fixtures — it is measuring wrong
 errored=0        # a lens could not run at all
 findings=0       # the harness has defects
+finished=0       # lenses whose iteration reached an end the runner wrote
 
 # Nothing to measure is not a clean result. Without this, an empty `lenses/` — or
 # a checkout where every lens arrived without its executable bit — walks straight
@@ -57,7 +58,7 @@ fi
 # "findings in the harness". Measured on bash 3.2.57.
 for lens in ${lenses[@]+"${lenses[@]}"}; do
   script="$here/$lens"
-  [ -x "$script" ] || { echo "run: no such lens: $lens" >&2; errored=1; continue; }
+  [ -x "$script" ] || { echo "run: no such lens: $lens" >&2; errored=1; finished=$((finished + 1)); continue; }
 
   echo "── $lens"
 
@@ -80,6 +81,13 @@ for lens in ${lenses[@]+"${lenses[@]}"}; do
       actual="$("$script" "${fix%/}" 2>&1)"; code=$?
       expected="$(awk 'NF || NR < 1' "$fix/expected")"
       if [ "$expected" = "${expected#CLEAN}" ]; then want=1; else want=0; fi
+      # An `exit` file overrides the inferred code, so a fixture can plant the
+      # cannot-run case (exit 2). Without it, every lens's exit-2 branch was a
+      # path no fixture had ever observed fail. Its message names the root, so
+      # the fixture's own path reads back as `<fixture>`, the same in any clone.
+      [ -f "$fix/exit" ] && want="$(tr -d '[:space:]' < "$fix/exit")"
+      fixpath="${fix%/}"
+      actual="${actual//"$fixpath"/<fixture>}"
 
       if [ "$actual" = "$expected" ] && [ "$code" -eq "$want" ]; then
         echo "   fixture ok    $name"
@@ -100,6 +108,7 @@ for lens in ${lenses[@]+"${lenses[@]}"}; do
   if [ "$calibrated" -eq 0 ]; then
     echo "   BROKEN INSTRUMENT — its reading of the harness is discarded, not reported"
     uncalibrated=1
+    finished=$((finished + 1))
     continue
   fi
 
@@ -111,7 +120,17 @@ for lens in ${lenses[@]+"${lenses[@]}"}; do
     echo "   COULD NOT RUN — calibrated, but it failed against the harness itself"
     errored=1
   fi
+  finished=$((finished + 1))
 done
+
+# A runtime error inside the loop — a `bad substitution` under bash 3.2 was the
+# measured one — abandons the iteration and falls through to the verdict, which
+# then read CLEAN with exit 0 over lenses it never finished. Every iteration
+# that reached an end the runner wrote is counted; a shortfall is not a result.
+if [ "$finished" -ne "${#lenses[@]}" ]; then
+  echo "run: only $finished of ${#lenses[@]} lenses finished — the runner itself failed mid-run" >&2
+  errored=1
+fi
 
 # Reported as loudly as a lens that ran, because the alternative is a shorter,
 # greener report that covers less and says nothing about the difference.
