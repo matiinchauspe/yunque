@@ -52,7 +52,7 @@ Index of the current harness (name — when to reach for it):
 | `yun-write-handoff` | Compact a session into a baton for the next agent | user |
 | `yun-review-work` | Review a decision/plan/spec/design/skill/code with two blind adversarial reviewers | auto |
 | `yun-show-me` | Re-pitch what did not land — plain words, the domain's language, the smallest view | user |
-| `yun-write-pr` | Write a PR body that shows the change: its shape, evidence, and merge danger | user |
+| `yun-write-pr` | Write a PR title and body that show the change: its ticket, shape, evidence, and merge danger | user |
 | `yun-retro` | Retrospective on a session — candidate improvements to the harness and the target repo, by severity | user |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);

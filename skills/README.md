@@ -71,9 +71,9 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   in the domain's own terms, and the smallest view that shows it, closing on the point in one
   refutable sentence. `VISUALS.md` holds the visual vocabulary `yun-write-pr` reads too. Adapted
   from Matt Pocock's `wait-what` and Dex Horthy's `show-me`.
-- `yun-write-pr/` — writes a PR body a reviewer can merge from: the change's shape, evidence as a
-  before and an after (saying so when nothing was run), and the merge danger as a door and a blast
-  radius, inside the repo's own PR form. Adapted from Matt Pocock's `pr`.
+- `yun-write-pr/` — writes a PR a reviewer can merge from: a title led by the tracker ID when
+  there is one, the change's shape, evidence as a before and an after (saying so when nothing was
+  run), and the merge danger as a door and a blast radius, inside the repo's own PR form. Adapted from Matt Pocock's `pr`.
 - `yun-retro/` — a retrospective on a session: reads its transcript, weighs Matt's seven categories
   (navigation, automated checks, coding standards, AGENTS.md bloat, tool economy, no-ops,
   information access) over two layers, the harness and the target repo, and presents candidates by

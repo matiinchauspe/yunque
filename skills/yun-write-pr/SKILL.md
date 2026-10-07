@@ -1,6 +1,6 @@
 ---
 name: yun-write-pr
-description: Write a pull request body that shows the change — its shape, the evidence it works, and how dangerous it is to merge.
+description: Write a pull request title and body that show the change — its ticket, its shape, the evidence it works, and how dangerous it is to merge.
 disable-model-invocation: true
 argument-hint: "Base ref or PR number (default: the branch against its mainline)"
 ---
@@ -24,15 +24,39 @@ dig for.
    noise.
 
 2. **Take the repo's form.** Look for a PR template the forge reads (`.github/pull_request_template.md`
-   or the forge's equivalent) and the title convention the repo's history shows. A declared
-   template wins: the sections below fill it — they never replace it. Domain things go by their
-   canonical term: `consult` the domain model through `skills/_shared/domain-convention.md`.
+   or the forge's equivalent) and a title convention or language the repo **declares** — a
+   PR-title check in its CI, or its agent instructions or conventions doc asking for one. A
+   declared template wins: the sections below fill it — they never replace it. A declared title
+   convention or language wins over **The title** below. Domain things go by their canonical
+   term: `consult` the domain model through `skills/_shared/domain-convention.md`.
 
-3. **Write the body.** The template and its rules are below. No preamble.
+3. **Write the title and the body.** Both forms and their rules are below. No preamble.
 
 4. **Hand it over.** If the user asked to publish it, do so through the forge's own tooling: for
-   a branch with no PR, push it and open one with this body; for an existing PR, replace its
-   body. Otherwise hand the body back as text.
+   a branch with no PR, push it and open one with this title and body; for an existing PR,
+   replace its title and body. Otherwise hand both back as text.
+
+## The title
+
+`<ticket ID> <description>` — or the description alone when there is no ticket. One form: the ID
+is a prefix that appears only when it exists.
+
+```
+RES-87 Count the plan limit against the reservation's month
+Rename the default domain glossary to GLOSSARY.md
+```
+
+**Ticket ID** — only a tracker ID a reviewer can open (`RES-87`, `#42`), written in the tracker's
+canonical form: the ticket step 1 fetched, else the one the branch name carries
+(`minchauspe/res-87-…` → `RES-87`), else one named in the conversation. A ticket on
+`artifact-convention`'s file floor is numbered locally and resolves for nobody else, so it
+leaves the title as one with no ticket. The ID is always one that exists — no placeholder, and no
+ticket opened just to have one.
+
+**Description** — the outcome of the change, imperative, sentence case, no trailing period, about
+72 characters at most. In English, unless the repo declares another language. It starts at the
+outcome itself: a conventional-commit prefix (`feat:`, `fix(scope):`) in the repo's history is
+habit, not a declaration, so it stays in the commits.
 
 ## The template
 
@@ -84,7 +108,7 @@ layout that shifts, a flow that degrades on mobile — in one word, then the ram
 
 ## Close by stating the verdict
 
-State the PR's link, or that the body was handed back as text, and the door in one line —
+State the PR's link and its title, or that both were handed back as text, and the door in one line —
 `two-way, blast radius: local`. A reviewer reads that line first; the body exists to justify it.
 Then name what the body could not cover: uncommitted changes left out, a ticket that could not
 be fetched.
@@ -95,6 +119,8 @@ Adapted for this workspace from **Matt Pocock's `pr`** (github.com/mattpocock/sk
 Summary menu comes from **Dex Horthy's `show-me`** (github.com/humanlayer/skills, MIT); the header
 of links, the one-sentence why and the contract view come from **Dex Horthy's `visual-pr`** (same
 repo). Changes: the visual menu is read from `yun-show-me`'s `VISUALS.md` instead of copied in;
-the repo's own PR template is honoured; the glossary is reached through
+the repo's own PR template is honoured; the title has its own rule — a tracker ID first when one
+exists, no conventional prefix, English unless the repo declares otherwise — where Matt's says
+nothing of titles; the glossary is reached through
 `skills/_shared/domain-convention.md`; Evidence gained a third rung that says plainly when nothing
 was run; and the skill can open the PR, not only draft its body.
