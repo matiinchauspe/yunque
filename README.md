@@ -9,7 +9,7 @@
 
 **The harness rules. Projects are interchangeable work material.**
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-D97706?style=flat-square)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-0D9488?style=flat-square)](LICENSE)
 ![Skills](https://img.shields.io/badge/skills-19-1F2328?style=flat-square)
 ![Agents](https://img.shields.io/badge/agents-Claude%20Code%20%C2%B7%20Cursor-1F2328?style=flat-square)
 
