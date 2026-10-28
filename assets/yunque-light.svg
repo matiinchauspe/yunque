@@ -1,6 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 190" width="280" height="190" role="img" aria-label="Yunque">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Yunque">
   <title>Yunque</title>
-  <path fill="#20252B" d="M22 54H164L242 78L211 103H166V121L198 143V172H76V143L108 121V103H72C45 103 27 88 22 68V54Z"/>
-  <path fill="#D97706" d="M82 37H106V71H82zM114 37H138V71H114zM146 37H170V71H146z"/>
-  <path fill="#F6F3EC" opacity=".16" d="M72 87H194L180 94H71C53 94 40 84 34 70C43 81 55 87 72 87Z"/>
+  <defs>
+    <radialGradient id="yq-glow-light" cx="25" cy="16" r="11.7" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0D9488" stop-opacity=".3"/>
+      <stop offset="1" stop-color="#0D9488" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="#20252B" d="M4 27H40L60 33L52 39H42V44L50 50V59H18V50L26 44V39H16C9 39 4 34 4 29Z"/>
+  <circle cx="25" cy="16" r="11.7" fill="url(#yq-glow-light)"/>
+  <circle cx="25" cy="16" r="7.65" fill="none" stroke="#0D9488" stroke-width="1.8" opacity=".35"/>
+  <circle cx="25" cy="16" r="4.5" fill="#0D9488"/>
 </svg>
