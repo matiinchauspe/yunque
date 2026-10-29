@@ -37,7 +37,7 @@ Index of the current harness (name — when to reach for it):
 | ----- | ---- | ---------- |
 | `yun-sync-repo` | Bring an external repo into the workspace | user |
 | `yun-spawn-worktree` | Spawn an isolated worktree so parallel work never collides | auto |
-| `yun-write-skill` | Author or edit a skill — the quality bar | auto |
+| `yun-write-agent-docs` | Author or edit a skill, a contract or AGENTS.md — the quality bar | auto |
 | `yun-chart-course` | Chart work too big for one session as a live map of decision tickets, cleared one at a time | user |
 | `yun-grill-plan` | Stress-test a plan/decision into airtight, settled decisions | auto |
 | `yun-write-spec` | Synthesize a settled conversation into one durable spec document | auto |

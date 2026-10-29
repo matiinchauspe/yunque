@@ -1,6 +1,6 @@
-# Glossary — Writing Great Skills
+# Glossary — Writing for Agents
 
-The domain model for what makes a skill great. A skill exists to wrangle determinism out of a stochastic system; the root virtue is **Predictability**, and every term below is a lever on it. This is the disclosed reference for [`yun-write-skill`](SKILL.md).
+The domain model for what makes a document an agent reads great — a skill first among them. Such a document exists to wrangle determinism out of a stochastic system; the root virtue is **Predictability**, and every term below is a lever on it. This is the disclosed reference for [`yun-write-agent-docs`](SKILL.md).
 
 The terms are grouped by axis: **Invocation** (how a skill is reached), **Information Hierarchy** (how its content is arranged), **Steering** (how the agent's runtime behaviour is shaped), and **Pruning** (how it is kept lean). Each **failure mode** lives beside the lever that cures it, tagged _failure mode_.
 
@@ -36,7 +36,7 @@ _Avoid_: frontmatter, summary
 
 ### Context Pointer
 
-A reference held in the agent's context that names some out-of-context material and encodes the condition for reaching it. The **description** is the top-level context pointer (context window → skill); pointers to disclosed files are the same object one level down. Its wording, not the target, decides _when_ the agent reaches — and _how reliably_. A must-have target behind a weakly worded pointer is a variance bug: fix the wording first, and inline the material only if sharpening fails.
+A reference held in the agent's context that names some out-of-context material and encodes the condition for reaching it. The **description** is the top-level context pointer (context window → skill); an `AGENTS.md` line naming a contract, and pointers to disclosed files, are the same object. Its wording, not the target, decides _when_ the agent reaches — and _how reliably_. A must-have target behind a weakly worded pointer is a variance bug: fix the wording first, and inline the material only if sharpening fails.
 
 _Avoid_: link, reference, import
 
@@ -191,6 +191,12 @@ _Avoid_: home, canonical location
 _Failure mode._ The same meaning given more than one **single source of truth**. It costs maintenance (change one place, you must change the others), costs tokens, and inflates prominence — repeating a meaning weights it on the ladder past its real rank. The accidental inverse of a **leading word**, which raises attention on purpose by repeating a token, never the meaning.
 
 _Avoid_: repetition, redundancy
+
+### Cache
+
+A document's restatement of something the environment already holds — `package.json` scripts, config files, the directory layout, `--help` output. The environment is a **single source of truth** too, so a cache is a copy of a lookup: it earns its load only when the lookup is expensive, and it goes stale the moment the environment moves. Keep what the agent cannot find by looking — the unwritten convention, the reason behind a choice, the gotcha no config confesses — and leave the cheap lookups to the environment.
+
+_Avoid_: copy, snapshot
 
 ### Relevance
 
