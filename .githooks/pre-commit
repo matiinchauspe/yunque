@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The net under the hole prose cannot reach.
 #
-# `yun-write-skill` closes an edit with an assertion: run the lens suite before
+# `yun-write-agent-docs` closes an edit with an assertion: run the lens suite before
 # declaring the index synced. That reaches harness text authored THROUGH a skill.
 # It does not reach harness text edited without one — a line changed in AGENTS.md
 # mid-conversation, an edit made by hand in an editor. If no skill is invoked, no

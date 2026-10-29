@@ -107,7 +107,7 @@ The harness is operational — 19 skills over six shared contracts: bring-in
 (`yun-diagnose-bug`), knowledge (`yun-research`, `yun-model-domain`), prototyping
 (`yun-build-prototype`), isolation (`yun-spawn-worktree`), adversarial review (`yun-review-work`),
 explanation (`yun-show-me`), PR writing (`yun-write-pr`), handoff (`yun-write-handoff`), and
-authoring (`yun-write-skill`). Contracts: `memory-`, `artifact-`
+authoring (`yun-write-agent-docs`). Contracts: `memory-`, `artifact-`
 (map/spec/ticket kinds, the plan at rest), `domain-`, `flow-convention` (walking a charted map —
 the plan in motion), `execution-convention` (running one ticket, isolated, to done — the run of
 one), and `practice-convention` (writing code the way the target repo already writes it).
@@ -126,7 +126,7 @@ The skills here are original writing, but several of them adapt patterns worked 
 other people. The lineage is recorded per skill in [`skills/README.md`](skills/README.md) — each
 adapted skill names the work it learned from.
 
-- **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT) — the skill-authoring bar,
+- **[mattpocock/skills](https://github.com/mattpocock/skills)** (MIT) — the writing bar for skills and every other agent-read document,
   and the patterns behind charting, grilling, spec-writing, slicing, implementing, TDD, diagnosing, research,
   prototyping, domain modeling, handoff, re-pitching and PR writing.
 - **[humanlayer/skills](https://github.com/humanlayer/skills)** (MIT) — Dex Horthy's `show-me`,

@@ -14,10 +14,11 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 - `yun-spawn-worktree/` — spawns an ephemeral git worktree for a synced repo on its own branch
   (`.worktrees/<repo>/<task>/`), so parallel agents never collide. The light isolation rung —
   creates only; the caller tears it down.
-- `yun-write-skill/` — the quality bar for authoring harness skills and the `_shared/`
-  contracts (invocation, information hierarchy, pruning, failure modes), opening on a recall
-  of the `friction` topic and closing on the index sync. Adapted from Matt Pocock's
-  `writing-great-skills`.
+- `yun-write-agent-docs/` — the quality bar for any document an agent reads here: a skill, a
+  `_shared/` contract, `AGENTS.md`, `skills/README.md` (context pointers, information hierarchy,
+  pruning and the cache rule, failure modes), opening on a recall of the `friction` topic and
+  closing on the index sync. `SKILL-MECHANICS.md` holds the skill-only part: invocation, splitting
+  by invocation, router skills. Adapted from Matt Pocock's `writing-for-agents`.
 - `yun-chart-course/` — charts an effort too big for one session as a live map of decision
   tickets, cleared one at a time until the way to the destination is clear. Adapted from Matt
   Pocock's `wayfinder`.

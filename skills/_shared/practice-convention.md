@@ -111,4 +111,4 @@ through a person.
 
 `project` resolves exactly as in `memory-convention.md`. Work not tied to a repo (`_workspace`) has
 no repo practice to read, so conform degrades by rule 5 — the harness's own practice is
-`yun-write-skill`'s subject, not this contract's.
+`yun-write-agent-docs`'s subject, not this contract's.

@@ -14,7 +14,7 @@ session worked (its checks, its agent instructions, its conventions doc).
 
 ## Steps
 
-1. Load `yun-write-skill` for the writing style guide. Done when it is loaded — every candidate
+1. Load `yun-write-agent-docs` for the writing style guide. Done when it is loaded — every candidate
    that touches steering text is judged by its rules.
 
 2. Read the primary sources for the session the user specifies. This may mean searching the session
@@ -101,13 +101,13 @@ In the harness:
 - `AGENTS.md`: pushed to every agent opened from the workspace root. The same sparing rule holds.
 - Skills and `skills/_shared/` contracts: a model-invoked skill's description goes into the agent's
   context window; a contract is read by the skills that name it. Follow the advice in
-  `yun-write-skill`.
+  `yun-write-agent-docs`.
 - `lenses/`: the harness's mechanical checks — where a mechanical harness candidate lands.
 
 ## Attribution
 
 Adapted for this workspace from **Matt Pocock's `retro`** (github.com/mattpocock/skills, MIT).
-Changes: the environment is read on two layers, the harness and the target repo; `yun-write-skill`
+Changes: the environment is read on two layers, the harness and the target repo; `yun-write-agent-docs`
 replaces `writing-for-agents`; the reviewer agent is `yun-implement`'s review stage and
 `yun-review-work`, and `CODING_STANDARDS.md` is whatever conventions doc the repo keeps; a fifth step
 files the candidates the user accepts — harness ones to `friction`, repo ones handed to a person,
