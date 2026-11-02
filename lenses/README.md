@@ -102,7 +102,7 @@ suite read `CLEAN` while the skill was uninvocable.
 
 **No skill body carries a `name:` line today**, so the whole-file read — the instrument bug
 rebuilt from scratch four times in this workspace — would not fire here. It would sit latent
-until someone documents the key in `yun-write-skill`, which is precisely where it belongs.
+until someone documents the key in `yun-write-agent-docs`, which is precisely where it belongs.
 `clean-documents-the-name` plants all three prose shapes now, so the lens cannot acquire that
 bug quietly later.
 
@@ -169,7 +169,7 @@ which is exactly why the second exists.
 
 | Layer | Reaches | When | Tool-agnostic because |
 | ----- | ------- | ---- | --------------------- |
-| The closing assertion in `yun-write-skill` | harness text authored **through a skill** | in session, while a fix is still cheap | it is prose in a `SKILL.md` |
+| The closing assertion in `yun-write-agent-docs` | harness text authored **through a skill** | in session, while a fix is still cheap | it is prose in a `SKILL.md` |
 | `.githooks/pre-commit` | **everything else** — a line changed in `AGENTS.md` mid-conversation, an edit made by hand | at commit, against the **staged** tree | it is git |
 
 The assertion is a closing one, never a precondition: the precondition form is
@@ -182,7 +182,7 @@ Activate the hook once per clone:
 git config core.hooksPath .githooks
 ```
 
-**Promotion rule.** The assertion lives in `yun-write-skill` and nowhere else,
+**Promotion rule.** The assertion lives in `yun-write-agent-docs` and nowhere else,
 because that is its only measured consumer. `yun-review-work` is the likely second.
 **When a THIRD skill needs it, move it to a contract under `skills/_shared/` and
 have all three reference that** — the six existing contracts each resolve a

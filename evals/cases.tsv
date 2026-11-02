@@ -64,12 +64,14 @@ yun-spawn-worktree	derived	run this ticket on its own branch
 yun-tdd	quoted	let's do this with TDD
 yun-tdd	quoted	red-green this fix
 yun-tdd	derived	build this feature test-first
-yun-write-skill	derived	I want to author a new skill in this workspace
-yun-write-skill	derived	this skill misfires — help me diagnose why
-yun-write-skill	derived	should this live in SKILL.md or a linked file?
+yun-write-agent-docs	derived	I want to author a new skill in this workspace
+yun-write-agent-docs	derived	this skill misfires — help me diagnose why
+yun-write-agent-docs	derived	should this live in SKILL.md or a linked file?
+yun-write-agent-docs	derived	tighten AGENTS.md, it restates every contract at length
+yun-write-agent-docs	derived	I want to edit one of the skills/_shared contracts
 yun-write-spec	quoted	escribí el spec
 yun-write-spec	quoted	write the spec
 yun-write-spec	derived	the decisions are settled, consolidate them into one document
 NONE	control-negative	qué hora es
 NONE	control-negative	what is 2 + 2
-yun-write-skill	control-positive	usá la skill yun-write-skill
+yun-write-agent-docs	control-positive	usá la skill yun-write-agent-docs

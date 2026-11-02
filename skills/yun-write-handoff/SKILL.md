@@ -14,7 +14,7 @@ Write a handoff document that lets a fresh agent continue this work without re-d
 - **The world-state it describes, first.** Open with the state that makes the rest true — the commit it was written against, where the work has one — and tell the reader to verify it before trusting anything below. The baton is read by an agent that does not load this skill, so the instruction has to travel inside the baton.
 - **Labelled pointers, not copies.** Settled facts already captured — memory references (ids, topic-keys), specs, commits, diffs — get a one-line label plus a reference (e.g. `#502 — chosen rate-limit algorithm`), never a restatement. The label lets the next agent triage without opening every link.
 - **The live delta, in full.** What exists only in this conversation — half-done edits, and the open threads you are handing forward (even if you also persisted them) — **and whatever the baton you replace still leaves open**. This is the next agent's marching order — write it out, do not reduce it to a pointer.
-- **Suggested skills.** Which harness skills fit the open work — e.g. `yun-grill-plan` for an unresolved decision, `yun-write-skill` when authoring.
+- **Suggested skills.** Which harness skills fit the open work — e.g. `yun-grill-plan` for an unresolved decision, `yun-write-agent-docs` when authoring.
 
 ## Persist the durable part first
 

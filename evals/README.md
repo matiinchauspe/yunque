@@ -55,7 +55,7 @@ description would move the skill and its test together and the delta would mean 
 The expected skill must appear in the agent's **first batch of tool calls** — what it reached
 for before seeing a single result.
 
-- **Why not "anywhere in the run":** `yun-write-skill` states the root virtue as *"the agent
+- **Why not "anywhere in the run":** `yun-write-agent-docs` states the root virtue as *"the agent
   taking the same **process** every run"*. A skill invoked after the work is done governed
   nothing; a process that already happened cannot be governed retroactively. Counting a late
   firing as a pass would read green over exactly that.
