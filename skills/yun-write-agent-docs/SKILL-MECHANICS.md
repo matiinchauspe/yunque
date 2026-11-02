@@ -1,6 +1,13 @@
 # Skill mechanics
 
-The skill-only branch of [`yun-write-agent-docs`](SKILL.md): what changes when the document is a skill — its frontmatter, the invocation choice, splitting by invocation, and router skills. Everything else about writing it is the reference in `SKILL.md`.
+The skill-only branch of [`yun-write-agent-docs`](SKILL.md): what changes when the document is a skill — its naming and home, its frontmatter, the invocation choice, splitting by invocation, and router skills. Everything else about writing it is the reference in `SKILL.md`.
+
+## In this workspace
+
+Two workspace rules bind every skill you author here — do not restate them, read them at their source:
+
+- **Naming:** follow the `yun-<verb>-<noun>` convention in `AGENTS.md`. The directory name must match the skill `name`.
+- **Home:** harness skills live in `skills/`; they are always active when your agent opens from the workspace root. A repo's own skills are secondary.
 
 ## Invocation
 

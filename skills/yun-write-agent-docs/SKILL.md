@@ -9,16 +9,11 @@ A document an agent reads exists to wrangle determinism out of a stochastic syst
 
 **Bold terms** are defined in [`GLOSSARY.md`](GLOSSARY.md); look them up there for the full meaning.
 
-**When the document is a skill**, also read [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md) for its frontmatter, the invocation choice, splitting by invocation, and router skills.
+**When the document is a skill**, also read [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md) for its naming and home, its frontmatter, the invocation choice, splitting by invocation, and router skills.
 
 ## In this workspace
 
-This is a harness skill. Two workspace rules bind every skill you author here — do not restate them, read them at their source:
-
-- **Naming:** follow the `yun-<verb>-<noun>` convention in `AGENTS.md`. The directory name must match the skill `name`.
-- **Home:** harness skills live in `skills/`; they are always active when your agent opens from the workspace root. A repo's own skills are secondary.
-
-**Before authoring or diagnosing, `recall` the harness's `friction` topic** (through `skills/_shared/memory-convention.md`) — sessions working *other* projects file there what the harness got wrong. It is the harness's only supply of measured pain.
+**Before authoring, editing, or diagnosing, `recall` the harness's `friction` topic** (through `skills/_shared/memory-convention.md`) — sessions working *other* projects file there what the harness got wrong. It is the harness's only supply of measured pain.
 
 **Close an edit by syncing the index.** `AGENTS.md`'s skill table and its `skills/_shared/` list, and `skills/README.md`, are a derived view of `skills/`. Sync them as the **last** edit, once the **traversal** has converged — a traversal keeps editing what the index describes. **The view is derived, so derive it: do not declare the index synced until `lenses/run` has read `CLEAN`, and quote its last line.** An assertion you can satisfy by saying you ran it is a precondition in disguise. Mid-edit the suite is *expected* to report — an index that does not yet list the skill you are adding is correct — so this is a closing assertion and never a gate on the work.
 
@@ -42,7 +37,7 @@ A demanding completion criterion drives thorough **legwork** — the digging the
 
 Push too little down and the top bloats; push too much and you hide material the agent actually needs. That tension is the whole decision.
 
-**Progressive disclosure** is the move down the ladder — out of the main file into a linked one — so the top stays legible. Mechanics: a linked `.md` file beside it, named for what it holds (this skill discloses its full definitions to `GLOSSARY.md`, and its skill-only material to `SKILL-MECHANICS.md`). **When to pull the lever:** the length itself is the trigger — treat a single reference block past ~50 lines, or a `SKILL.md` past ~150–200 lines (~500 words for a frequently-loaded skill), as **sprawl** and disclose it; no other justification is needed. Some documents are used in more than one way, and each distinct way is a **branch** — different runs taking different paths through it. Branching is the cleanest disclosure test: inline what every branch needs, and push behind a pointer what only some branches reach. Disclosing moves antecedents behind that pointer and leaves every branch but the one that opens the file holding them, so close a disclosure with a **traversal**.
+**Progressive disclosure** is the move down the ladder — out of the main file into a linked one — so the top stays legible. Mechanics: a linked `.md` file beside it, named for what it holds (this skill discloses its full definitions to `GLOSSARY.md`, and its skill-only material to `SKILL-MECHANICS.md`). **When to pull the lever:** the length itself is the trigger — treat a single reference block past ~50 lines, or a `SKILL.md` past ~150–200 lines, as **sprawl** and disclose it; no other justification is needed. Some documents are used in more than one way, and each distinct way is a **branch** — different runs taking different paths through it. Branching is the cleanest disclosure test: inline what every branch needs, and push behind a pointer what only some branches reach. Disclosing moves antecedents behind that pointer and leaves every branch but the one that opens the file holding them, so close a disclosure with a **traversal**.
 
 Where the ladder decides _how far down_ a piece sits, **co-location** decides _what sits beside it_ once there: keep a concept's definition, rules, and caveats under one heading rather than scattered, so reading one part brings its neighbours with it.
 
@@ -69,7 +64,7 @@ A **leading word** is a compact concept already living in the model's pretrainin
 
 It serves predictability twice. In the body it anchors _execution_: the agent reaches for the same behaviour every time the word appears. In a pointer it anchors _invocation_: when the same word lives in your prompts, docs, and code, the agent links that shared language to the material and reaches it more reliably.
 
-Hunt for opportunities to refactor documents to use leading words. A triad spelled out at three sites (**duplication**), a pointer spending a sentence to gesture at one idea — each is a passage begging to **collapse** into a single token. Examples include:
+Hunt for opportunities to refactor documents to use leading words. A triad spelled out at three sites (**duplication**), a pointer spending a sentence to gesture at one idea — each is a passage begging to collapse into a single token. Examples include:
 
 - "fast, deterministic, low-overhead" -> _tight_ — one quality restated across a phase — into a single pretrained word (a _tight_ loop).
 - "a loop you believe in" -> _red_ — converts a fuzzy gate into a binary observable state (the loop goes _red_ on the bug, or it doesn't).
