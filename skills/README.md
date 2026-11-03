@@ -88,6 +88,12 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   `yun-design-modules`' vocabulary, presents them as an HTML report outside the repo, then grills
   the candidate the user picks. `HTML-REPORT.md` holds the scaffold and diagram patterns. Adapted
   from Matt Pocock's `improve-codebase-architecture`.
+- `yun-write-wizard/` — generates a bash wizard for a manual procedure only a human can do: it
+  opens each URL, says what to click and copy, captures the value, and writes it to `.env` or
+  the CI's secret store. Written to `.yun/wizards/<project>/<slug>.sh`, ephemeral by default,
+  committed to the repo's `scripts/` only when the user asks; a dispatched run with no human
+  stops and reports the manual step instead of authoring one left waiting. `template.sh` holds
+  the stage library. Adapted from Matt Pocock's `wizard`.
 
 ## Shared contracts
 

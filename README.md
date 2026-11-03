@@ -10,7 +10,7 @@
 **The harness rules. Projects are interchangeable work material.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-0D9488?style=flat-square)](LICENSE)
-![Skills](https://img.shields.io/badge/skills-21-20252B?style=flat-square)
+![Skills](https://img.shields.io/badge/skills-22-20252B?style=flat-square)
 ![Agents](https://img.shields.io/badge/agents-Claude%20Code%20%C2%B7%20Cursor-20252B?style=flat-square)
 
 </div>
@@ -55,7 +55,7 @@ Then the rule the whole thing rests on:
 Open it in `repos/<project>/` and the agent loads *that project's* skills; the harness never
 loads. You don't go into the repo — you bring the repo into the workspace.
 
-To verify it took, your agent should list 21 skills prefixed `yun-`.
+To verify it took, your agent should list 22 skills prefixed `yun-`.
 
 If you will edit the harness itself, turn on its pre-commit hook, which runs the `lenses/` suite
 over the staged tree:
@@ -86,7 +86,7 @@ not land → `/yun-show-me`.
 
 ### Skills you type
 
-Eight skills run only when you type them; the other thirteen fire on their own when the work
+Eight skills run only when you type them; the other fourteen fire on their own when the work
 calls for them.
 
 | Skill | When |
@@ -102,13 +102,13 @@ calls for them.
 
 ## Current state
 
-The harness is operational — 21 skills over six shared contracts: bring-in
+The harness is operational — 22 skills over six shared contracts: bring-in
 (`yun-sync-repo`), charting (`yun-chart-course`), planning (`yun-grill-plan` → `yun-write-spec` →
 `yun-slice-plan`), build (`yun-build-plan` orchestrating, `yun-implement`, `yun-tdd`), repair
 (`yun-diagnose-bug`), architecture (`yun-scan-architecture` over `yun-design-modules`), knowledge (`yun-research`, `yun-model-domain`), prototyping
 (`yun-build-prototype`), isolation (`yun-spawn-worktree`), adversarial review (`yun-review-work`),
-explanation (`yun-show-me`), PR writing (`yun-write-pr`), handoff (`yun-write-handoff`), and
-authoring (`yun-write-agent-docs`). Contracts: `memory-`, `artifact-`
+explanation (`yun-show-me`), PR writing (`yun-write-pr`), handoff (`yun-write-handoff`), manual
+steps (`yun-write-wizard`), and authoring (`yun-write-agent-docs`). Contracts: `memory-`, `artifact-`
 (map/spec/ticket kinds, the plan at rest), `domain-`, `flow-convention` (walking a charted map —
 the plan in motion), `execution-convention` (running one ticket, isolated, to done — the run of
 one), and `practice-convention` (writing code the way the target repo already writes it).
