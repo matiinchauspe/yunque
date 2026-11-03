@@ -56,6 +56,7 @@ Index of the current harness (name — when to reach for it):
 | `yun-write-pr` | Write a PR title and body that show the change: its ticket, shape, evidence, and merge danger | user |
 | `yun-retro` | Retrospective on a session — candidate improvements to the harness and the target repo, by severity | user |
 | `yun-scan-architecture` | Scan a codebase's hot spots for deepening opportunities — an HTML report, then grill the pick | user |
+| `yun-write-wizard` | Hit a step only a human can do — credentials, CI secrets, an unfamiliar dashboard, a one-off migration | auto |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
 **user** = typed by name (Claude) / slash-command menu (Cursor).
@@ -152,7 +153,8 @@ yunque/
 ├─ .yun/memory/<project>/     ← per-project memory file fallback (gitignored)
 ├─ .yun/artifacts/<project>/<feature>/ ← per-project ticket file fallback (gitignored)
 ├─ .yun/domain/<project>/     ← domain-model fallback when work isn't tied to a repo (gitignored)
-└─ .yun/handoffs/            ← session batons, retired when superseded (gitignored)
+├─ .yun/handoffs/            ← session batons, retired when superseded (gitignored)
+└─ .yun/wizards/<project>/   ← generated wizard scripts, ephemeral by default (gitignored)
 ```
 
 The domain model's real home is the target repo itself (the glossary and decision log it
@@ -180,4 +182,4 @@ Only the harness: `skills/` (including `skills/_shared/`), `lenses/`, `evals/`, 
 `README.md`, `LICENSE`, `assets/` and `.gitignore`. Research notes under `docs/` stay local
 and are gitignored.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
-artifact, domain-model and handoff files (`.yun/`) are NOT versioned.
+artifact, domain-model, handoff and wizard files (`.yun/`) are NOT versioned.
