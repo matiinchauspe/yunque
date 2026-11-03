@@ -48,6 +48,10 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   large or unsettled work back to planning. Adapted from Matt Pocock's `implement`.
 - `yun-tdd/` — the red → green loop: a failing test at a pre-agreed seam, then only enough
   code to pass it, refactor once green. Adapted from Matt Pocock's `tdd`.
+- `yun-design-modules/` — the deep-module vocabulary (module, interface, depth, seam, adapter,
+  leverage, locality) and its principles, a reference other skills consult. `DEEPENING.md` holds
+  the dependency categories and replace-don't-layer testing; `DESIGN-IT-TWICE.md` the parallel
+  sub-agent pattern for rival interfaces. Adapted from Matt Pocock's `codebase-design`.
 - `yun-diagnose-bug/` — the repair path: build a tight loop that goes red on the bug before
   theorising, minimise the repro, rank falsifiable hypotheses, instrument, then fix through
   `yun-tdd` and persist the cause. `LOOPS.md` holds the eleven routes to a red loop. Adapted
@@ -61,7 +65,7 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   glossary (the repo's own, else `GLOSSARY.md`) and one-paragraph ADRs, captured through the
   domain convention. It
   also receives architectural decisions handed over by the skills that produce them —
-  `yun-chart-course`, `yun-grill-plan` and `yun-build-prototype` — and owns whether each
+  `yun-chart-course`, `yun-grill-plan`, `yun-build-prototype` and `yun-scan-architecture` — and owns whether each
   qualifies for an ADR. Adapted from Matt Pocock's `domain-modeling`.
 - `yun-write-handoff/` — compacts a session into a disposable baton for the next agent:
   labelled pointers into durable memory plus the live delta. Adapted from Matt Pocock's `handoff`.
@@ -80,6 +84,10 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   information access) over two layers, the harness and the target repo, and presents candidates by
   severity. Files only what the user accepts — harness candidates to `friction`, repo candidates
   handed to a person. Adapted from Matt Pocock's `retro`.
+- `yun-scan-architecture/` — scans a codebase's hot spots for deepening opportunities in
+  `yun-design-modules`' vocabulary, presents them as an HTML report outside the repo, then grills
+  the candidate the user picks. `HTML-REPORT.md` holds the scaffold and diagram patterns. Adapted
+  from Matt Pocock's `improve-codebase-architecture`.
 
 ## Shared contracts
 

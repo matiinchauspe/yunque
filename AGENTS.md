@@ -45,6 +45,7 @@ Index of the current harness (name — when to reach for it):
 | `yun-build-plan` | Build a sliced plan to completion, leaving one branch to review | user |
 | `yun-implement` | When the next step is writing code — from a spec, tickets, or a described task | auto |
 | `yun-tdd` | When building test-first — the red → green loop at a pre-agreed seam | auto |
+| `yun-design-modules` | Design a module's interface and seam in the deep-module vocabulary | auto |
 | `yun-diagnose-bug` | When an ordinary pass left a bug open, or something got slower — a red loop before any theory | auto |
 | `yun-research` | Delegate reading legwork; get back a cited Markdown file | auto |
 | `yun-build-prototype` | Answer a design question by building it — a hand-driven state model, or rival UI variants | auto |
@@ -54,6 +55,7 @@ Index of the current harness (name — when to reach for it):
 | `yun-show-me` | Re-pitch what did not land — plain words, the domain's language, the smallest view | user |
 | `yun-write-pr` | Write a PR title and body that show the change: its ticket, shape, evidence, and merge danger | user |
 | `yun-retro` | Retrospective on a session — candidate improvements to the harness and the target repo, by severity | user |
+| `yun-scan-architecture` | Scan a codebase's hot spots for deepening opportunities — an HTML report, then grill the pick | user |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
 **user** = typed by name (Claude) / slash-command menu (Cursor).
