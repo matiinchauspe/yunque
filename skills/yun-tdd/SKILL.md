@@ -37,6 +37,11 @@ came through a spec, those seams are already named in its Testing Decisions
 effort lands on the critical paths and complex logic instead of every edge case. Ask:
 "what's the public interface, and which seams should we test?"
 
+When the shape of that interface is itself in question (how deep the module is, where the
+seam belongs, what the interface should expose), reach for `yun-design-modules` for the
+vocabulary. It is the shared source of the module, interface, depth, seam, adapter, leverage
+and locality terms, and it is a reference to consult, not a session to run.
+
 ## Anti-patterns
 
 - **Implementation-coupled** — mocks internal collaborators, tests private methods, or
@@ -72,5 +77,6 @@ word is kept intact for invocation reliability); the TypeScript-specific `tests.
 `mocking.md` reference files are dropped, their mocking guidance collapsed to one
 language-agnostic rule; refactor stays in the loop as each slice's third beat once green
 (the source routes it to a review stage) and seams point to `yun-write-spec`'s Testing
-Decisions instead of the source's sibling skills. The red → green loop, the good-test definition, the three
+Decisions instead of the source's sibling skills; its pointer to `codebase-design` points to
+`yun-design-modules`. The red → green loop, the good-test definition, the three
 anti-patterns, and the seam discipline are preserved.
