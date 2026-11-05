@@ -26,10 +26,10 @@ code as it stands today. That difference decides where each one lives and how fa
    Conform to the form; a defect in the repo's practice is form you match, never discipline you
    drop.
 
-   **A comment carries what the code cannot**: why it is this way, a constraint from outside it, a
-   consequence a reader would not see. Code that reads clearly carries no comment, however densely
-   the code around it is commented. A doc comment the repo declares — a linter requiring one on
-   every public function — is form, so write it, holding it to the contract callers rely on.
+   **A comment carries the why** — a reason, an outside constraint, a hidden consequence; code that
+   reads clearly carries none, whatever the code around it does. Hold the comments already in every
+   file the work changes to that bar, in the same change: shorten them or delete them. A doc comment
+   the repo declares is form: write it, as the contract callers rely on.
 3. **The inferred half is a by-product.** It comes off the files the work already opens — the one
    being changed and its neighbours — costing the run nothing beyond reads it was making anyway.
    Only where those yielded nothing does a single **targeted** pass follow, aimed at the areas the
