@@ -36,9 +36,19 @@ isolate(ticket, project, base?, name?):  the workspace the run happens in + its 
      branch, is what makes a run safe beside others. **`base` is optional, and a caller holding
      one MUST pass it**: it is the ref already carrying every dependency this ticket declares,
      and only a caller with the whole-set view knows which ref that is — a run, seeing one
-     ticket, cannot compute it. Absent a base, the run cuts from the repo's current HEAD and says
+     ticket, cannot compute it. Absent a base, the run cuts from the repo's **mainline** and says
      so in its report: right for a standalone run, wrong for a dispatched one, which is why the
-     dispatcher always supplies it. **`name` is optional, and a caller that will need to address
+     dispatcher always supplies it. The mainline is `origin/develop` when it carries commits the
+     trunk lacks (`git rev-list --count <trunk>..origin/develop` above 0), else the trunk; the
+     trunk is `origin/main`, else `origin/master`, and a `develop` with no trunk beside it is the
+     mainline. A `develop` not ahead of its trunk is abandoned or freshly released, and the trunk
+     already holds all of it. A repo with no remote reads the local branches of the same names,
+     and with none of them the run stops and asks for a base. It is read without fetching, and
+     never from `origin/HEAD`, which can name `main` in a repo whose work happens on `develop`.
+     The source checkout's HEAD is a base only when someone names it: no work happens there, so
+     it shows where that checkout was last left, not what the run wants.
+     When that HEAD is on another branch, the report names it beside the mainline it cut from.
+     **`name` is optional, and a caller that will need to address
      this branch again MUST pass it**: it names both the workspace and the branch the run leaves,
      so a dispatcher can group a whole set under one namespace — `<prefix>/<ticket>-<nonce>`, the
      nonce because a second attempt at one ticket must not collide with what the first left
@@ -112,8 +122,8 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
   present, nobody integrates: the branch simply waits as a ref for a human. Either way, execution's
   run ends with that named branch left as a ref its integrator can address.
 - **A caller that supplied a `base` MUST confirm the branch it gets back descends from it.** The
-  run reports the base it actually cut from — that is what the HEAD fallback above says out loud —
-  and a run can lose the base without failing: a relay that drops it, a tier-1 entry point that
+  run reports the base it actually cut from — that is what the mainline fallback above says out
+  loud — and a run can lose the base without failing: a relay that drops it, a tier-1 entry point that
   takes none, a runtime that seeds from the repo's default branch. What comes back then is a branch
   that is green, plausible, and missing everything the base carried. **Nothing downstream catches
   it**, because the work it dropped is already recorded as done, and a serial caller will cut every
@@ -137,7 +147,7 @@ already found it fit to run by its own judgment: takeable, branch-producing, and
 its namespace carries an axis to judge that on — the implementation one does not, and the walk over
 it says so rather than claiming the judgment. A
 run entered without a dispatcher — a change a human chose to isolate — arrives with no base and
-no such judgment, and takes the HEAD default above.
+no such judgment, and takes the mainline default above.
 Execution does not select the ticket, compute a frontier, judge its autonomy, or decide it produces
 a branch — composing those judgments into a hand-off is the dispatching skill's, one rung up.
 Execution receives a ticket already found fit, and runs it.

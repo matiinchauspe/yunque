@@ -8,7 +8,7 @@ description: Spawn an isolated git worktree for a synced repo so parallel work n
 Spawn an ephemeral **worktree** — a second working tree of a synced repo, on its own branch,
 so parallel agents each get an isolated tree and branch instead of editing or scanning each
 other's. It only creates the worktree; removing it is the caller's job once the work lands
-(`git worktree remove`, or a future `yun-clean-worktree`). This is the light isolation rung —
+(`git worktree remove`, or the `/yun-clean-worktree` sweep). This is the light isolation rung —
 pure git, local, no sandbox — the seam a heavier execution substrate plugs in above.
 
 ## Preconditions
@@ -25,7 +25,10 @@ pure git, local, no sandbox — the seam a heavier execution substrate plugs in 
   carry slash-separated segments (`<prefix>/<ticket>-<nonce>`) so a caller spawning a whole set
   can group them under one branch namespace it can list and prune later; git takes the slashes in
   a branch name, and the worktree simply nests to match.
-- `<base>` — the ref to branch from (optional; defaults to the repo's current `HEAD`).
+- `<base>` — the ref to branch from. A base the user or caller names is the base. Absent one,
+  it is the repo's **mainline**, resolved by the rule in `skills/_shared/execution-convention.md`
+  (a live `develop`, else `main` or `master`, never `origin/HEAD`); none of them → STOP and ask
+  for a base.
 
 ## Steps
 
@@ -47,12 +50,16 @@ pure git, local, no sandbox — the seam a heavier execution substrate plugs in 
    if it appears, the workspace `.gitignore` is broken, so fix it before continuing. Done when
    both hold.
 
-4. **Report.** Give the ready path `.worktrees/<repo>/<task>/` and its branch. Work runs there
+4. **Report.** Give the ready path `.worktrees/<repo>/<task>/`, its branch, and the base it was
+   cut from. When the base was the mainline and `repos/<repo>` has another branch checked out,
+   name that branch too ("`repos/<repo>` is on `<branch>`; cut from `<mainline>`"), so a human who
+   meant to stack on it sees it now. Work runs there
    via `git -C .worktrees/<repo>/<task>`, from the workspace root. Done when the caller has the
    path and branch.
 
 ## Cleanup
 
 The caller's job once the work lands, not this skill's: `git -C repos/<repo> worktree remove
-.worktrees/<repo>/<task>`. Run `git worktree prune` BEFORE deleting a source repo, and
+.worktrees/<repo>/<task>`, or the `/yun-clean-worktree` sweep for every worktree whose work has
+merged. Run `git worktree prune` BEFORE deleting a source repo, and
 `git worktree repair` if the workspace moves (AGENTS.md rule 4).
