@@ -22,8 +22,14 @@ code as it stands today. That difference decides where each one lives and how fa
 2. **Practice governs form; the harness governs discipline.** The repo decides what the work looks
    like — what a test is called, where the file goes, which framework, how an error is shaped. The
    harness decides what is non-negotiable — whether the test is written at all, whether a
-   done-signal fires, whether the work is reviewed, how it is committed. Conform to the form; a
-   defect in the repo's practice is form you match, never discipline you drop.
+   done-signal fires, whether the work is reviewed, how it is committed, what a comment carries.
+   Conform to the form; a defect in the repo's practice is form you match, never discipline you
+   drop.
+
+   **A comment carries what the code cannot**: why it is this way, a constraint from outside it, a
+   consequence a reader would not see. Code that reads clearly carries no comment, however densely
+   the code around it is commented. A doc comment the repo declares — a linter requiring one on
+   every public function — is form, so write it, holding it to the contract callers rely on.
 3. **The inferred half is a by-product.** It comes off the files the work already opens — the one
    being changed and its neighbours — costing the run nothing beyond reads it was making anyway.
    Only where those yielded nothing does a single **targeted** pass follow, aimed at the areas the
