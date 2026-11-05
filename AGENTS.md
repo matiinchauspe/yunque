@@ -84,9 +84,10 @@ intent and never binds a specific tool; each contract resolves that intent to a 
 and degrades by its own rules, spelled out below:
 
 - `memory-convention.md` — remember/recall across sessions (persist/recall) →
-  `.yun/memory/<project>/` → skip. A capability that cannot scope to the resolved project is a
-  **failed** first step, and an empty recall is not proof of absence — retry with the shortest
-  distinctive term. The **subject** decides the project, not the session: harness friction
+  `.yun/memory/<project>/`, a Karpathy-style wiki (`raw.md` + compiled pages + `index.md`) →
+  skip; a project whose `index.md` exists stays on the wiki. A capability that cannot scope to
+  the resolved project is a **failed** step, and an empty recall is not proof of absence — retry
+  with the shortest distinctive term. The **subject** decides the project, not the session: harness friction
   noticed mid-project files under the harness's own `friction` topic — a running list, recalled
   and written back whole.
 - `artifact-convention.md` — record tracked work in three kinds: the map an effort is charted
@@ -152,7 +153,7 @@ yunque/
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ repos/                    ← cloned projects (gitignored)
 ├─ .worktrees/<repo>/<task>/ ← ephemeral worktrees (gitignored, on-demand)
-├─ .yun/memory/<project>/     ← per-project memory file fallback (gitignored)
+├─ .yun/memory/<project>/     ← per-project memory wiki, the file fallback (gitignored)
 ├─ .yun/artifacts/<project>/<feature>/ ← per-project ticket file fallback (gitignored)
 ├─ .yun/domain/<project>/     ← domain-model fallback when work isn't tied to a repo (gitignored)
 ├─ .yun/handoffs/            ← session batons, retired when superseded (gitignored)

@@ -19,13 +19,15 @@ maps that intent to whatever mechanism the running agent actually has.
 The agent resolves intent to the first mechanism it has, in order:
 
 ```
-persist(digest, project):
-  1. A persistent-memory capability is available in the session AND can scope to
+persist(digest, topic, project):
+  1. .yun/memory/<project>/index.md exists → the wiki.
+  2. A persistent-memory capability is available in the session AND can scope to
      `project` → use it, scoped to `project`.
-  2. Else → append to  .yun/memory/<project>/<topic>.md   (workspace root, gitignored)
-  3. Else → skip.
+  3. Else → the wiki, creating it.   (.yun/memory/<project>/, workspace root, gitignored)
+  4. Else → skip.
 
-recall(query, project):  symmetric — capability → files → none.
+recall(query, project):  index.md exists → the wiki; else capability; else the project's
+                         flat .md notes, if any; else none.
 ```
 
 - **Capability** = any persistent-memory tool the agent has loaded (an MCP memory
@@ -33,14 +35,37 @@ recall(query, project):  symmetric — capability → files → none.
   project field, and **confirm the scope it lands on is `project`** — one that infers its
   scope from the working directory resolves to the *workspace*, since AGENTS.md rule 1
   keeps every session at the root. A scope you cannot set to `project` is a **failed
-  step 1**: fall through to the files, which scope by path. The convention does not know
+  step 2**: fall through to the wiki, which scopes by path. The convention does not know
   or care which capability it is.
-- **File fallback** scopes by path: `.yun/memory/<project>/<topic>.md`. This mirrors
-  the `.worktrees/<repo>/<task>/` namespacing — same shape, one level for project,
-  the rest for the topic.
 - **An empty `recall` is not proof of absence.** A capability can miss what it holds: a long,
   specific query returns nothing where one short distinctive term returns the answer. Retry
   with the shortest distinctive term before concluding nothing is stored.
+
+## The wiki
+
+The file rung is a small **wiki**, after Karpathy's LLM wiki: raw digests in, compiled pages out.
+Flat, in `.yun/memory/<project>/`:
+
+- `raw.md` — every persisted digest, whole, under `## [YYYY-MM-DD] <topic> | <title>`.
+  Append-only: never edited, never read whole on recall.
+- `<topic>.md` — one page per topic: what holds today, compiled from `raw.md`.
+- `index.md` — one line per page: `- [<topic>](<topic>.md) — <summary> · <YYYY-MM-DD>`.
+
+**persist** is one step: append to `raw.md`, rewrite the topic's page to what holds now, fix its
+`index.md` line. A superseded claim leaves the page; it stays in `raw.md`.
+**recall** reads `index.md`, then the matching page; no page matches → search `raw.md`.
+
+`index.md` is the switch, and it **sticks**: a project that has one stays on the wiki even with a
+capability loaded — one home per project, so nothing filed while the capability was missing turns
+orphan when it returns. Creating a new `index.md` first ingests the project's flat `.md` notes into
+`raw.md`, dated by file mtime, and compiles their pages; then tell the user in one line that the
+project switched to wiki memory. Deleting `index.md` switches it back; a project that already
+holds `raw.md` is switching on again, so rebuild `index.md` from its pages and ingest nothing.
+
+**lint** runs only when the user asks. A persist touches one page, so only lint sees across pages.
+It fixes the mechanical — every page has its `index.md` line and every line its page; a referenced
+path that no longer exists gets marked — and reports, without fixing, the judgment calls: pages
+that contradict each other, a page claim `raw.md` does not back.
 
 ## Project resolution
 
