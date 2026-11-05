@@ -65,9 +65,9 @@ Cross them, and two facts fall out:
 
 - **The chain's tip.** **No ticket reads `resolved`** → nothing is chained here, whatever failed
   branches are standing, and the base is the `<base>` you were given — confirm it resolves in the
-  repo before dispatching onto it — else the mainline:
-  `origin/HEAD` where it resolves, else whatever HEAD has checked out — record which, since a stale
-  `origin/HEAD` is the human's to correct and this walk never fetches. **Otherwise every resolved
+  repo before dispatching onto it — else the mainline, resolved by `execution-convention`'s rule and
+  recorded as the ref it resolved to; a stale ref is the human's to correct, since this walk never
+  fetches. **Otherwise every resolved
   ticket must have a branch** under its number, and one of those branches must hold all the rest as
   ancestors: that one is the tip, the deliverable so far, and the next dispatch's base. Ancestry is
   what orders them, since dispatch follows the edges rather than the numbers. **Check it per ticket,

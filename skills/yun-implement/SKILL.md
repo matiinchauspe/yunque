@@ -87,8 +87,8 @@ isolating, calls `isolate` through the contract, which resolves the run's worksp
 else an isolated worktree via `yun-spawn-worktree`, else the host tree's single-writer floor),
 every tier on its own named branch. **Pass on the base and the name you were handed** — the base
 is the ref carrying this ticket's dependencies, the name is how your caller will address the
-branch afterwards; a run you entered on your own has neither, so the contract cuts from HEAD and
-the run names itself. Done when the workspace is chosen: the current branch for a task you build
+branch afterwards; a run you entered on your own has neither, so the contract cuts from the
+mainline and the run names itself. Done when the workspace is chosen: the current branch for a task you build
 in place, or an isolated workspace on its own named branch, cut from the right base and carrying
 the name your caller will look for.
 
