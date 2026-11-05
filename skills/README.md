@@ -102,7 +102,8 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 
 - `_shared/memory-convention.md` — how any skill remembers or recalls without naming a
   memory tool: declare intent, degrade from an available capability **that can actually scope
-  to the project** → per-project files under `.yun/memory/<project>/` → skip. An empty recall is
+  to the project** → a per-project wiki under `.yun/memory/<project>/` (sticky once its
+  `index.md` exists) → skip. An empty recall is
   not proof of absence — retry with the shortest distinctive term. The subject
   decides the project, so harness friction found mid-project lands on the harness's `friction`
   topic instead of the project's.
