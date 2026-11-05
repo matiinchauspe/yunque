@@ -14,6 +14,9 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 - `yun-spawn-worktree/` — spawns an ephemeral git worktree for a synced repo on its own branch
   (`.worktrees/<repo>/<task>/`), so parallel agents never collide. The light isolation rung —
   creates only; the caller tears it down.
+- `yun-clean-worktree/` — the teardown half of `yun-spawn-worktree`, run by hand: removes every
+  worktree whose work is merged (its PR reads MERGED, or its own commits are in the
+  mainline) and asks about each one that is not. Removes workspaces, never branches.
 - `yun-write-agent-docs/` — the quality bar for any document an agent reads here: a skill, a
   `_shared/` contract, `AGENTS.md`, `skills/README.md` (context pointers, information hierarchy,
   pruning and the cache rule, failure modes), opening on a recall of the `friction` topic and
@@ -146,7 +149,6 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 
 - An unattended path for `yun-review-work` — bounded to one pass, so a dispatched run can be
   reviewed before the next run is chained onto it instead of only at the end.
-- `yun-clean-worktree/` — the teardown half of `yun-spawn-worktree`.
 
 **Evaluated and parked** — a merge-conflict skill. The exposure is real and stated in
 `yun-build-plan/LIMITS.md`: nothing inside a serial walk can conflict, but the merge *out* of one

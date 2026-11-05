@@ -37,6 +37,7 @@ Index of the current harness (name — when to reach for it):
 | ----- | ---- | ---------- |
 | `yun-sync-repo` | Bring an external repo into the workspace | user |
 | `yun-spawn-worktree` | Spawn an isolated worktree so parallel work never collides | auto |
+| `yun-clean-worktree` | Sweep the worktrees — remove the merged ones, ask about the rest | user |
 | `yun-write-agent-docs` | Author or edit a skill, a contract or AGENTS.md — the quality bar | auto |
 | `yun-chart-course` | Chart work too big for one session as a live map of decision tickets, cleared one at a time | user |
 | `yun-grill-plan` | Stress-test a plan/decision into airtight, settled decisions | auto |
@@ -113,7 +114,8 @@ and degrades by its own rules, spelled out below:
 - `execution-convention.md` — run one ticket to completion, isolated: the workspace it runs in and
   the loop that drives it to done (isolate/converge). Isolation degrades sandbox → worktree
   (`yun-spawn-worktree`) → single-writer inline floor, cutting the branch from an optional `base`
-  the caller passes when it holds one (else HEAD); tier 1 is any sandbox — the agent's or one the
+  the caller passes when it holds one (else the mainline: a live `develop`, else `main` or `master`,
+  never `origin/HEAD`); tier 1 is any sandbox — the agent's or one the
   target repo declares — qualifying only by SHAPE, a per-ticket entry point (a whole orchestrator
   answers a different verb). Converge is a bounded loop ending on the strongest done-signal the
   ticket offers, else fail-fast. The run of one — it never counts (flow's) nor integrates the branch
