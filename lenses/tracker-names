@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Lens: tracker-names
+#
+# Question: does any harness text name a specific ticket tracker?
+#
+# The harness is tool-agnostic: a skill says "the ticket's state" and
+# `artifact-convention` resolves it to whatever tracker the project uses. On
+# 2026-11-05 a live run of `yun-clean-worktree` drafted a fix that baked Linear
+# into the skill; Matías caught it ("es agnóstico a la herramienta, puede ser
+# linear, jira, etc"). The check he then ran by hand was this one.
+#
+# Case-sensitive, whole word: the corpus says "a linear chain" and
+# `linear-gradient`, and neither is a tracker. A sentence opening on the
+# adjective ("Linear chains…") would read as a finding — no file writes one
+# today, and rewording it is cheaper than a lens that guesses.
+#
+# Usage: lenses/tracker-names [root]   (root defaults to the workspace root)
+# Exit:  0 = clean · 1 = findings · 2 = the lens could not run
+
+set -uo pipefail
+
+root="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+
+[ -d "$root/skills" ] || { echo "tracker-names: no skills/ under $root" >&2; exit 2; }
+
+findings=""
+count=0
+
+while IFS= read -r f; do
+  count=$((count + 1))
+  rel="${f#"$root"/}"
+  hits="$(awk -v rel="$rel" '
+    {
+      line = $0
+      while (match(line, /(^|[^A-Za-z])(Linear|Jira|Asana|Trello|ClickUp|YouTrack|GitHub Issues)([^A-Za-z]|$)/)) {
+        hit = substr(line, RSTART, RLENGTH)
+        gsub(/^[^A-Za-z]|[^A-Za-z]$/, "", hit)
+        printf "TRACKER  %s:%d  names \"%s\"\n", rel, NR, hit
+        line = substr(line, RSTART + RLENGTH)
+      }
+    }
+  ' "$f")"
+  [ -n "$hits" ] && findings="${findings}${hits}"$'\n'
+done < <({ find "$root/skills" -type f -name '*.md' -print; [ -f "$root/AGENTS.md" ] && echo "$root/AGENTS.md"; } | sort)
+
+if [ -n "$findings" ]; then
+  printf '%s' "$findings" | sort
+  exit 1
+fi
+
+echo "CLEAN  $count files, no tracker named"
