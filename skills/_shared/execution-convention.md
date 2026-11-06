@@ -98,7 +98,10 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
      so it cannot spin forever. The done-signal is the strongest the ticket offers, and a weaker
      signal never substitutes for a stronger one the ticket carries:
   - The run's work has any runnable gate — a test, a build, an automated acceptance check → the
-         signal is ALL such gates passing.
+         signal is ALL such gates passing, and every acceptance criterion the ticket names
+         accounted for: covered by a gate, or — only where no gate could run it — asserted in the
+         completion report. A criterion left unaccounted is short of the signal, however green
+         the rest.
   - It has none → the signal is the agent's own completion report, the best available when there
          is nothing to run.
   A ticket held for a human never reaches this loop, so the completion-report tier is never a

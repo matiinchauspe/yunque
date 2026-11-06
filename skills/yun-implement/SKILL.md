@@ -96,9 +96,11 @@ the name your caller will look for.
 
 Loop the build until it reaches its done-signal: wherever the work admits a seam, create the
 gate and drive it red-green-refactor with yun-implement's own `yun-tdd`, and the signal is every
-such gate green; only where no runnable gate exists at all — not merely where you'd skip one —
-does your own completion report stand in, enumerating the brief's behaviours and asserting each
-is covered; a weaker signal never substitutes where a gate was possible. What
+such gate green and every acceptance criterion in the brief accounted for — under a gate, or,
+where none could run it, in your completion report; only where no runnable gate exists at all —
+not merely where you'd skip one — does your own completion report stand in, enumerating the
+brief's behaviours and asserting each is covered; a weaker signal never substitutes where a gate
+was possible. What
 bounds the loop depends on the run: an isolated run converges through
 `skills/_shared/execution-convention.md`, held to an iteration ceiling (the dispatcher's, else
 the contract's conservative default) whose fail-fast exit is never a pass; an attended build is
