@@ -48,7 +48,9 @@ Flat, in `.yun/memory/<project>/`:
 
 - `raw.md` — every persisted digest, whole, under `## [YYYY-MM-DD] <topic> | <title>`.
   Append-only: never edited, never read whole on recall.
-- `<topic>.md` — one page per topic: what holds today, compiled from `raw.md`.
+- `<topic>.md` — one page per topic: what holds today, compiled from `raw.md`. A claim that leans
+  on another page links it at the claim, `[<topic>](<topic>.md)`, and only to a page that exists.
+  `raw.md` links to no page.
 - `index.md` — one line per page: `- [<topic>](<topic>.md) — <summary> · <YYYY-MM-DD>`.
 
 **persist** is one step: append to `raw.md`, rewrite the topic's page to what holds now, fix its
@@ -70,8 +72,10 @@ nothing filed meanwhile. A project that already holds `raw.md` is switching on a
 
 **lint** runs only when the user asks. A persist touches one page, so only lint sees across pages.
 It fixes the mechanical — every page has its `index.md` line and every line its page; a referenced
-path that no longer exists gets marked — and reports, without fixing, the judgment calls: pages
-that contradict each other, a page claim `raw.md` does not back.
+path that no longer exists gets marked; another page's name gets linked at its first mention in
+prose, outside code spans — and reports, without fixing, the judgment calls: pages that contradict
+each other, a page claim `raw.md` does not back, a claim that leans on another page without naming
+it, a topic several pages mention that has no page.
 
 ## Project resolution
 
