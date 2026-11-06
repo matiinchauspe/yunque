@@ -151,6 +151,7 @@ yunque/
 ├─ .githooks/pre-commit      ← runs the suite over the staged tree (`git config core.hooksPath .githooks`)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
+├─ hooks/session-start       ← warns at session start when this checkout is behind origin/main
 ├─ repos/                    ← cloned projects (gitignored)
 ├─ .worktrees/<repo>/<task>/ ← ephemeral worktrees (gitignored, on-demand)
 ├─ .yun/memory/<project>/     ← per-project memory wiki, the file fallback (gitignored)
@@ -182,7 +183,7 @@ directory name must match the skill name (Agent Skills spec).
 
 Only the harness: `skills/` (including `skills/_shared/`), `lenses/`, `evals/`, `.githooks/`,
 `AGENTS.md`, the `CLAUDE.md` symlink, the `.claude/skills` and `.cursor/skills` symlinks,
-`README.md`, `LICENSE`, `assets/` and `.gitignore`. Research notes under `docs/` stay local
-and are gitignored.
+`hooks/` with `.claude/settings.json` and `.cursor/hooks.json`, `README.md`, `LICENSE`,
+`assets/` and `.gitignore`. Research notes under `docs/` stay local and are gitignored.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
 artifact, domain-model, handoff and wizard files (`.yun/`) are NOT versioned.

@@ -11,7 +11,7 @@ Ask the questions **one at a time**, waiting for feedback on each before continu
 
 ## Facts vs decisions
 
-If a *fact* can be found by exploring the environment, **look it up rather than asking** — the filesystem, tools, the codebase, and prior decisions from past sessions are all fair game. Before putting any decision to the user, **recall** prior work on the decision's keywords (follow `skills/_shared/memory-convention.md`): if it was already settled in a prior session, surface it ("you decided X before — still holds?") instead of asking fresh. Nothing relevant found → ask. Any recommended answer you attach is grounded in what the lookup turned up, not a lazy default.
+If a *fact* can be found by exploring the environment, **look it up rather than asking** — the filesystem, tools, the codebase, and prior decisions from past sessions are all fair game. Before putting any decision to the user, **recall** prior work on the decision's keywords (follow `skills/_shared/memory-convention.md`): if it was already settled in a prior session, surface it ("you decided X before — still holds?") instead of asking fresh. Nothing relevant found → ask. Any recommended answer you attach is grounded in what the lookup turned up, not a lazy default. A decision about **where something lives** is grounded in a listing of the whole tree it joins, and every convention line that already places things there, quoted beside the recommendation.
 
 Surface only decisions an implementer couldn't safely default on their own; skip trivia they'd just pick. That bound is what keeps the interview relentless without turning endless.
 
