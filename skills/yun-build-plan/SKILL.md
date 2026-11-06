@@ -243,6 +243,8 @@ Done when the pass has chained, skipped, or stopped.
 - **The deliverable, running** — where its workspace is still standing, offer to start it there by
   whatever entry point the repo declares for running itself, and start it only on a yes. Where that
   workspace is gone or the repo declares no such entry point, say which rather than guess.
+- **The deliverable, reviewed** — where there is a deliverable, offer `yun-review-work` over it,
+  and run it only on a yes.
 - **Every ticket skipped, loudly**, with which of step 3's reasons skipped it, naming any branch and
   workspace it left behind and saying that **deleting the branch is what retries it**.
 - **Every ticket declined**, with what step 2 refused it for: a batch, with what it would take to
@@ -260,8 +262,8 @@ deliverable into the mainline.** Step 1 reads the chain out of that namespace, a
 deliverable over a feature with tickets still open is precisely the walk that will need it.
 
 Done when the human knows what to review, what was skipped, what was declined, what was stranded,
-what went unchecked, and what a retry costs — and has been offered the deliverable running, or told
-why it cannot be.
+what went unchecked, and what a retry costs — and has been offered the deliverable running and
+reviewed, or told why it cannot be.
 
 ## Attribution
 
