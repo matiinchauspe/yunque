@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Session-start hook: report a stale harness.
+#
+# Every worktree of this workspace runs the skills of ITS checkout. On
+# 2026-11-06 ten sat behind origin/main (one 12 commits, missing five PRs), and
+# nothing said so: "no me lo detecta /yun-clean-worktree" was the symptom.
+#
+# Measures against the last fetched origin/main, no network: worktrees share
+# their refs, so any fetch in any checkout updates it. Silent when current.
+#
+# Usage: hooks/session-start claude|cursor   (the JSON shape each tool reads)
+
+set -uo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 0
+behind="$(git rev-list --count HEAD..origin/main 2>/dev/null)" || exit 0
+
+if [ "${behind:-0}" -eq 0 ]; then
+  [ "${1:-}" = cursor ] && echo '{}'
+  exit 0
+fi
+
+where="$(git rev-parse --abbrev-ref HEAD) at $(git rev-parse --short HEAD)"
+msg="Yunque: this checkout ($where) is $behind commits behind origin/main, so the skills loaded here are stale. Tell the user before working, and cut any harness edit from a fresh origin/main."
+
+case "${1:-}" in
+  claude) printf '{"systemMessage":"%s","hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$msg" "$msg" ;;
+  cursor) printf '{"additional_context":"%s"}\n' "$msg" ;;
+  *)      echo "$msg" ;;
+esac
