@@ -57,10 +57,16 @@ Flat, in `.yun/memory/<project>/`:
 
 `index.md` is the switch, and it **sticks**: a project that has one stays on the wiki even with a
 capability loaded — one home per project, so nothing filed while the capability was missing turns
-orphan when it returns. Creating a new `index.md` first ingests the project's flat `.md` notes into
-`raw.md`, dated by file mtime, and compiles their pages; then tell the user in one line that the
-project switched to wiki memory. Deleting `index.md` switches it back; a project that already
-holds `raw.md` is switching on again, so rebuild `index.md` from its pages and ingest nothing.
+orphan when it returns. A persist that reaches step 3 creates it, and so does the user asking to
+switch a project on. Creating a new `index.md` first ingests into `raw.md` what the project already
+holds: its flat `.md` notes, dated by file mtime — one entry per dated `##` section when a note has
+them — and the capability's records scoped to `project`, dated by creation. A `handoff-*.md` is a
+baton, not memory: it stays out. Then compile their pages and tell the user in one line that the
+project switched to wiki memory. Deleting `index.md` switches it back; when the user asks for that,
+confirm first, naming what it costs: the pages stop being read, new notes go to the capability —
+and with none, the next persist switches the wiki back on — and switching on again later brings in
+nothing filed meanwhile. A project that already holds `raw.md` is switching on again, so rebuild
+`index.md` from its pages and ingest nothing.
 
 **lint** runs only when the user asks. A persist touches one page, so only lint sees across pages.
 It fixes the mechanical — every page has its `index.md` line and every line its page; a referenced
