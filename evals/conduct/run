@@ -9,16 +9,17 @@
 # disposable copy of the workspace so none of it touches the real one.
 #
 # WHAT IT JUDGES, AND WHAT IT NEVER READS. Each turn is judged against invariants the
-# CASE declares, from two sources only: the tool calls in that turn's transcript and
-# the files that changed in the sandbox during that turn. The agent's prose is never
-# read and no model sits in the measuring path. Accepted cost: a false claim about
-# something the case did not declare goes unseen.
+# CASE declares, from the tool calls in that turn's transcript, the files that changed
+# in the sandbox during that turn, and — for `said` alone — the turn's final message.
+# No model sits in the measuring path. `said` proves only that the words appeared:
+# it is for an act that IS prose (an offer), never for a claim about an act.
 #
-# THE VOCABULARY IS CLOSED — four predicates, one per line in turn-N.expect:
+# THE VOCABULARY IS CLOSED — five predicates, one per line in turn-N.expect:
 #   invoked <skill>        the turn made a Skill call for <skill>
 #   wrote <glob>           a file matching <glob> was created, modified or deleted
 #   added <glob> <regex>   a file matching <glob> gained a line matching <regex> (ERE)
-#   not <predicate>        the negation of one of the three above
+#   said <regex>           the turn's final message has a line matching <regex> (ERE)
+#   not <predicate>        the negation of one of the four above
 # Globs match paths relative to the sandbox root: `**` crosses directories, `*` and `?`
 # stay inside one segment.
 #
@@ -175,6 +176,7 @@ valid_invariant() {
   case "$pred" in
     invoked | wrote) [ -n "$rest" ] && [ "${rest#* }" = "$rest" ] ;;
     added) read -r a b <<< "$rest"; [ -n "$a" ] && [ -n "$b" ] ;;
+    said) [ -n "$rest" ] ;;
     *) return 1 ;;
   esac
 }
@@ -210,6 +212,11 @@ judge() {
         if grep -Eq -- "$re" <<< "$found"; then echo 1; return; fi
       done < <(changes "$prev" "$cur" | match_glob "$glob")
       echo 0 ;;
+    said)
+      # The result event's text, DECODED: a raw grep over the JSON would see `\n` as two
+      # characters, and would also match mid-turn text and tool_results quoting it back.
+      found="$(jq -r 'select(.type == "result") | .result // empty' "$transcript" 2>/dev/null)"
+      if grep -Eq -- "$rest" <<< "$found"; then echo 1; else echo 0; fi ;;
   esac
 }
 

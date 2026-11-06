@@ -19,19 +19,26 @@ re-run with `--runs 5` when a fix lands there.
 
 ## What it judges, and what it never reads
 
-Each turn is judged against **invariants the case declares**, from two sources only: the tool
-calls in that turn's transcript, and the files that changed in the sandbox **during that turn**.
-The agent's prose is never read and no model sits in the measuring path. Accepted cost: a false
-claim about something the case did not declare goes unseen.
+Each turn is judged against **invariants the case declares**, from the tool calls in that turn's
+transcript and the files that changed in the sandbox **during that turn**. No model sits in the
+measuring path. Accepted cost: a false claim about something the case did not declare goes unseen.
 
-The vocabulary is **closed** — four predicates, one per line of `turn-N.expect`:
+The agent's prose is read in one place only: `said`, a regex over the turn's **final message**.
+It exists for an act that **is** prose, such as an offer ("offer `yun-review-work`, run it only on
+a yes"). It proves the words appeared, never that the act they describe happened. Pair it with an
+action predicate (`said yun-review-work` + `not invoked yun-review-work`), and never let it stand
+in for one: "Decisión 1 registrada" is a `said` that holds while the `added` it claims does not.
+The same narrow-proxy-with-its-limit-stated shape as truss's `tests_required` gate.
+
+The vocabulary is **closed** — five predicates, one per line of `turn-N.expect`:
 
 | Predicate | Holds when |
 | --- | --- |
 | `invoked <skill>` | the turn made a `Skill` call for `<skill>` |
 | `wrote <glob>` | a file matching `<glob>` was created, modified **or deleted** |
 | `added <glob> <regex>` | a file matching `<glob>` gained a line matching `<regex>` (ERE) |
-| `not <predicate>` | the negation of one of the three — once, never nested |
+| `said <regex>` | the turn's final message (the `result` event, decoded) has a line matching `<regex>` (ERE) |
+| `not <predicate>` | the negation of one of the four — once, never nested |
 
 Globs match paths relative to the sandbox root, **the whole path**: `**` crosses directories,
 `*` and `?` stay inside one segment, `.` is literal. So `.yun/memory/acme/*` does not match
@@ -86,11 +93,14 @@ function gate 0, gate 1 and the measurement all go through.
 | reads only the last block of a parallel batch (awk's greedy `.*`) | **`invoked-reader` alone** |
 | stops reading at the first batch (the `evals/run` reader, reused) | **`invoked-reader` alone** |
 | any tool with a `skill` key counts as a Skill call | **`invoked-reader` alone** |
+| `said` greps the raw transcript · reads the `result` field undecoded | **`said-reader` alone** |
+| `said` reads every assistant text, not the final message | **`said-reader` alone** |
+| `said` matches a fixed string instead of an ERE | **`said-reader` alone** |
 | `not` does not negate | every fixture carrying a `not` |
-| the validator accepts anything · `not` nests | **`rejected` alone** |
+| the validator accepts anything · `not` nests · a bare `said` | **`rejected` alone** |
 | a verdict taken from a pipeline's exit status | `turn-boundary` · `unchanged-and-deleted` |
 
-Fourteen mutations, all red, each patch verified applied by `shasum` before and after, against
+Nineteen mutations, all red, each patch verified applied by `shasum` before and after, against
 a baseline in which the unmutated copy calibrates in the same place. Every fixture is the sole
 catcher of something.
 

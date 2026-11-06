@@ -1,0 +1,8 @@
+# The final message (the result event) against mid-turn text, a tool_result quoting a phrase,
+# and an escaped newline: `^ofrezco` holds only if the JSON string is decoded, not grepped raw.
+1	said yun-review-work	1
+1	said ^ofrezco correr	1
+1	said "yun-review-work" sobre	1
+1	not said yun-review-work	0
+1	said yun-mid-turn	0
+1	said yun-quoted	0
