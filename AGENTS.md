@@ -133,6 +133,10 @@ and degrades by its own rules, spelled out below:
   each run opens — correcting a facet that code contradicts, adding one it settles. Read-only on the
   repo: recording a practice there is a person's deliberate act, through `domain-convention`'s
   capture or the repo's own conventions doc.
+- `control-convention.md` — tell a session-observing capability who the running session is
+  (announce): its ticket, its project. A capability that declared an announce command to the
+  session → run it, and it labels the session that issues it; none declared → skip. Found by shape,
+  never by name. There is no file floor: the capability is the record.
 
 ## Structure
 
@@ -145,7 +149,7 @@ yunque/
 ├─ assets/                   ← the Yunque mark (light/dark SVG for the README)
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.yun
 ├─ skills/yun-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
-├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-, practice-convention)
+├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-, practice-, control-convention)
 ├─ lenses/                   ← a linter for the harness TEXT; `lenses/run` calibrates then measures
 ├─ evals/                    ← measures BEHAVIOUR — does the skill that should fire, fire? On demand only
 ├─ .githooks/pre-commit      ← runs the suite over the staged tree (`git config core.hooksPath .githooks`)

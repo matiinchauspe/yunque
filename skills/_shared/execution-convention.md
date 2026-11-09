@@ -109,6 +109,9 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
   a SEPARATE, serial concern (below) — not this loop's.
 ```
 
+- **A run announces itself** through `control-convention.md`, twice. Once its workspace stands,
+  it announces `ticket`, `project`, `branch` and `base`. At every exit of `converge`, a re-entry's
+  included, it announces `verdict=done` or `verdict=fail-fast`.
 - **Sandbox capability** = any isolated runtime the agent can drive — a container, a microVM, a
   remote sandbox. It carries the ticket's whole run; the convention does not know or care which
   one it is, only that it takes one ticket at a time. A runtime that offers no per-ticket entry

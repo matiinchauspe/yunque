@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Lens: tracker-names
 #
-# Question: does any harness text name a specific ticket tracker?
+# Question: does any harness text name a specific ticket tracker, or a
+# product of the ecosystem?
 #
 # The harness is tool-agnostic: a skill says "the ticket's state" and
 # `artifact-convention` resolves it to whatever tracker the project uses. On
@@ -13,6 +14,12 @@
 # `linear-gradient`, and neither is a tracker. A sentence opening on the
 # adjective ("Linear chains…") would read as a finding — no file writes one
 # today, and rewording it is cheaper than a lens that guesses.
+#
+# The ecosystem's products follow the same rule: each declares itself where
+# the harness already looks — Crisol its sandbox in a repo's AGENTS.md, Tenaza
+# its announce command in the session — and a contract finds it by shape. So
+# no file names either, not even the contract that uses it. Any case, whole
+# word, is reported `CAPABILITY`.
 #
 # Usage: lenses/tracker-names [root]   (root defaults to the workspace root)
 # Exit:  0 = clean · 1 = findings · 2 = the lens could not run
@@ -38,6 +45,13 @@ while IFS= read -r f; do
         printf "TRACKER  %s:%d  names \"%s\"\n", rel, NR, hit
         line = substr(line, RSTART + RLENGTH)
       }
+      line = tolower($0)
+      while (match(line, /(^|[^a-z])(tenaza|crisol)([^a-z]|$)/)) {
+        hit = substr(line, RSTART, RLENGTH)
+        gsub(/^[^a-z]|[^a-z]$/, "", hit)
+        printf "CAPABILITY  %s:%d  names \"%s\"\n", rel, NR, toupper(substr(hit, 1, 1)) substr(hit, 2)
+        line = substr(line, RSTART + RLENGTH)
+      }
     }
   ' "$f")"
   [ -n "$hits" ] && findings="${findings}${hits}"$'\n'
@@ -48,4 +62,4 @@ if [ -n "$findings" ]; then
   exit 1
 fi
 
-echo "CLEAN  $count files, no tracker named"
+echo "CLEAN  $count files, no tracker or capability named"
