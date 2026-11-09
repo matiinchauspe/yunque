@@ -103,7 +103,7 @@ calls for them.
 
 ## Current state
 
-The harness is operational — 23 skills over six shared contracts: bring-in
+The harness is operational — 23 skills over seven shared contracts: bring-in
 (`yun-sync-repo`), charting (`yun-chart-course`), planning (`yun-grill-plan` → `yun-write-spec` →
 `yun-slice-plan`), build (`yun-build-plan` orchestrating, `yun-implement`, `yun-tdd`), repair
 (`yun-diagnose-bug`), architecture (`yun-scan-architecture` over `yun-design-modules`), knowledge (`yun-research`, `yun-model-domain`), prototyping
@@ -112,7 +112,8 @@ explanation (`yun-show-me`), PR writing (`yun-write-pr`), handoff (`yun-write-ha
 steps (`yun-write-wizard`), and authoring (`yun-write-agent-docs`). Contracts: `memory-`, `artifact-`
 (map/spec/ticket kinds, the plan at rest), `domain-`, `flow-convention` (walking a charted map —
 the plan in motion), `execution-convention` (running one ticket, isolated, to done — the run of
-one), and `practice-convention` (writing code the way the target repo already writes it).
+one), `practice-convention` (writing code the way the target repo already writes it), and
+`control-convention` (telling a session observer which ticket a session is working).
 
 The planning-to-build chain now closes end to end: charted → specced → sliced → built, with the
 walk cutting each run from the branch the last one produced and leaving that final branch for a

@@ -92,6 +92,11 @@ mainline and the run names itself. Done when the workspace is chosen: the curren
 in place, or an isolated workspace on its own named branch, cut from the right base and carrying
 the name your caller will look for.
 
+A build that stays outside the contract — the current-branch case — announces itself, since the
+contract's announce never reaches it: once the workspace is chosen, announce `project` and, when
+you build a ticket, `ticket` through `skills/_shared/control-convention.md`, then `verdict=done`
+or `verdict=fail-fast` each time step 3 ends.
+
 ### 3. Converge on done
 
 Loop the build until it reaches its done-signal: wherever the work admits a seam, create the

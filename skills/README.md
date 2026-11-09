@@ -145,6 +145,10 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   No upstream counterpart: Matt's `implement` reads no repo conventions and his
   `codebase-design` is a portable vocabulary rather than reconnaissance, so this one is written from
   scratch.
+- `_shared/control-convention.md` — how any skill tells a session-observing capability who the
+  running session is, without naming it: one intent, announce. A capability that declared an
+  announce command to the session → run it, labeling the session that issues it; none declared →
+  skip, with no file floor, since the capability is the record. No upstream counterpart.
 
 ## Next stage
 
