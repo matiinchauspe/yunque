@@ -21,7 +21,7 @@ if [ "${behind:-0}" -eq 0 ]; then
 fi
 
 where="$(git rev-parse --abbrev-ref HEAD) at $(git rev-parse --short HEAD)"
-msg="Yunque: this checkout ($where) is $behind commits behind origin/main, so the skills loaded here are stale. Tell the user before working, and cut any harness edit from a fresh origin/main."
+msg="Yunque: this checkout ($where) is $behind commits behind origin/main, so the skills loaded here are stale. Tell the user before working, cut any harness edit from a fresh origin/main, and have every agent you delegate to read the harness there (git show origin/main:<path>), not in this tree."
 
 case "${1:-}" in
   claude) printf '{"systemMessage":"%s","hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$msg" "$msg" ;;

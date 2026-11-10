@@ -22,6 +22,8 @@ does the reading, you keep working, and you get back a cited document to react t
    - Write the findings to a **single Markdown file** in the repo, each claim cited
      to its source. Save it where the repo already keeps such notes; match the
      existing convention, and if there is none, pick somewhere sensible and say where.
+   - Read the harness (`skills/`, `AGENTS.md`) as of `origin/main` —
+     `git show origin/main:<path>` — whenever this checkout is behind it.
 
    Done when the agent has returned and the file exists with a source on every claim.
 
