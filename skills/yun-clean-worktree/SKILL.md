@@ -12,15 +12,16 @@ sweep is that removal, run by hand. What is **merged** goes without asking; what
 unless the human says otherwise. It removes **workspaces, never refs**: every branch stands, so
 anything committed can be spawned again.
 
-Run at the workspace root and operate with `git -C` (AGENTS.md rule 1). The sweep covers every
-worktree registered under `.worktrees/` by any repo in `repos/`; a source checkout is never one.
+Run at the workspace root and operate with `git -C <repo>` (AGENTS.md rule 1), where a **repo** is
+each one in `repos/` and the workspace's own. The sweep covers every worktree a repo registers under
+`.worktrees/`; a source checkout is never one.
 
 ## Merged
 
 A worktree is **merged** when either proof holds for its branch. Anything else is unmerged.
 
 - **A — the forge.** The branch's PR reads MERGED:
-  `gh pr list --head <branch> --state merged` run from `repos/<repo>`. This proof covers squash and
+  `gh pr list --head <branch> --state merged` run from the repo. This proof covers squash and
   rebase merges, whose commits never reach the mainline.
 - **B — git.** The branch has at least one commit of its own, and every one of them is in the
   repo's **mainline**, resolved by the rule in `skills/_shared/execution-convention.md`, without
@@ -34,7 +35,7 @@ unmerged one, which gets asked about. No proof failure can delete unmerged work.
 
 ## Steps
 
-1. **Inventory.** For each repo in `repos/`, read `git worktree list --porcelain` and keep the
+1. **Inventory.** For each repo, read `git worktree list --porcelain` and keep the
    entries under `.worktrees/`. For each, record: path, branch, the PR state (MERGED, OPEN, CLOSED
    or none), whether proof A or B holds, the uncommitted files (`git status --porcelain`), its size,
    and its **age**. Age is the time since the later of two dates: the tip commit, and the newest
@@ -50,14 +51,20 @@ unmerged one, which gets asked about. No proof failure can delete unmerged work.
      has a path inside it. A walk in flight shows up here, so name the walk when the branch is one
      of its links.
    - **Whether its commits exist only here.** No remote branch contains its tip
-     (`git branch -r --contains <tip>` is empty). A directory under `.worktrees/` holding a `.git` file that no repo
-   registers is an orphan; record it and leave it alone. The directories that only nest a worktree
-   (`.worktrees/<repo>/aw/`) are neither. Done when every registered worktree has a row.
+     (`git branch -r --contains <tip>` is empty).
 
-2. **Remove the merged ones.** `git -C repos/<repo> worktree remove --force <path>` for each merged
-   row. Uncommitted and ignored files go with it, because its work is already merged. Then run
-   `git -C repos/<repo> worktree prune` for each repo touched, and delete the directories under
-   `.worktrees/` this left empty — a directory holding only `.DS_Store` counts as empty. Done when no merged row is still registered.
+   A directory under `.worktrees/` holding a `.git` file that no repo registers is an orphan;
+   record it and leave it alone. The directories that only nest a worktree (`.worktrees/<repo>/aw/`)
+   are neither. Done when every registered worktree has a row.
+
+2. **Remove the merged ones.** In one command: `git -C <repo> worktree remove --force <path>` for
+   each merged row, with `<path>` absolute — `-C` reads a relative one against the repo — then
+   `git -C <repo> worktree prune` for each repo touched. Uncommitted and ignored files go with it,
+   because its work is already merged. Then delete the directories under `.worktrees/` this left
+   empty — a directory holding only `.DS_Store` counts as empty. A removal the environment holds
+   for the human is theirs to release: hand back that one command, or the id its refusal names,
+   and go on to step 3. Done when no merged row is still registered, or the human holds the one
+   action that removes them all.
 
 3. **Ask about the unmerged ones, oldest first, one at a time.** Show the path, branch, age, PR
    state, size, its ticket's state, and the uncommitted files, listed when there are any. Warn
@@ -66,10 +73,10 @@ unmerged one, which gets asked about. No proof failure can delete unmerged work.
    uncommitted files are the only copy of its work, is a keep. A walk's earlier link is a keep
    too, even when its commits are inside the newer one, because the walk removes that link itself
    when it chains, and a link already gone fails that removal. Then ask:
-   delete it or keep it. On delete, remove it as in step 2. On keep, leave it. Done when every
+   delete it or keep it. On delete, remove it as in step 2. Done when every
    unmerged row has the human's answer.
 
-4. **Report.** Three lists: removed as merged (with the proof and any uncommitted files
-   discarded), removed by the human's answer, and kept. Add the orphans, the space freed, and
-   every branch whose commits exist only on this machine. Done
-   when every row from step 1 sits on exactly one list.
+4. **Report.** Four lists: removed as merged (with the proof and any uncommitted files
+   discarded), held for the human (merged, or deleted on their answer), removed by the human's
+   answer, and kept. Add the orphans, the space freed, and every branch whose commits exist only
+   on this machine. Done when every row from step 1 sits on exactly one list.
