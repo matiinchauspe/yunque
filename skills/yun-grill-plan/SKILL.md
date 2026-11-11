@@ -32,6 +32,8 @@ A decision that changed the system's **architecture** — how it is built, not j
 
 ## Done
 
+Before asking for that confirmation, **cross the acceptance criteria** — each against every other and against every settled decision — and show the crossing: each criterion beside the decisions it touches. A pair that cannot both hold is an open question, not a settled one: put it to the user like any other.
+
 Do not act on the plan until the user confirms you have reached a shared understanding. The bar: an implementer could execute the result without asking a single question — and, in a domain grill, could name every concept in the glossary's own words. Close by listing the terms captured this session, or stating that none resolved.
 
 ## Attribution
