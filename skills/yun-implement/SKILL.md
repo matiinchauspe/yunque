@@ -39,9 +39,12 @@ the mode off the mechanism instead would turn a walk's degraded pass into an att
 re-litigating whether to build at all, stopping for a review with nobody there, and landing a commit
 its caller never asked for.
 
-It differs from a run a human is driving in exactly four ways, and nowhere else: the guard
+It differs from a run a human is driving in exactly five ways, and nowhere else: the guard
 above is already satisfied — the walk found the ticket fit, so do not re-litigate magnitude or
-ripeness; step 2 does not choose, it always isolates, passing the handed base and name; **it ends at
+ripeness; **it is a leaf** — it does the whole ticket in its own context and hands no share of it to
+further agents, since how many run is the walk's to hold and a helper inherits this run's plan of the
+split, which outweighs any rule handed it; a background command it waits on re-invokes it when it
+ends, so it waits without a `sleep` poll; step 2 does not choose, it always isolates, passing the handed base and name; **it ends at
 step 3** — neither the review of step 4 nor the landing of step 5 runs, because `yun-review-work`
 assumes a human at its convergence points and no human is there, so review is the walk's to push
 right, over the assembled result; and before ending it runs **the repo's whole-tree gates** — test,

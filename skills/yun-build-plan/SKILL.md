@@ -126,7 +126,9 @@ when anything is loose there.** A run that fail-fasts at the contract's bottom t
 in that tree, and the next run commits them under **its own** ticket, past ancestry, commits and a
 green gate alike. Nothing tells you in advance which tier a run resolves to, so the read is
 unconditional — and it is a read rather than a report, because a run that dies reports nothing while
-the tree still shows it.
+the tree still shows it. **The one exception is a path this ticket's body names** — fetched just
+below — since its run commits that path under the ticket that carries it: let it through, and step 4
+reports it.
 
 `fetch` the ticket through `artifact-convention.md` — a second read of a ticket `list` already
 returned, deliberately: the walk needs the body, the subagent needs its own copy in a fresh context.
@@ -175,6 +177,12 @@ chain does not advance, the next dispatch cuts from the same base, and you
 tried, and its workspace is a human's to inspect. Only a *converged* run owes you its branch name,
 so for a skip, report the name you handed out. **Stop the walk**: leave every branch where it is,
 and go to step 4 with what stopped it.
+
+**When a human sends a stopped run back to work**, hand it the **symptom** and the evidence — the
+failing check, its output, the human's ruling — leave the fix to the run, and take what it hands back
+through this same step. The run holds the
+workspace and the evidence; the walk holds only its report, so a "don't touch X" the run has not
+itself ruled out fences off exactly where the defect may sit.
 
 **The whole-tree verdict picks the move** — a question answered inside the run, in the only workspace
 where the project's environment stands up:
@@ -258,6 +266,7 @@ Done when the pass has chained, skipped, or stopped.
   there rather than in the repo, and a declined ticket left no branch to delete.
 - **Every ticket left stranded**, each with the root its edges lead to. A quiet strand reads as a
   delivery.
+- **Loose paths let through** — each one step 2 passed, with the ticket whose body named it.
 - **Comments over the bar** — every one step 3 found, by ticket and `file:line`, or "none" said
   outright.
 - **What was never verified** — every ticket whose repo declared no gates, and any run that shared

@@ -32,9 +32,11 @@ dig for.
 
 3. **Write the title and the body.** Both forms and their rules are below. No preamble.
 
-4. **Hand it over.** If the user asked to publish it, do so through the forge's own tooling: for
-   a branch with no PR, push it and open one with this title and body; for an existing PR,
-   replace its title and body. Otherwise hand both back as text.
+4. **Hand it over.** If the user asked to publish it, do so through the forge's own tooling, and
+   read the branch's PR state from the forge **before pushing**. A PR still **open** → push, then
+   replace its title and body. No PR, or one merged or closed → push and open a new one with this
+   title and body, on purpose: a merged PR's deleted branch is recreated by the push, and the
+   close names the old PR beside the new one. Otherwise hand both back as text.
 
 ## The title
 
