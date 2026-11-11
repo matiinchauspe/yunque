@@ -27,7 +27,8 @@ code as it stands today. That difference decides where each one lives and how fa
    drop.
 
    **A comment carries the why** — a reason, an outside constraint, a hidden consequence; code that
-   reads clearly carries none, whatever the code around it does. Hold the comments already in every
+   reads clearly carries none. Comments are never inferred practice: a neighbour's comment is not
+   form to match, and a pointer to a ticket or spec is not a why. Hold the comments already in every
    file the work changes to that bar, in the same change: shorten them or delete them. A doc comment
    the repo declares is form: write it, as the contract callers rely on.
 3. **The inferred half is a by-product.** It comes off the files the work already opens — the one
