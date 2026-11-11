@@ -142,7 +142,8 @@ Tell it explicitly that this is a **dispatched run** of `yun-implement`, and giv
 ticket's number, the **base** step 1 derived, and the **`name`** `aw/<slug>/<NN>-<random>` — this
 walk's slug, the ticket's number, and a random suffix, which is what the source template settled on
 after second-granularity timestamps collided. Step 1 matches on the `<NN>-` prefix, so the suffix
-costs the walk nothing.
+costs the walk nothing. Quote `practice-convention`'s rule 2 paragraph **A comment carries the why**
+into the package whole — a run left to reach it through conform mirrors the comments around it.
 
 `yun-implement`'s dispatched-run rules then apply, and one of them is this walk's whole review
 posture: **it stops before review and before landing**, because review is pushed right, to the
@@ -209,6 +210,11 @@ this ticket as open with no branch and **redispatches work already built**. Carr
 and let step 4 declare this chain no longer derivable, naming every branch: from here it resumes
 only on a `<base>` a human supplies.
 
+**Before chaining, read the comments the run added** — the comment lines `git -C repos/<repo> diff`
+adds between the base you handed out and the branch — against that same paragraph. Neither a veto
+nor a move: each one over the bar goes to step 4 by `file:line`, since a long diff hides it from the
+human.
+
 Chaining `resolve`s the ticket through `artifact-convention.md`. **Resolved means integrated, not
 delivered** — the deliverable still waits for a human, and `resolve` has no inverse.
 
@@ -252,6 +258,8 @@ Done when the pass has chained, skipped, or stopped.
   there rather than in the repo, and a declined ticket left no branch to delete.
 - **Every ticket left stranded**, each with the root its edges lead to. A quiet strand reads as a
   delivery.
+- **Comments over the bar** — every one step 3 found, by ticket and `file:line`, or "none" said
+  outright.
 - **What was never verified** — every ticket whose repo declared no gates, and any run that shared
   this thread's context rather than a subagent's.
 - **Whether this chain is still derivable**, wherever step 1 could not read a tip or step 3 found a
@@ -261,9 +269,9 @@ Then say **when the refs may go: once the whole feature is built — not once a 
 deliverable into the mainline.** Step 1 reads the chain out of that namespace, and a merged
 deliverable over a feature with tickets still open is precisely the walk that will need it.
 
-Done when the human knows what to review, what was skipped, what was declined, what was stranded,
-what went unchecked, and what a retry costs — and has been offered the deliverable running and
-reviewed, or told why it cannot be.
+Done when the human knows what to review, which comments to prune, what was skipped, what was
+declined, what was stranded, what went unchecked, and what a retry costs — and has been offered the
+deliverable running and reviewed, or told why it cannot be.
 
 ## Attribution
 
