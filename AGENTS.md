@@ -57,6 +57,7 @@ Index of the current harness (name — when to reach for it):
 | `yun-write-pr` | Write a PR title and body that show the change: its ticket, shape, evidence, and merge danger | user |
 | `yun-retro` | Retrospective on a session — candidate improvements to the harness and the target repo, by severity | user |
 | `yun-scan-architecture` | Scan a codebase's hot spots for deepening opportunities — an HTML report, then grill the pick | user |
+| `yun-design-factory` | Design a software factory — the tasks it runs and the services it plugs into — alongside a grill | user |
 | `yun-write-wizard` | Hit a step only a human can do — credentials, CI secrets, an unfamiliar dashboard, a one-off migration | auto |
 
 *Invocation* maps across tools: **auto** = model-invoked (Claude) / agent-requested (Cursor);
