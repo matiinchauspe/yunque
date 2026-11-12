@@ -21,6 +21,12 @@
 # no file names either, not even the contract that uses it. Any case, whole
 # word, is reported `CAPABILITY`.
 #
+# A survey is the one exception to TRACKER: a file whose first lines carry
+# `> Surveyed YYYY-MM` maps the market for a human choosing a product, and binds
+# the harness to none (`yun-design-factory`'s slot surveys, 2026-11-12). The
+# marker is read in the header only, so a stray quote deep in a skill exempts
+# nothing; CAPABILITY still applies to surveys.
+#
 # Usage: lenses/tracker-names [root]   (root defaults to the workspace root)
 # Exit:  0 = clean · 1 = findings · 2 = the lens could not run
 
@@ -36,9 +42,11 @@ count=0
 while IFS= read -r f; do
   count=$((count + 1))
   rel="${f#"$root"/}"
-  hits="$(awk -v rel="$rel" '
+  survey=0
+  head -n 5 "$f" | rg -q '^> Surveyed [0-9]{4}-[0-9]{2}' && survey=1
+  hits="$(awk -v rel="$rel" -v survey="$survey" '
     {
-      line = $0
+      line = survey ? "" : $0
       while (match(line, /(^|[^A-Za-z])(Linear|Jira|Asana|Trello|ClickUp|YouTrack|GitHub Issues)([^A-Za-z]|$)/)) {
         hit = substr(line, RSTART, RLENGTH)
         gsub(/^[^A-Za-z]|[^A-Za-z]$/, "", hit)

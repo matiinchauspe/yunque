@@ -91,6 +91,10 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   `yun-design-modules`' vocabulary, presents them as an HTML report outside the repo, then grills
   the candidate the user picks. `HTML-REPORT.md` holds the scaffold and diagram patterns. Adapted
   from Matt Pocock's `improve-codebase-architecture`.
+- `yun-design-factory/` — the language for designing a software factory: tasks, triggers, runs
+  and runners, the services they plug into, the three brakes, and five questions per task. Each
+  example task names the harness skill that carries its body; the four slot surveys map the market.
+  Adapted from Matt Pocock's `software-factory`.
 - `yun-write-wizard/` — generates a bash wizard for a manual procedure only a human can do: it
   opens each URL, says what to click and copy, captures the value, and writes it to `.env` or
   the CI's secret store. Written to `.yun/wizards/<project>/<slug>.sh`, ephemeral by default,
