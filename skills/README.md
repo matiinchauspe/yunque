@@ -38,8 +38,9 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
 - `yun-build-plan/` — the orchestrator: walks a sliced plan's implementation frontier, dispatches
   each ticket to an isolated run behind a whole-tree gate, and leaves ONE branch for a human to
   review. Serial, so it cuts each run from the branch the last one produced: the chain integrates
-  by construction, the final branch already holds every ticket, and **the walk itself never writes
-  to git** — every git command it runs is a read. It also **keeps no state of its own**: each pass
+  by construction, the final branch already holds every ticket, and **the walk writes to git only
+  to commit a run a human approved** in an attended walk — unattended, every git command it runs is
+  a read. It also **keeps no state of its own**: each pass
   re-derives the chain's tip and its skip set from the `aw/<slug>/` branch namespace and the ticket
   statuses, so every pass is a resume, and deleting a failed run's branch is how a human retries it.
   `LIMITS.md` declares what the mechanism does not guarantee. Adapted from Matt Pocock's

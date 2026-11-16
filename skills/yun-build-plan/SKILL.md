@@ -11,8 +11,9 @@ for a human to review and merge. The **walk**: read the chain and compute the fr
 one ticket to a run → resolve the ticket → read again, until the frontier drains or the walk stops
 on something it must surface.
 
-**The walk never writes to git and keeps no state of its own.** Each run is cut from the branch the
-last one produced, so the chain integrates *by construction*: the newest branch already carries
+**The walk keeps no state of its own, and writes to git only to commit a run a human approved** —
+in an attended walk; unattended, every git command it runs is a read. Each run is cut from the
+branch the last one produced, so the chain integrates *by construction*: the newest branch already carries
 every ticket before it, and the last one **is** the deliverable. Every pass reads that chain back
 out of git and the ticket store rather than remembering it, which makes **every pass a resume** —
 the first and the seventh run the same steps.
@@ -36,6 +37,9 @@ A human types this skill, plausibly bare. Ask for whichever of the first three y
 - `<base>` — the ref the chain starts from, where that is not the mainline: a feature branch a fresh
   plan builds onto, or the chain a broken derivation cannot read for itself. **Where step 1 can
   derive a tip, that tip wins** — a base supplied over it would override a fact with a guess.
+- **attended** — whether a human reviews each run's changes **uncommitted** before it chains. Ask
+  when you were not told. Attended, the run leaves its work uncommitted and the walk commits it on
+  the human's ok; unattended, the run commits and nothing waits on a person.
 
 ## Preconditions
 
@@ -75,7 +79,11 @@ Cross them, and two facts fall out:
   *remaining* branch as an ancestor, so it reads as a clean tip while that ticket's work sits outside
   the deliverable.
 - **The failed set** — every ticket reading `open` that has a branch under its number. It was
-  dispatched and never resolved. **Skip it, permanently.**
+  dispatched and never resolved. **Skip it, permanently.** The one exception is a run **awaiting
+  review**: a ticket whose newest log entry, read through `fetch`, says so, and whose workspace still
+  stands with uncommitted changes. It waits on a person, not on a failure — take it straight to
+  step 3's stop for the human rather than dispatching, with the tip as the base it was handed, since
+  nothing chained past it. Its workspace gone, it is failed like any other.
 
 The frontier is what remains: **open**, **unblocked** — every edge `list` returns for it already
 `resolved` — and **not in the failed set**, in number order, minus whatever step 2 declined on this
@@ -90,8 +98,9 @@ survives a restart too: every pass resolves a ticket, leaves a branch on one, or
 monotonic over a finite set **recorded in the repo**.
 
 **Permanent is a decision.** A failed run's branch is the record that it ran, so **deleting that
-branch is how a human retries the ticket.** The walk never writes to git, which makes a human's git
-commands the entire control surface — and nothing needs syncing, because the repo *is* the state.
+branch is how a human retries the ticket.** Past the commits a human approves, the walk never writes
+to git, which makes a human's git commands the entire control surface — and nothing needs syncing,
+because the repo *is* the state.
 
 **When the derivation breaks** — a resolved ticket without its branch, or no branch holding the rest
 as ancestors — neither the chain nor a base is readable.
@@ -116,8 +125,8 @@ and go to step 4 with whichever one holds:**
   that is not `resolved`. Follow each **stranded** one's edges to that root and name it.
   A walk that built eleven of twelve and skipped one is neither finished nor simply stuck.
 
-Done when you hold the takeable set and the base, know which empty reading you are in, or stopped
-because neither the chain nor a `<base>` resolved.
+Done when you hold the takeable set and the base, hold a run awaiting review, know which empty
+reading you are in, or stopped because neither the chain nor a `<base>` resolved.
 
 ### 2. Dispatch the frontier's first ticket to a run
 
@@ -145,7 +154,9 @@ ticket's number, the **base** step 1 derived, and the **`name`** `aw/<slug>/<NN>
 walk's slug, the ticket's number, and a random suffix, which is what the source template settled on
 after second-granularity timestamps collided. Step 1 matches on the `<NN>-` prefix, so the suffix
 costs the walk nothing. Quote `practice-convention`'s rule 2 paragraph **A comment carries the why**
-into the package whole — a run left to reach it through conform mirrors the comments around it.
+into the package whole — a run left to reach it through conform mirrors the comments around it —
+and ask the run to hand back step 3's comment table over its own diff. In an attended walk, also
+tell it to leave its work **uncommitted** on its branch, in its workspace: the human reviews it there.
 
 `yun-implement`'s dispatched-run rules then apply, and one of them is this walk's whole review
 posture: **it stops before review and before landing**, because review is pushed right, to the
@@ -203,7 +214,8 @@ where the project's environment stands up:
 - **Passed**, or **the repo declares none** → the branch may carry the chain, subject to the two
   vetoes. No gates is not a pass — step 4 reports it unverified.
 
-**Then the two vetoes, neither of which asks the run:**
+**Then the two vetoes, neither of which asks the run** — in an attended walk, only once the human's
+ok has been committed, below:
 
 - **Ancestry** — is the base you handed out an ancestor of the branch? `execution-convention:114-123`
   requires this of any caller that supplied one, and spells out what a lost base returns and why
@@ -218,10 +230,23 @@ this ticket as open with no branch and **redispatches work already built**. Carr
 and let step 4 declare this chain no longer derivable, naming every branch: from here it resumes
 only on a `<base>` a human supplies.
 
-**Before chaining, read the comments the run added** — the comment lines `git -C repos/<repo> diff`
-adds between the base you handed out and the branch — against that same paragraph. Neither a veto
-nor a move: each one over the bar goes to step 4 by `file:line`, since a long diff hides it from the
-human.
+**Before chaining, show the comments the run added** — every comment line its change adds over the
+base you handed out: `git -C repos/<repo> diff <base> <branch>`, or, while an attended run's work is
+uncommitted, `git -C <workspace> diff <base>` plus every untracked file it created, read whole — as
+a table, one row each: the comment, what the code beside it already says, and *keep*, *cut* or a
+one-line rewrite. Each row asks one question: delete it, and is anything lost the code does not say? A read with no table is not done —
+the run's own table is a claim to check, not this read. Neither a veto nor a move: every row not
+*keep* goes to step 4 by `file:line`, since a long diff hides it from the human.
+
+**In an attended walk, stop for the human here**, before anything is committed and before the two
+vetoes, which have no commits to read yet. Append an *awaiting review* entry to the ticket's log
+through `artifact-convention.md` — the only record that this branch waits on a person, since in git
+it reads as a failed run — and hand the human the workspace path, the files changed, your review
+with the comment table, and the commits you would split the change into. **Their ruling picks the
+move:** changes go back to the run by the rule above — or, where that run is gone with a past session,
+the human chooses between the walk making them in that workspace, then this stop again, and
+deleting the branch to retry the ticket; an ok has the walk commit on the run's branch,
+in that workspace — conventional commits, no attribution — and only then run the two vetoes.
 
 Chaining `resolve`s the ticket through `artifact-convention.md`. **Resolved means integrated, not
 delivered** — the deliverable still waits for a human, and `resolve` has no inverse.
@@ -235,7 +260,7 @@ mean anything here — `resolve` the ticket by hand, so the next pass reads the 
 the branch, so the ticket is retried from scratch. **Restarting without doing either discards that
 run's work in silence.**
 
-Done when the pass has chained, skipped, or stopped.
+Done when the pass has chained, skipped, stopped, or waits on the human's ruling.
 
 ### 4. Report
 
@@ -258,7 +283,9 @@ Done when the pass has chained, skipped, or stopped.
   whatever entry point the repo declares for running itself, and start it only on a yes. Where that
   workspace is gone or the repo declares no such entry point, say which rather than guess.
 - **The deliverable, reviewed** — where there is a deliverable, offer `yun-review-work` over it,
-  and run it only on a yes.
+  and run it only on a yes. Each fix it calls for is published as an implementation ticket blocked
+  by the newest resolved one and walked from step 1, never edited inline: a branch with no ticket
+  under its number is invisible to step 1.
 - **Every ticket skipped, loudly**, with which of step 3's reasons skipped it, naming any branch and
   workspace it left behind and saying that **deleting the branch is what retries it**.
 - **Every ticket declined**, with what step 2 refused it for: a batch, with what it would take to
@@ -267,8 +294,8 @@ Done when the pass has chained, skipped, or stopped.
 - **Every ticket left stranded**, each with the root its edges lead to. A quiet strand reads as a
   delivery.
 - **Loose paths let through** — each one step 2 passed, with the ticket whose body named it.
-- **Comments over the bar** — every one step 3 found, by ticket and `file:line`, or "none" said
-  outright.
+- **Comments over the bar** — every row step 3's table did not keep, by ticket and `file:line`, with
+  its rewrite, or "none" said outright.
 - **What was never verified** — every ticket whose repo declared no gates, and any run that shared
   this thread's context rather than a subagent's.
 - **Whether this chain is still derivable**, wherever step 1 could not read a tip or step 3 found a
