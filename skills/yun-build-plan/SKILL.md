@@ -79,16 +79,17 @@ Cross them, and two facts fall out:
   *remaining* branch as an ancestor, so it reads as a clean tip while that ticket's work sits outside
   the deliverable.
 - **The failed set** — every ticket reading `open` that has a branch under its number. It was
-  dispatched and never resolved. **Skip it, permanently.** The one exception is a run **awaiting
-  review**: a ticket whose newest log entry, read through `fetch`, says so, and whose workspace still
-  stands with uncommitted changes. It waits on a person, not on a failure — take it straight to
-  step 3's stop for the human rather than dispatching, with the tip as the base it was handed, since
-  nothing chained past it. Its workspace gone, it is failed like any other.
+  dispatched and never resolved. **Skip it, permanently.** Its newest log entry, read through
+  `fetch`, overrides that twice. A **`parked`** entry → the ticket is **parked**: off the
+  frontier, and reported with its question, never as skipped, whether or not its workspace still
+  stands. An *awaiting review* entry, with the workspace still standing with uncommitted changes →
+  take it straight to step 3's stop for the human rather than dispatching, with the tip as the base
+  it was handed, since nothing chained past it. An *awaiting review* ticket whose workspace is gone is failed like any other.
 
 The frontier is what remains: **open**, **unblocked** — every edge `list` returns for it already
-`resolved` — and **not in the failed set**, in number order, minus whatever step 2 declined on this
-pass. Only `resolved` unblocks: a blocker closed any other way left no code behind, so a ticket that
-declared a dependency on it would build against a hole.
+`resolved` — and **neither failed nor parked**, in number order, minus whatever step 2 declined on
+this pass. Only `resolved` unblocks: a blocker closed any other way left no code behind, so a
+ticket that declared a dependency on it would build against a hole.
 
 **Deriving is the point, not an optimization.** A skip set kept in this thread dies with a
 compaction, and the frontier then re-offers the failed ticket forever: dispatch, fail, skip, forget,
@@ -117,9 +118,12 @@ and go to step 4 with whichever one holds:**
 - **No tickets at all under this feature key** → nothing was ever sliced here. Say that, rather than
   reporting a finished walk over an empty set.
 - **Nothing open remains** → the plan is built.
-- **Open tickets remain** → separate them. Ones in the failed set are reported as skipped; ones
-  step 2 **declined** — a ticket nothing could `fetch`, or a batch refused — are takeable and wait
-  on no root, so they are reported as declined rather than stranded; the rest are **stranded**, each
+- **Open tickets remain** → separate them. Ones in the failed set are reported as skipped; parked
+  ones as parked, and every ticket waiting on one — directly, or through a chain of open tickets —
+  as **waiting on your answer in #NN**, naming the parked ticket at the chain's end, unless another
+  of its edges leads to a root below, which strands it whatever the answer; ones step 2
+  **declined** — a ticket nothing could `fetch`, or a batch refused — are takeable and wait on no
+  root, so they are reported as declined rather than stranded; the rest are **stranded**, each
   waiting — directly, or through a chain of open tickets — on something that will never resolve: a
   skipped ticket, a cycle among the edges, a number never published, or a blocker closed some way
   that is not `resolved`. Follow each **stranded** one's edges to that root and name it.
@@ -195,6 +199,12 @@ through this same step. The run holds the
 workspace and the evidence; the walk holds only its report, so a "don't touch X" the run has not
 itself ruled out fences off exactly where the defect may sit.
 
+**A run that parked, or one that reports done while its completion report leaves an acceptance
+criterion unaccounted for, parks the ticket** — before anything below, attended or not. Append a
+`parked` entry to its log through `artifact-convention.md`: the run's question and recommendation,
+or the question the gap raises and your recommendation, rather than dispatching it again. Then
+**skip**.
+
 **The whole-tree verdict picks the move** — a question answered inside the run, in the only workspace
 where the project's environment stands up:
 
@@ -217,7 +227,7 @@ where the project's environment stands up:
 **Then the two vetoes, neither of which asks the run** — in an attended walk, only once the human's
 ok has been committed, below:
 
-- **Ancestry** — is the base you handed out an ancestor of the branch? `execution-convention:114-123`
+- **Ancestry** — is the base you handed out an ancestor of the branch? `execution-convention:135-144`
   requires this of any caller that supplied one, and spells out what a lost base returns and why
   nothing downstream catches it. Not an ancestor, or the ref unreadable → **stop the walk**, naming
   the ticket whose branch broke it.
@@ -260,12 +270,12 @@ mean anything here — `resolve` the ticket by hand, so the next pass reads the 
 the branch, so the ticket is retried from scratch. **Restarting without doing either discards that
 run's work in silence.**
 
-Done when the pass has chained, skipped, stopped, or waits on the human's ruling.
+Done when the pass has chained, parked, skipped, stopped, or waits on the human's ruling.
 
 ### 4. Report
 
-- **Why the walk ended** — drained, drained with skips, stuck, nothing sliced, or stopped, and on
-  what.
+- **Why the walk ended** — drained, drained with skips or parked tickets, stuck, nothing sliced, or
+  stopped, and on what.
 - **The deliverable — the chain's tip**: the branch the last chained run **produced**, named as the
   one to review and merge. Where nothing chained, a resumed walk's deliverable is the base it started
   from, unchanged; only a *fresh* walk that chained nothing has **no deliverable**. Where a failed
@@ -291,6 +301,9 @@ Done when the pass has chained, skipped, stopped, or waits on the human's ruling
 - **Every ticket declined**, with what step 2 refused it for: a batch, with what it would take to
   build by hand; a ticket nothing could `fetch`, with the store and key that failed — the repair is
   there rather than in the repo, and a declined ticket left no branch to delete.
+- **Every ticket parked**, with its question, its recommendation, its branch, and its workspace
+  where it still stands for the answer; then every ticket waiting on that answer, as **waiting on your
+  answer in #NN** — apart from the stranded, since an answer frees them.
 - **Every ticket left stranded**, each with the root its edges lead to. A quiet strand reads as a
   delivery.
 - **Loose paths let through** — each one step 2 passed, with the ticket whose body named it.
@@ -305,9 +318,9 @@ Then say **when the refs may go: once the whole feature is built — not once a 
 deliverable into the mainline.** Step 1 reads the chain out of that namespace, and a merged
 deliverable over a feature with tickets still open is precisely the walk that will need it.
 
-Done when the human knows what to review, which comments to prune, what was skipped, what was
-declined, what was stranded, what went unchecked, and what a retry costs — and has been offered the
-deliverable running and reviewed, or told why it cannot be.
+Done when the human knows what to review, which comments to prune, which questions wait on them,
+what was skipped, what was declined, what was stranded, what went unchecked, and what a retry
+costs — and has been offered the deliverable running and reviewed, or told why it cannot be.
 
 ## Attribution
 

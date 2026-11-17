@@ -91,11 +91,11 @@ isolate(ticket, project, base?, name?):  the workspace the run happens in + its 
          it — the tier that is always available is also the one that cannot isolate a failure.
 
 converge(ticket):  loop the run — drive the work, evaluate the done-signal, and on anything short
-     of it iterate again — with two exits only: the done-signal fires (success), or an iteration
-     ceiling is reached first (a fail-fast surface, never a done). A failing gate or an unfinished
-     run is not an exit — it spends one more iteration. The ceiling — a run-level bound the
-     dispatching skill sets, and a conservative default when it does not — always bounds the loop,
-     so it cannot spin forever. The done-signal is the strongest the ticket offers, and a weaker
+     of it iterate again — with three exits only: the done-signal fires (success), the run parks
+     (below), or an iteration ceiling is reached first (a fail-fast surface, never a done). A
+     failing gate or an unfinished run is not an exit — it spends one more iteration. The
+     ceiling — a run-level bound the dispatching skill sets, and a conservative default when it
+     does not — always bounds the loop, so it cannot spin forever. The done-signal is the strongest the ticket offers, and a weaker
      signal never substitutes for a stronger one the ticket carries:
   - The run's work has any runnable gate — a test, a build, an automated acceptance check → the
          signal is ALL such gates passing, and every acceptance criterion the ticket names
@@ -104,6 +104,11 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
          the rest.
   - It has none → the signal is the agent's own completion report, the best available when there
          is nothing to run.
+  A run **parks** only when no human is at hand and an acceptance criterion cannot be met as
+  written without a WHAT decision — cut it, reassign it to another ticket, or choose between
+  criteria that conflict; with a human at hand, it asks them. It ends there and reports the question
+  with its recommendation; its dispatching skill records them. A HOW decision never parks: the run
+  takes the default, names it in its completion report, and goes on.
   A ticket held for a human never reaches this loop, so the completion-report tier is never a
   stand-in for the human. Whether the whole tree still holds once this branch is integrated is
   a SEPARATE, serial concern (below) — not this loop's.
@@ -111,7 +116,7 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
 
 - **A run announces itself** through `control-convention.md`, twice. Once its workspace stands,
   it announces `ticket`, `project`, `branch` and `base`. At every exit of `converge`, a re-entry's
-  included, it announces `verdict=done` or `verdict=fail-fast`.
+  included, it announces `verdict=done`, `verdict=parked` or `verdict=fail-fast`.
 - **Sandbox capability** = any isolated runtime the agent can drive — a container, a microVM, a
   remote sandbox. It carries the ticket's whole run; the convention does not know or care which
   one it is, only that it takes one ticket at a time. A runtime that offers no per-ticket entry

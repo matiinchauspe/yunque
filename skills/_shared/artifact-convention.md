@@ -87,6 +87,9 @@ log(ticket):  where a ticket's LOG lives — NOT an intent a skill declares, but
        appended beneath the last. **The first append creates the heading**; a ticket without
        one has an empty log, not a missing one.
   No third rung — a ticket always has a body.
+  An entry is free text, except a **`parked`** one: a walk reads a ticket's state off it, so its
+  kind leads it — `parked`, then the **question** and the **recommendation**, each on its own
+  line.
 
 fetch(reference, project):  try each mechanism until one YIELDS the artifact — a present but
      empty capability falls through, it does not short-circuit:
