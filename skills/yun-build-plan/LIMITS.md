@@ -125,7 +125,7 @@ The walk keeps no state, so it survives any interruption — but only because `a
 ticket statuses hold everything it would otherwise have remembered. Three things put that out of
 reach: a **pruned namespace**; **two branches on one resolved number**, where no single branch holds
 the others as ancestors; and a **tier that did not honour the name it was given**, which
-`execution-convention:47-49` explicitly permits and which leaves a branch outside the namespace
+`execution-convention:57-59` explicitly permits and which leaves a branch outside the namespace
 entirely. Then step 1 stops and asks for `<base>`, which nothing can verify, so the walk proceeds on
 a human's word and step 4 says so. The contract sanctions re-deriving a set from git alone; what it
 cannot promise is that the refs are still there.
