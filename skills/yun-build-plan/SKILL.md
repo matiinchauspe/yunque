@@ -80,11 +80,13 @@ Cross them, and two facts fall out:
   the deliverable.
 - **The failed set** — every ticket reading `open` that has a branch under its number. It was
   dispatched and never resolved. **Skip it, permanently.** Its newest log entry, read through
-  `fetch`, overrides that twice. A **`parked`** entry → the ticket is **parked**: off the
+  `fetch`, overrides that three times. A **`parked`** entry → the ticket is **parked**: off the
   frontier, and reported with its question, never as skipped, whether or not its workspace still
-  stands. An *awaiting review* entry, with the workspace still standing with uncommitted changes →
-  take it straight to step 3's stop for the human rather than dispatching, with the tip as the base
-  it was handed, since nothing chained past it. An *awaiting review* ticket whose workspace is gone is failed like any other.
+  stands. An **`answered`** entry → the ticket is **answered**: takeable, and step 2 dispatches it
+  as a resume. An *awaiting review* entry, with the workspace still standing with uncommitted
+  changes → take it straight to step 3's stop for the human rather than dispatching, with the tip
+  as the base it was handed, since nothing chained past it. An *awaiting review* ticket whose
+  workspace is gone is failed like any other.
 
 The frontier is what remains: **open**, **unblocked** — every edge `list` returns for it already
 `resolved` — and **neither failed nor parked**, in number order, minus whatever step 2 declined on
@@ -96,10 +98,13 @@ compaction, and the frontier then re-offers the failed ticket forever: dispatch,
 dispatch. State in context is tolerable **only when losing it costs a re-read rather than a
 different answer** — true of step 2's declines, false of everything above. Derived, the bound
 survives a restart too: every pass resolves a ticket, leaves a branch on one, or stops, all three
-monotonic over a finite set **recorded in the repo**.
+monotonic over a finite set **recorded in the repo** — and a resume spends its answer in a
+`resumed` entry before it leaves its branch, so an answer re-offers its ticket once.
 
 **Permanent is a decision.** A failed run's branch is the record that it ran, so **deleting that
-branch is how a human retries the ticket.** Past the commits a human approves, the walk never writes
+branch is how a human retries the ticket.** A ticket that took an answer has several: append
+another `answered` entry to resume it from the one holding the others, or delete them all to start
+it fresh. Past the commits a human approves, the walk never writes
 to git, which makes a human's git commands the entire control surface — and nothing needs syncing,
 because the repo *is* the state.
 
@@ -162,6 +167,14 @@ into the package whole — a run left to reach it through conform mirrors the co
 and ask the run to hand back step 3's comment table over its own diff. In an attended walk, also
 tell it to leave its work **uncommitted** on its branch, in its workspace: the human reviews it there.
 
+An **answered** ticket is a **resume**: the same package under a fresh `name`, plus as `prior` the
+branch under that number holding its others — where none does, decline it, since a pick would
+leave one outside the chain. Tell the run its log's last `answered` entry is binding over the
+framing, and, in an attended walk, that the merge is committed and only the ticket's new work
+stays uncommitted. **First append a `resumed` entry** naming the `name` and `prior`: the answer is
+spent there, so short of chaining or parking again the ticket reads failed like any other instead
+of re-offered each pass.
+
 `yun-implement`'s dispatched-run rules then apply, and one of them is this walk's whole review
 posture: **it stops before review and before landing**, because review is pushed right, to the
 human, over the assembled result. Let `execution-convention`'s own default bound the run's
@@ -200,10 +213,11 @@ workspace and the evidence; the walk holds only its report, so a "don't touch X"
 itself ruled out fences off exactly where the defect may sit.
 
 **A run that parked, or one that reports done while its completion report leaves an acceptance
-criterion unaccounted for, parks the ticket** — before anything below, attended or not. Append a
-`parked` entry to its log through `artifact-convention.md`: the run's question and recommendation,
-or the question the gap raises and your recommendation, rather than dispatching it again. Then
-**skip**.
+criterion unaccounted for, parks the ticket** — before anything below. Append a `parked` entry to
+its log through `artifact-convention.md`: the run's question and recommendation, or the question
+the gap raises and your recommendation, rather than dispatching it again. Then **skip**. In an
+attended walk only the first parks, its work committed by the run; the gap goes to the stop for
+the human below, who is at hand, and whose uncommitted work a later resume could not reach.
 
 **The whole-tree verdict picks the move** — a question answered inside the run, in the only workspace
 where the project's environment stands up:
@@ -227,10 +241,12 @@ where the project's environment stands up:
 **Then the two vetoes, neither of which asks the run** — in an attended walk, only once the human's
 ok has been committed, below:
 
-- **Ancestry** — is the base you handed out an ancestor of the branch? `execution-convention:135-144`
+- **Ancestry** — is the base you handed out an ancestor of the branch? `execution-convention:144-153`
   requires this of any caller that supplied one, and spells out what a lost base returns and why
-  nothing downstream catches it. Not an ancestor, or the ref unreadable → **stop the walk**, naming
-  the ticket whose branch broke it.
+  nothing downstream catches it. A resume asks the same of the `prior` its `resumed` entry names:
+  a run that skipped that merge leaves the parked branch outside the chain, and step 1 then finds
+  no tip. Not an ancestor, or the ref unreadable → **stop the walk**, naming the ticket whose branch
+  broke it.
 - **Commits** — does anything sit between that base and the branch? A branch level with its base
   built nothing, and resolving its ticket would record work that is not there. Nothing → **skip**.
 
@@ -288,7 +304,8 @@ Done when the pass has chained, parked, skipped, stopped, or waits on the human'
   workspace still standing**: the deliverable's, which contains every link before it. That is where
   a human runs the gates before merging. Say plainly that the earlier workspaces were pruned as the
   walk chained past them and that their branches are all still there, or a reader will take the
-  missing directories for lost work. Removing that last workspace is theirs to do, once they have run it.
+  missing directories for lost work. Removing that last workspace is theirs to do, once they have run it,
+  and so is removing any a parked run left: the walk never chains past one, so name them.
 - **The deliverable, running** — where its workspace is still standing, offer to start it there by
   whatever entry point the repo declares for running itself, and start it only on a yes. Where that
   workspace is gone or the repo declares no such entry point, say which rather than guess.
@@ -297,13 +314,16 @@ Done when the pass has chained, parked, skipped, stopped, or waits on the human'
   by the newest resolved one and walked from step 1, never edited inline: a branch with no ticket
   under its number is invisible to step 1.
 - **Every ticket skipped, loudly**, with which of step 3's reasons skipped it, naming any branch and
-  workspace it left behind and saying that **deleting the branch is what retries it**.
+  workspace it left behind and saying that **deleting the branch is what retries it** — or, for a
+  ticket that took an answer, naming all its branches and step 1's two retries.
 - **Every ticket declined**, with what step 2 refused it for: a batch, with what it would take to
   build by hand; a ticket nothing could `fetch`, with the store and key that failed — the repair is
-  there rather than in the repo, and a declined ticket left no branch to delete.
+  there rather than in the repo, and a declined ticket left no branch to delete; a resume whose
+  branches none holds the others, naming them all, since deleting all but one makes it takeable.
 - **Every ticket parked**, with its question, its recommendation, its branch, and its workspace
-  where it still stands for the answer; then every ticket waiting on that answer, as **waiting on your
-  answer in #NN** — apart from the stranded, since an answer frees them.
+  where it still stands — evidence only, since the resume runs fresh from the branch; then every
+  ticket waiting on that answer, as **waiting on your answer in #NN** — apart from the stranded,
+  since an answer frees them.
 - **Every ticket left stranded**, each with the root its edges lead to. A quiet strand reads as a
   delivery.
 - **Loose paths let through** — each one step 2 passed, with the ticket whose body named it.
@@ -318,9 +338,18 @@ Then say **when the refs may go: once the whole feature is built — not once a 
 deliverable into the mainline.** Step 1 reads the chain out of that namespace, and a merged
 deliverable over a feature with tickets still open is precisely the walk that will need it.
 
+**Where the walk ended on an empty frontier with tickets parked, ask their questions** — never
+after a stop, whose chain waits on a human's reading. A parked question waits for this point, so
+nothing independent stalls behind it. Ask each one at a time, with its recommendation, and append
+each answer as an `answered` entry through `artifact-convention.md`; a question left unanswered
+stays parked, and is not asked again this session. After the round, if any answer came, return to
+step 1 in this session. With none, the walk ends: relaunching the same `/yun-build-plan <repo> <feature> <slug>` asks
+again, or takes an `answered` entry a human appended to the log since.
+
 Done when the human knows what to review, which comments to prune, which questions wait on them,
 what was skipped, what was declined, what was stranded, what went unchecked, and what a retry
-costs — and has been offered the deliverable running and reviewed, or told why it cannot be.
+costs — has been offered the deliverable running and reviewed, or told why it cannot be — and,
+after an empty frontier, has been asked every parked question.
 
 ## Attribution
 

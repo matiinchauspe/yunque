@@ -29,9 +29,9 @@ maps both to whatever runtime the running agent has.
 Both below:
 
 ```
-isolate(ticket, project, base?, name?):  the workspace the run happens in + its life in git — ALWAYS a
-     distinct named branch, cut from `base`: the unit a later integration layer takes (it takes
-     branches, not working trees), so every tier down to the floor must hand one up. What
+isolate(ticket, project, base?, name?, prior?):  the workspace the run happens in + its life in
+     git — ALWAYS a distinct named branch, cut from `base`: the unit a later integration layer
+     takes (it takes branches, not working trees), so every tier down to the floor must hand one up. What
      the tiers vary is the DEGREE of isolation around that branch — and that degree, not the
      branch, is what makes a run safe beside others. **`base` is optional, and a caller holding
      one MUST pass it**: it is the ref already carrying every dependency this ticket declares,
@@ -56,13 +56,20 @@ isolate(ticket, project, base?, name?):  the workspace the run happens in + its 
      invents one and reports it: right for a run nobody will come back to, wrong for a set someone
      must reassemble, which is why a dispatcher holding a namespace supplies it. A tier that
      cannot honour the name it was given reports the name it actually used, exactly as it reports
-     a base it could not take. Resolve to the first available:
+     a base it could not take. **`prior` is optional: the branch an earlier run of this same
+     ticket left unfinished.** The run cuts from `base` as usual and merges `prior` into its new
+     branch before any other work, so what it returns descends from both. `prior` is a ref in the
+     host repo: a workspace cloned from the host reads it as its remote-tracking form. A conflict
+     is the ticket's own work, and what `base` carries is settled: keep it and re-apply the
+     ticket's intent on top. An intent that cannot stand beside it, as the ticket's log now reads,
+     is a WHAT decision, and the run parks. A tier that cannot take `prior` reports so, as it does
+     a base. Resolve to the first available:
   1. A sandbox capability — an isolated container or VM, either one the agent has loaded or one
          the TARGET REPO declares to agents beside its own instructions. A repo that brings its
          own wins, since it knows how the project builds. Whatever its source, it qualifies at
          this rung only by SHAPE: a PER-TICKET entry point that, invoked with the ticket, the
-         base, and the name where it takes one, runs that one ticket isolated and leaves one
-         named branch. A whole orchestrator —
+         base, and the name and `prior` where it takes them, runs that one ticket isolated and
+         leaves one named branch. A whole orchestrator —
          a runner that plans, fans out and merges by itself — is NOT this rung: it answers a
          different verb, and taking it here would trade the caller's walk away. What it adds
          over rung 2 is **filesystem** isolation — a container wrapped around the same branch,
@@ -106,9 +113,11 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
          is nothing to run.
   A run **parks** only when no human is at hand and an acceptance criterion cannot be met as
   written without a WHAT decision — cut it, reassign it to another ticket, or choose between
-  criteria that conflict; with a human at hand, it asks them. It ends there and reports the question
-  with its recommendation; its dispatching skill records them. A HOW decision never parks: the run
-  takes the default, names it in its completion report, and goes on.
+  criteria that conflict; with a human at hand, it asks them. It ends there, its work so far
+  committed to its branch even where it was told to leave work uncommitted — the run that resumes
+  merges that branch, and loose edits do not travel — and reports the question with its
+  recommendation; its dispatching skill records them. A HOW decision never parks: the run takes
+  the default, names it in its completion report, and goes on.
   A ticket held for a human never reaches this loop, so the completion-report tier is never a
   stand-in for the human. Whether the whole tree still holds once this branch is integrated is
   a SEPARATE, serial concern (below) — not this loop's.

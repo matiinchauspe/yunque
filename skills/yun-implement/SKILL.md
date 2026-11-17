@@ -32,7 +32,8 @@ a walk for the user to start.
 ## Dispatched runs
 
 A **dispatched run** is this skill entered on a walk's hand-off — one ticket, its repo, its base,
-the name to give the workspace and branch, and no human at the convergence points. **What makes it dispatched is that package, never the
+the name to give the workspace and branch, any `prior` branch to resume, and no human at the
+convergence points. **What makes it dispatched is that package, never the
 mechanism that carried it**: a walk with a subagent capability hands it to a fresh context, and one
 without hands it to itself, in-thread. Both are dispatched runs and owe everything below. Reading
 the mode off the mechanism instead would turn a walk's degraded pass into an attended build —
@@ -44,7 +45,8 @@ above is already satisfied — the walk found the ticket fit, so do not re-litig
 ripeness; **it is a leaf** — it does the whole ticket in its own context and hands no share of it to
 further agents, since how many run is the walk's to hold and a helper inherits this run's plan of the
 split, which outweighs any rule handed it; a background command it waits on re-invokes it when it
-ends, so it waits without a `sleep` poll; step 2 does not choose, it always isolates, passing the handed base and name; **it ends at
+ends, so it waits without a `sleep` poll; step 2 does not choose, it always isolates, passing the handed base, name and any `prior`;
+**it ends at
 step 3** — neither the review of step 4 nor the landing of step 5 runs, because `yun-review-work`
 assumes a human at its convergence points and no human is there, so review is the walk's to push
 right, over the assembled result; and before ending it runs **the repo's whole-tree gates** — test,
@@ -61,8 +63,8 @@ created** — the walk addresses it rather than predicting it — and to **leave
 it created around that branch**. The branch carries the work, but only the workspace carries the
 environment that work runs in: tear it down and a human must rebuild that environment before they
 can run anything, which is how a chain reaches review unverified. **A run that fail-fasts or parks
-removes nothing** either: its workspace is the only evidence of what went wrong, or where the
-answer resumes. Either way the workspace is **a human's to remove** — once they have run what it
+removes nothing** either: its workspace is the only evidence of what went wrong, or of what the
+parked run had reached. Either way the workspace is **a human's to remove** — once they have run what it
 holds, or answered what it parked on — so a run reports its path alongside its branch. The walk cuts its next run from a converged branch rather than from the mainline; a branch
 you isolated on your own waits as a ref for a human.
 
@@ -91,7 +93,8 @@ else an isolated worktree via `yun-spawn-worktree`, else the host tree's single-
 every tier on its own named branch. **Pass on the base and the name you were handed** — the base
 is the ref carrying this ticket's dependencies, the name is how your caller will address the
 branch afterwards; a run you entered on your own has neither, so the contract cuts from the
-mainline and the run names itself. Done when the workspace is chosen: the current branch for a task you build
+mainline and the run names itself. A `prior` — an earlier run's unfinished branch for this
+ticket — is passed on too. Done when the workspace is chosen: the current branch for a task you build
 in place, or an isolated workspace on its own named branch, cut from the right base and carrying
 the name your caller will look for.
 
