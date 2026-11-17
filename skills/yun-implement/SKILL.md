@@ -60,10 +60,10 @@ So a **converged** dispatched run's own last act is to hand back **the name of t
 created** — the walk addresses it rather than predicting it — and to **leave standing the workspace
 it created around that branch**. The branch carries the work, but only the workspace carries the
 environment that work runs in: tear it down and a human must rebuild that environment before they
-can run anything, which is how a chain reaches review unverified. **A run that fail-fasts removes
-nothing** either: its workspace is the only evidence of what went wrong. Either way the workspace is
-**a human's to remove**, once they have run what it holds — so a run reports its path alongside its
-branch. The walk cuts its next run from a converged branch rather than from the mainline; a branch
+can run anything, which is how a chain reaches review unverified. **A run that fail-fasts or parks
+removes nothing** either: its workspace is the only evidence of what went wrong, or where the
+answer resumes. Either way the workspace is **a human's to remove** — once they have run what it
+holds, or answered what it parked on — so a run reports its path alongside its branch. The walk cuts its next run from a converged branch rather than from the mainline; a branch
 you isolated on your own waits as a ref for a human.
 
 ## Steps
@@ -112,9 +112,10 @@ was possible. What
 bounds the loop depends on the run: an isolated run converges through
 `skills/_shared/execution-convention.md`, held to an iteration ceiling (the dispatcher's, else
 the contract's conservative default) whose fail-fast exit is never a pass; an attended build is
-bounded by the human driving it. A run that stops short of its done-signal reports the shortfall
-and ends here — no review, no landing (an isolated run's branch stays as its ref). Done when the
-done-signal has fired.
+bounded by the human driving it. A dispatched run with no human to ask **parks** on a WHAT
+decision, by that contract's rule, reporting the question and its recommendation. A run that stops
+short of its done-signal reports the shortfall and ends here — no review, no landing (an isolated
+run's branch stays as its ref). Done when the done-signal has fired.
 
 ### 4. Review the run
 
