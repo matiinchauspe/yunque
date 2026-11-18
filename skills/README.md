@@ -136,9 +136,9 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   holds one, degrading a per-ticket sandbox → worktree → single-writer inline floor, every rung
   leaving that branch as a ref in the host repo) and converge
   (a bounded loop to the strongest done-signal the ticket offers, else it parks on a human's WHAT
-  decision or fail-fasts). The run of one — selection-agnostic, never counts (flow's) nor
-  integrates the branch it leaves (`yun-build-plan`'s, which does that by cutting each run from the
-  last one's branch). Grounded in Matt Pocock's `sandcastle`.
+  decision, checkpoints when told, or fail-fasts). The run of one — selection-agnostic, never
+  counts (flow's) nor integrates the branch it leaves (`yun-build-plan`'s, which does that by
+  cutting each run from the last one's branch). Grounded in Matt Pocock's `sandcastle`.
 - `_shared/practice-convention.md` — how any skill writes code the way the target repo already
   writes it: one intent, conform — the **declared** half (a conventions doc, the linter and
   formatter config, the repo's own agent instructions read as evidence about form) outranking the

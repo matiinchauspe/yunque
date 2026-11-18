@@ -120,10 +120,10 @@ and degrades by its own rules, spelled out below:
   never `origin/HEAD`); tier 1 is any sandbox — the agent's or one the
   target repo declares — qualifying only by SHAPE, a per-ticket entry point (a whole orchestrator
   answers a different verb). Converge is a bounded loop ending on the strongest done-signal the
-  ticket offers, else it parks on a human's WHAT decision or fail-fasts. The run of one — it never
-  counts (flow's) nor integrates the branch it leaves (`yun-build-plan`'s, which does that by
-  cutting each run from the last one's branch); selection-agnostic, a dispatching skill hands it
-  the ticket.
+  ticket offers, else it parks on a human's WHAT decision, checkpoints when told, or fail-fasts.
+  The run of one — it never counts (flow's) nor integrates the branch it leaves
+  (`yun-build-plan`'s, which does that by cutting each run from the last one's branch);
+  selection-agnostic, a dispatching skill hands it the ticket.
 - `practice-convention.md` — write code the way the target repo already writes it
   (conform). Two halves: **declared** (a conventions doc, the linter and formatter
   config, the repo's own agent instructions read as evidence about form) and **inferred** (naming,
