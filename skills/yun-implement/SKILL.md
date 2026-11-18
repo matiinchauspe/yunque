@@ -40,18 +40,18 @@ the mode off the mechanism instead would turn a walk's degraded pass into an att
 re-litigating whether to build at all, stopping for a review with nobody there, and landing a commit
 its caller never asked for.
 
-It differs from a run a human is driving in exactly five ways, and nowhere else: the guard
-above is already satisfied — the walk found the ticket fit, so do not re-litigate magnitude or
-ripeness; **it is a leaf** — it does the whole ticket in its own context and hands no share of it to
-further agents, since how many run is the walk's to hold and a helper inherits this run's plan of the
-split, which outweighs any rule handed it; a background command it waits on re-invokes it when it
-ends, so it waits without a `sleep` poll; step 2 does not choose, it always isolates, passing the handed base, name and any `prior`;
-**it ends at
-step 3** — neither the review of step 4 nor the landing of step 5 runs, because `yun-review-work`
-assumes a human at its convergence points and no human is there, so review is the walk's to push
-right, over the assembled result; and before ending it runs **the repo's whole-tree gates** — test,
-build and typecheck, from wherever the repo declares them — against its branch in the workspace it
-already built, reporting which of *passed*, *failed*, *none declared* or *could not run* it got.
+It differs from a run a human is driving in these ways, and, past step 3's park and checkpoint,
+nowhere else: the guard above is already satisfied — the walk found the ticket fit, so do not
+re-litigate magnitude or ripeness; **it is a leaf** — it does the whole ticket in its own context and
+hands no share of it to further agents, since how many run is the walk's to hold and a helper
+inherits this run's plan of the split, which outweighs any rule handed it; a background command it
+waits on re-invokes it when it ends, so it waits without a `sleep` poll; step 2 does not choose, it
+always isolates, passing the handed base, name and any `prior`; **it ends at step 3** — neither the
+review of step 4 nor the landing of step 5 runs, because `yun-review-work` assumes a human at its
+convergence points and no human is there, so review is the walk's to push right, over the assembled
+result; and before ending, a run that neither parked nor checkpointed runs **the repo's whole-tree
+gates** — test, build and typecheck, from wherever the repo declares them — against its branch in
+the workspace it already built, reporting which of *passed*, *failed*, *none declared* or *could not run* it got.
 
 That last one is not the ticket's done-signal, which step 3 already settled on the ticket's own
 seams. It is a different question — does everything still hold together — and it is asked here
@@ -62,10 +62,11 @@ So a **converged** dispatched run's own last act is to hand back **the name of t
 created** — the walk addresses it rather than predicting it — and to **leave standing the workspace
 it created around that branch**. The branch carries the work, but only the workspace carries the
 environment that work runs in: tear it down and a human must rebuild that environment before they
-can run anything, which is how a chain reaches review unverified. **A run that fail-fasts or parks
-removes nothing** either: its workspace is the only evidence of what went wrong, or of what the
-parked run had reached. Either way the workspace is **a human's to remove** — once they have run what it
-holds, or answered what it parked on — so a run reports its path alongside its branch. The walk cuts its next run from a converged branch rather than from the mainline; a branch
+can run anything, which is how a chain reaches review unverified. **A run that fail-fasts, parks or
+checkpoints removes nothing** either: its workspace is the only evidence of what went wrong, or of
+what the run had reached. Either way the workspace is **a human's to remove** — once they have
+run what it holds, answered what it parked on, or seen a resume chain past it — so a run reports
+its path alongside its branch. The walk cuts its next run from a converged branch rather than from the mainline; a branch
 you isolated on your own waits as a ref for a human.
 
 ## Steps
@@ -116,7 +117,8 @@ bounds the loop depends on the run: an isolated run converges through
 `skills/_shared/execution-convention.md`, held to an iteration ceiling (the dispatcher's, else
 the contract's conservative default) whose fail-fast exit is never a pass; an attended build is
 bounded by the human driving it. A dispatched run with no human to ask **parks** on a WHAT
-decision, by that contract's rule, reporting the question and its recommendation. A run that stops
+decision, by that contract's rule, reporting the question and its recommendation; told to
+checkpoint, it ends by that contract's rule too, reporting the baton. A run that stops
 short of its done-signal reports the shortfall and ends here — no review, no landing (an isolated
 run's branch stays as its ref). Done when the done-signal has fired.
 

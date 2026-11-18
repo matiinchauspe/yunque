@@ -90,8 +90,9 @@ log(ticket):  where a ticket's LOG lives — NOT an intent a skill declares, but
   An entry is free text, except the kinds a walk reads a ticket's state off, so the kind leads
   them, each part on its own line: **`parked`**, then the **question** and the
   **recommendation**; **`answered`**, then the human's **answer** to the `parked` entry before
-  it; and **`resumed`**, then the **name** and the **prior** a walk handed the run that took that
-  answer.
+  it; **`checkpoint`**, then the run's **baton**, verbatim, without its `## Handoff` heading; and
+  **`resumed`**, then the **name** and the **prior** a walk handed the run that took that answer
+  or baton.
 
 fetch(reference, project):  try each mechanism until one YIELDS the artifact — a present but
      empty capability falls through, it does not short-circuit:

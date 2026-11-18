@@ -98,9 +98,9 @@ isolate(ticket, project, base?, name?, prior?):  the workspace the run happens i
          it — the tier that is always available is also the one that cannot isolate a failure.
 
 converge(ticket):  loop the run — drive the work, evaluate the done-signal, and on anything short
-     of it iterate again — with three exits only: the done-signal fires (success), the run parks
-     (below), or an iteration ceiling is reached first (a fail-fast surface, never a done). A
-     failing gate or an unfinished run is not an exit — it spends one more iteration. The
+     of it iterate again — with four exits only: the done-signal fires (success), the run parks
+     or checkpoints (below), or an iteration ceiling is reached first (a fail-fast surface, never
+     a done). A failing gate or an unfinished run is not an exit — it spends one more iteration. The
      ceiling — a run-level bound the dispatching skill sets, and a conservative default when it
      does not — always bounds the loop, so it cannot spin forever. The done-signal is the strongest the ticket offers, and a weaker
      signal never substitutes for a stronger one the ticket carries:
@@ -118,6 +118,12 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
   merges that branch, and loose edits do not travel — and reports the question with its
   recommendation; its dispatching skill records them. A HOW decision never parks: the run takes
   the default, names it in its completion report, and goes on.
+  A dispatched run **checkpoints** when its context tells it to — an instruction to write its
+  checkpoint and end, from whatever measures how deep the run has gone. It ends there without
+  asking anyone, its work committed as a parking run's is, and reports the baton below, filled
+  in, under a `## Handoff` heading closing its final message, or in the report its tier hands up
+  instead, and never into the ticket's log: its dispatching skill records it there and counts the
+  entries, so a second copy counts twice.
   A ticket held for a human never reaches this loop, so the completion-report tier is never a
   stand-in for the human. Whether the whole tree still holds once this branch is integrated is
   a SEPARATE, serial concern (below) — not this loop's.
@@ -125,7 +131,25 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
 
 - **A run announces itself** through `control-convention.md`, twice. Once its workspace stands,
   it announces `ticket`, `project`, `branch` and `base`. At every exit of `converge`, a re-entry's
-  included, it announces `verdict=done`, `verdict=parked` or `verdict=fail-fast`.
+  included, it announces `verdict=done`, `verdict=parked`, `verdict=checkpoint` or
+  `verdict=fail-fast`.
+- **The baton is one fixed template**, so every tier hands up the same text and a checkpointing
+  run fills it from here, loading no skill. The next run reads nothing else of this one, so a
+  section counts as filled only when it meets its line:
+
+  ```
+  ## Handoff
+  - World-state: branch `<name>` at `<commit>` in workspace `<path>`, cut from `<base>`, merging
+    `<prior>` where one was handed. Verify that commit is in your branch before trusting anything
+    below.
+  - Criteria: every acceptance criterion of the ticket, each marked done with the gate or file
+    that shows it, or remaining.
+  - Approach: the one chosen, why, and the files or seam it shapes.
+  - Rejected: each approach tried and dropped, with what ruled it out — or `none`.
+  - Current state: each failing gate by name with its last output line, and each half-written
+    file by path — or `every gate green`.
+  - Next step: one action, a command to run or a file and the change it needs.
+  ```
 - **Sandbox capability** = any isolated runtime the agent can drive — a container, a microVM, a
   remote sandbox. It carries the ticket's whole run; the convention does not know or care which
   one it is, only that it takes one ticket at a time. A runtime that offers no per-ticket entry
