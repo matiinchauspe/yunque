@@ -95,7 +95,8 @@ buries it.
 the index — one line per entry, `- #<n> <title> · <state>`, and a last line `next: <n>`. A new
 note claims its number first — recall the index, add its line, advance `next:` and write the index
 back whole — and only then writes `friction-<n>`; a `friction-<n>` that already holds something was
-taken meanwhile, so claim again from the index's current `next:`. A sighting or a change rewrites
+taken meanwhile, so put that entry's own title back on its line and claim again from the
+index's current `next:`. A sighting or a change rewrites
 that entry, and its line only when its title or state moved. A fully closed entry's line leaves the
 index; the entry stays and its number is never reused, so a cited number still resolves. Recall
 reads the `friction` index, then only the entries the work touches. A capability may REPLACE what is
