@@ -87,7 +87,7 @@ project = the synced repo the work targets   →  repos/<name>  ⇒  <name>
 
 **The subject decides the project, not the session.** A note about the harness itself — a skill
 that misfired, a contract that missed the case, a step done by hand — resolves to the harness even
-when you noticed it mid-project. Persist it under the fixed topic `friction` and carry on: raising
+when you noticed it mid-project. File it in the harness's `friction` running list and carry on: raising
 it spends the user's turn on a problem they did not come to work, and filing it under their project
 buries it.
 
