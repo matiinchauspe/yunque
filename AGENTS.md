@@ -154,7 +154,7 @@ yunque/
 ├─ skills/_shared/           ← cross-skill contracts (memory-, artifact-, domain-, flow-, execution-, practice-, control-convention)
 ├─ lenses/                   ← a linter for the harness TEXT; `lenses/run` calibrates then measures
 ├─ evals/                    ← measures BEHAVIOUR — does the skill that should fire, fire? On demand only
-├─ .githooks/pre-commit      ← runs the suite over the staged tree (`git config core.hooksPath .githooks`)
+├─ .githooks/pre-commit      ← runs the suite and every skill's `*-test` over the staged tree (`git config core.hooksPath .githooks`)
 ├─ .claude/skills            → symlink to ../skills  (Claude Code discovery)
 ├─ .cursor/skills            → symlink to ../skills  (Cursor discovery)
 ├─ hooks/session-start       ← warns at session start when this checkout is behind origin/main

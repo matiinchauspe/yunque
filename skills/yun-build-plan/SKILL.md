@@ -166,8 +166,8 @@ ticket's number, the **base** step 1 derived, and the **`name`** `aw/<slug>/<NN>
 walk's slug, the ticket's number, and a random suffix, which is what the source template settled on
 after second-granularity timestamps collided. Step 1 matches on the `<NN>-` prefix, so the suffix
 costs the walk nothing. Quote `practice-convention`'s rule 2 paragraph **A comment carries the why**
-into the package whole — a run left to reach it through conform mirrors the comments around it —
-and ask the run to hand back step 3's comment table over its own diff. In an attended walk, also
+into the package whole — a run left to reach it through conform mirrors the comments around it.
+In an attended walk, also
 tell it to leave its work **uncommitted** on its branch, in its workspace: the human reviews it there.
 
 An **answered** or checkpointed ticket is a **resume**: the same package under a fresh `name`,
@@ -276,19 +276,24 @@ this ticket as open with no branch and **redispatches work already built**. Carr
 and let step 4 declare this chain no longer derivable, naming every branch: from here it resumes
 only on a `<base>` a human supplies.
 
-**Before chaining, show the comments the run added** — every comment line its change adds over the
-base you handed out: `git -C repos/<repo> diff <base> <branch>`, or, while an attended run's work is
-uncommitted, `git -C <workspace> diff <base>` plus every untracked file it created, read whole — as
-a table, one row each: the comment, what the code beside it already says, and *keep*, *cut* or a
-one-line rewrite. Each row asks one question: delete it, and is anything lost the code does not say? A read with no table is not done —
-the run's own table is a claim to check, not this read. Neither a veto nor a move: every row not
-*keep* goes to step 4 by `file:line`, since a long diff hides it from the human.
+**Before chaining, have the comments the run added judged blind** — by a fresh subagent, never
+this thread, which has read the run's rationale; with no subagent to hand it to, judge here and
+let step 4 say the judgment was not blind. Hand it rule 2's paragraph and any comment policy the
+repo declares; what [`comment-check`](../yun-implement/comment-check) prints for the run's change —
+`<base> repos/<repo> <branch>`, or `<base> <workspace>` while an attended run's work is
+uncommitted; every comment line that change adds, with the code beside it; and, only to spot a
+why written twice, the comment lines the earlier runs of this chain added. Nothing of the ticket
+or the run's report. It starts every comment at *cut* and keeps one only when deleting it loses
+a fact the code cannot show, returning a table, one row each: the comment, what the code beside
+it already says, and *keep*, *cut* or a one-line rewrite. A pass with no table is not done.
+Neither a veto nor a move: every row not *keep* goes to step 4 by `file:line`, since a long diff
+hides it from the human.
 
 **In an attended walk, stop for the human here**, before anything is committed and before the two
 vetoes, which have no commits to read yet. Append an *awaiting review* entry to the ticket's log
 through `artifact-convention.md` — the only record that this branch waits on a person, since in git
 it reads as a failed run — and hand the human the workspace path, the files changed, your review
-with the comment table, and the commits you would split the change into. **Their ruling picks the
+with the judge's comment table, and the commits you would split the change into. **Their ruling picks the
 move:** changes go back to the run by the rule above — or, where that run is gone with a past session,
 the human chooses between the walk making them in that workspace, then this stop again, and
 deleting the branch to retry the ticket; an ok has the walk commit on the run's branch,
@@ -349,9 +354,11 @@ Done when the pass has chained, parked, skipped, stopped, or waits on the human'
   delivery.
 - **Loose paths let through** — each one step 2 passed, with the ticket whose body named it.
 - **Comments over the bar** — every row step 3's table did not keep, by ticket and `file:line`, with
-  its rewrite, or "none" said outright.
-- **What was never verified** — every ticket whose repo declared no gates, and any run that shared
-  this thread's context rather than a subagent's.
+  its rewrite, or "none" said outright. Unattended, before this report, publish the rows as one
+  implementation ticket blocked by the newest resolved one and walk it from step 1, so the
+  deliverable carries none; once per walk — rows that ticket's own judge leaves are reported.
+- **What was never verified** — every ticket whose repo declared no gates, any run that shared
+  this thread's context rather than a subagent's, and any comment judgment made here.
 - **Whether this chain is still derivable**, wherever step 1 could not read a tip or step 3 found a
   name outside the namespace.
 

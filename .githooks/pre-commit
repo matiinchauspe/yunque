@@ -37,10 +37,21 @@ if [ ! -x "$staged/lenses/run" ]; then
 fi
 
 out="$("$staged/lenses/run" 2>&1)"; code=$?
-[ "$code" -eq 0 ] && exit 0
+if [ "$code" -ne 0 ]; then
+  printf '%s\n' "$out" >&2
+  echo >&2
+  echo "pre-commit: the lens suite did not read CLEAN against the staged tree." >&2
+  echo "            Fix it, or bypass with --no-verify." >&2
+  exit 1
+fi
 
-printf '%s\n' "$out" >&2
-echo >&2
-echo "pre-commit: the lens suite did not read CLEAN against the staged tree." >&2
-echo "            Fix it, or bypass with --no-verify." >&2
-exit 1
+# A script a skill ships carries its cases beside it as an executable `<name>-test`.
+failed=0
+for test in "$staged"/skills/*/*-test; do
+  [ -x "$test" ] || continue
+  out="$("$test" 2>&1)" && continue
+  printf '%s\n' "$out" >&2
+  echo "pre-commit: ${test#"$staged"/} failed. Fix it, or bypass with --no-verify." >&2
+  failed=1
+done
+exit "$failed"

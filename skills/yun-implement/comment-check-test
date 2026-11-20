@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# Each case builds a throwaway repo, runs comment-check, and compares output and exit.
+# Exit 0 = every case passed.
+
+set -uo pipefail
+# A git hook exports these; left set, every throwaway repo would write to the real one.
+unset GIT_DIR GIT_INDEX_FILE GIT_WORK_TREE GIT_PREFIX
+
+check="$(cd "$(dirname "$0")" && pwd)/comment-check"
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+failed=0
+
+repo() {
+  rm -rf "$tmp/r" && mkdir -p "$tmp/r" && git -C "$tmp/r" init -q \
+    && git -C "$tmp/r" -c user.email=t@t -c user.name=t commit -q --allow-empty -m base
+}
+commit() { git -C "$tmp/r" add -A && git -C "$tmp/r" -c user.email=t@t -c user.name=t commit -q -m c; }
+
+# expect <name> <exit> <output> -- <comment-check args…>
+expect() {
+  local name="$1" want="$2" wanted="$3"; shift 4
+  local got code
+  got="$("$check" "$@" 2>/dev/null)"; code=$?
+  if [[ "$code" == "$want" && "$got" == "$wanted" ]]; then
+    echo "  ok    $name"
+  else
+    echo "  FAIL  $name — exit $code (want $want)"
+    diff <(printf '%s\n' "$wanted") <(printf '%s\n' "$got") | sed 's/^/        /'
+    failed=1
+  fi
+}
+
+repo
+printf '%s\n' '// seq1 of the sequence' 'const a = 1' '// the mac 3 build' 'const b = 2' \
+  '// upr2 thing' 'const u = "http://x" // keeps the slash' >"$tmp/r/a.ts"
+expect "a word ending in a number is no pointer" 0 "" -- HEAD "$tmp/r"
+
+repo
+printf '%s\n' 'x() // see ticket 05' '// same rule as the reader' 'y()' \
+  '// measured at 360px' 'z()' "// $(printf 'w%.0s' {1..121})" >"$tmp/r/a.ts"
+expect "pointer, cross-ref, history and long are flagged" 1 "a.ts:1	pointer	see ticket 05
+a.ts:2	cross-ref	same rule as the reader
+a.ts:4	history	measured at 360px
+a.ts:6	long	$(printf 'w%.0s' {1..121})" -- HEAD "$tmp/r"
+
+repo
+printf '%s\n' '# one' '# two' '# three' '# four' 'x = 1' >"$tmp/r/a.py"
+printf '%s\n' '// the cache outlives the request here' 'a()' '// the cache outlives the request here' >"$tmp/r/b.ts"
+expect "a block of four and a repeated why are flagged" 1 "a.py:4	block	four
+b.ts:3	repeat of b.ts:1	the cache outlives the request here" -- HEAD "$tmp/r"
+
+repo
+printf '%s\n' '#!/usr/bin/env bash' '# a' '# b' '# c' '# d' >"$tmp/r/tool"
+printf '%s\n' '# a' '# b' '# c' '# d' >"$tmp/r/notes"
+expect "an extensionless script is read, plain text is not" 1 "tool:5	block	d" -- HEAD "$tmp/r"
+
+repo
+printf '%s\n' '// see ticket 05' >"$tmp/r/a.ts" && commit
+printf '%s\n' '// see ticket 06' >"$tmp/r/b.ts"
+expect "with <head>, uncommitted work is left out" 1 "a.ts:1	pointer	see ticket 05" -- HEAD~1 "$tmp/r" HEAD
+expect "without <head>, untracked work counts" 1 "a.ts:1	pointer	see ticket 05
+b.ts:1	pointer	see ticket 06" -- HEAD~1 "$tmp/r"
+
+repo
+printf '%s\n' 'const a = 1' '// the cache outlives the request' >"$tmp/r/a.ts"
+expect "a clean change exits 0" 0 "" -- HEAD "$tmp/r"
+expect "a base that does not resolve is exit 2, never clean" 2 "" -- nope "$tmp/r"
+expect "a head that does not resolve is exit 2, never clean" 2 "" -- HEAD "$tmp/r" nope
+
+exit "$failed"
