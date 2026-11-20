@@ -147,6 +147,7 @@ yunque/
 ├─ CLAUDE.md                 → symlink to AGENTS.md (Claude Code reads this)
 ├─ README.md
 ├─ LICENSE                   ← MIT
+├─ .github/CODEOWNERS        ← every path is the owner's; a collaborator's PR needs their approval
 ├─ assets/                   ← the Yunque mark (light/dark SVG for the README)
 ├─ .gitignore                ← ignores /repos, /.worktrees and /.yun
 ├─ skills/yun-*/SKILL.md      ← THE HARNESS. Canonical. Versioned. Always active.
@@ -189,6 +190,6 @@ directory name must match the skill name (Agent Skills spec).
 Only the harness: `skills/` (including `skills/_shared/`), `lenses/`, `evals/`, `.githooks/`,
 `AGENTS.md`, the `CLAUDE.md` symlink, the `.claude/skills` and `.cursor/skills` symlinks,
 `hooks/` with `.claude/settings.json` and `.cursor/hooks.json`, `README.md`, `LICENSE`,
-`assets/` and `.gitignore`. Research notes under `docs/` stay local and are gitignored.
+`assets/`, `.github/CODEOWNERS` and `.gitignore`. Research notes under `docs/` stay local and are gitignored.
 The projects' code (`repos/`), the worktrees (`.worktrees/`), and the per-project memory,
 artifact, domain-model, handoff and wizard files (`.yun/`) are NOT versioned.
