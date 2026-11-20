@@ -87,13 +87,23 @@ project = the synced repo the work targets   →  repos/<name>  ⇒  <name>
 
 **The subject decides the project, not the session.** A note about the harness itself — a skill
 that misfired, a contract that missed the case, a step done by hand — resolves to the harness even
-when you noticed it mid-project. Persist it under the fixed topic `friction` and carry on: raising
+when you noticed it mid-project. File it in the harness's `friction` running list and carry on: raising
 it spends the user's turn on a problem they did not come to work, and filing it under their project
 buries it.
 
-`friction` accumulates, so **recall it and write it back with yours added** — never persist your
-note alone. A capability may REPLACE what is under a topic, so one blind write erases every note
-before it. Holds for any topic read as a running list rather than a latest-value.
+`friction` is a **running list**: each entry is its own topic, `friction-<n>`, and `friction` is
+the index — one line per entry, `- #<n> <title> · <state>`, and a last line `next: <n>`. A new
+note claims its number first — recall the index, add its line, advance `next:` and write the index
+back whole — and only then writes `friction-<n>`; a `friction-<n>` that already holds something was
+taken meanwhile, so put that entry's own title back on its line and claim again from the
+index's current `next:`. A sighting or a change rewrites
+that entry, and its line only when its title or state moved. A fully closed entry's line leaves the
+index; the entry stays and its number is never reused, so a cited number still resolves. Recall
+reads the `friction` index, then only the entries the work touches. A capability may REPLACE what is
+under a topic, so **recall what you write — the index, the entry — and write it back whole with
+yours added or changed**, never yours alone. An index you cannot recall is never started over: retry
+with the shortest distinctive term; if it is still missing and no `friction-<n>` exists, start it at
+`next: 1`, else say so and file nothing.
 
 ## What a skill persists
 

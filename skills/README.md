@@ -111,7 +111,7 @@ as part of the workspace harness. See `AGENTS.md` for the full rule.
   `index.md` exists) → skip. An empty recall is
   not proof of absence — retry with the shortest distinctive term. The subject
   decides the project, so harness friction found mid-project lands on the harness's `friction`
-  topic instead of the project's.
+  running list instead of the project's.
 - `_shared/artifact-convention.md` — how any skill records tracked work in three kinds (the map
   an effort is charted onto, the spec a plan is written into, the tickets it is sliced into)
   without naming a tracker: declare intent, degrade from an available capability → per-project
