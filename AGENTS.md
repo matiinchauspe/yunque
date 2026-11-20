@@ -89,7 +89,7 @@ and degrades by its own rules, spelled out below:
   skip; a project whose `index.md` exists stays on the wiki. A capability that cannot scope to
   the resolved project is a **failed** step, and an empty recall is not proof of absence — retry
   with the shortest distinctive term. The **subject** decides the project, not the session: harness friction
-  noticed mid-project files under the harness's own `friction` topic, a running list.
+  noticed mid-project files in the harness's own `friction` running list.
 - `artifact-convention.md` — record tracked work in three kinds: the map an effort is charted
   onto, the spec a plan is written into, and the tickets it breaks into (publish/fetch/resolve;
   list one ticket **namespace** — decision or implementation, never both, since they are separate

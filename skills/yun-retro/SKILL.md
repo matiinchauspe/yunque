@@ -66,7 +66,8 @@ session worked (its checks, its agent instructions, its conventions doc).
    `skills/_shared/memory-convention.md` — a new entry, or a sighting on the entry it repeats. A repo
    candidate is handed back as the change a person would make; recording it in
    the repo is that person's deliberate act, per `skills/_shared/practice-convention.md`, rule 4.
-   Done when every accepted candidate is filed or handed back, and you have stated which went where.
+   Done when every accepted candidate is filed or handed back — where memory files nothing, back to
+   the user verbatim — and you have stated which went where.
 
 ## Reference
 

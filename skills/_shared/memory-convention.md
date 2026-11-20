@@ -92,15 +92,17 @@ it spends the user's turn on a problem they did not come to work, and filing it 
 buries it.
 
 `friction` is a **running list**: each entry is its own topic, `friction-<n>`, and `friction` is
-the index — one line per entry with its number, title and state, plus the next free number. A new
-note takes that number, adds its line and advances the number; a sighting or a change rewrites
+the index — one line per entry, `- #<n> <title> · <state>`, and a last line `next: <n>`. A new
+note claims its number first — recall the index, add its line, advance `next:` and write the index
+back whole — and only then writes `friction-<n>`; a `friction-<n>` that already holds something was
+taken meanwhile, so claim again from the index's current `next:`. A sighting or a change rewrites
 that entry, and its line only when its title or state moved. A fully closed entry's line leaves the
-index, and its number is never reused. Recall reads the index, then only the entries the work
-touches. A capability may REPLACE what is under a topic, so **recall what you write — the index,
-the entry — and write it back whole with yours added or changed**, never yours alone. Recall the
-index again just before writing it; if your number was taken meanwhile, take the next. An index you
-cannot recall is never started over: retry with the shortest distinctive term, and if it is still
-missing, say so and file nothing.
+index; the entry stays and its number is never reused, so a cited number still resolves. Recall
+reads the `friction` index, then only the entries the work touches. A capability may REPLACE what is
+under a topic, so **recall what you write — the index, the entry — and write it back whole with
+yours added or changed**, never yours alone. An index you cannot recall is never started over: retry
+with the shortest distinctive term; if it is still missing and no `friction-<n>` exists, start it at
+`next: 1`, else say so and file nothing.
 
 ## What a skill persists
 
