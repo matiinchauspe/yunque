@@ -112,7 +112,10 @@ such gate green and every acceptance criterion in the brief accounted for — un
 where none could run it, in your completion report; only where no runnable gate exists at all —
 not merely where you'd skip one — does your own completion report stand in, enumerating the
 brief's behaviours and asserting each is covered; a weaker signal never substitutes where a gate
-was possible. What
+was possible. Where the harness is in reach, the signal also needs
+[`comment-check`](comment-check) `<base>` over your change — the base you were handed, else the
+commit you started from — to print only lines a comment policy the repo declares asks for: cut
+or rewrite every other one. Its exit 2 is a check that did not run, never a pass. What
 bounds the loop depends on the run: an isolated run converges through
 `skills/_shared/execution-convention.md`, held to an iteration ceiling (the dispatcher's, else
 the contract's conservative default) whose fail-fast exit is never a pass; an attended build is

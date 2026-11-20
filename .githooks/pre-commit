@@ -37,10 +37,18 @@ if [ ! -x "$staged/lenses/run" ]; then
 fi
 
 out="$("$staged/lenses/run" 2>&1)"; code=$?
-[ "$code" -eq 0 ] && exit 0
+if [ "$code" -ne 0 ]; then
+  printf '%s\n' "$out" >&2
+  echo >&2
+  echo "pre-commit: the lens suite did not read CLEAN against the staged tree." >&2
+  echo "            Fix it, or bypass with --no-verify." >&2
+  exit 1
+fi
 
+test="$staged/skills/yun-implement/comment-check-test"
+[ -x "$test" ] || exit 0
+out="$("$test" 2>&1)"; code=$?
+[ "$code" -eq 0 ] && exit 0
 printf '%s\n' "$out" >&2
-echo >&2
-echo "pre-commit: the lens suite did not read CLEAN against the staged tree." >&2
-echo "            Fix it, or bypass with --no-verify." >&2
+echo "pre-commit: comment-check failed its own cases. Fix it, or bypass with --no-verify." >&2
 exit 1
