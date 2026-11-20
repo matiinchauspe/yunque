@@ -91,9 +91,16 @@ when you noticed it mid-project. Persist it under the fixed topic `friction` and
 it spends the user's turn on a problem they did not come to work, and filing it under their project
 buries it.
 
-`friction` accumulates, so **recall it and write it back with yours added** — never persist your
-note alone. A capability may REPLACE what is under a topic, so one blind write erases every note
-before it. Holds for any topic read as a running list rather than a latest-value.
+`friction` is a **running list**: each entry is its own topic, `friction-<n>`, and `friction` is
+the index — one line per entry with its number, title and state, plus the next free number. A new
+note takes that number, adds its line and advances the number; a sighting or a change rewrites
+that entry, and its line only when its title or state moved. A fully closed entry's line leaves the
+index, and its number is never reused. Recall reads the index, then only the entries the work
+touches. A capability may REPLACE what is under a topic, so **recall what you write — the index,
+the entry — and write it back whole with yours added or changed**, never yours alone. Recall the
+index again just before writing it; if your number was taken meanwhile, take the next. An index you
+cannot recall is never started over: retry with the shortest distinctive term, and if it is still
+missing, say so and file nothing.
 
 ## What a skill persists
 

@@ -62,9 +62,9 @@ session worked (its checks, its agent instructions, its conventions doc).
    category, and the moment in the session that shows it. Done when every candidate is on the table
    — or, where step 3 found none, the categories it weighed are, with what each one read.
 
-5. File only what the user accepts. A harness candidate goes to the `friction` topic through
-   `skills/_shared/memory-convention.md` — recall it and write it back whole with yours added, never
-   a note alone. A repo candidate is handed back as the change a person would make; recording it in
+5. File only what the user accepts. A harness candidate goes to the `friction` running list through
+   `skills/_shared/memory-convention.md` — a new entry, or a sighting on the entry it repeats. A repo
+   candidate is handed back as the change a person would make; recording it in
    the repo is that person's deliberate act, per `skills/_shared/practice-convention.md`, rule 4.
    Done when every accepted candidate is filed or handed back, and you have stated which went where.
 
