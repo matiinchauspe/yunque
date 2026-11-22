@@ -129,10 +129,11 @@ converge(ticket):  loop the run — drive the work, evaluate the done-signal, an
   a SEPARATE, serial concern (below) — not this loop's.
 ```
 
-- **A run announces itself** through `control-convention.md`, twice. Once its workspace stands,
+- **A run announces itself** through `control-convention.md`. Once its workspace stands,
   it announces `ticket`, `project`, `branch` and `base`. At every exit of `converge`, a re-entry's
   included, it announces `verdict=done`, `verdict=parked`, `verdict=checkpoint` or
-  `verdict=fail-fast`.
+  `verdict=fail-fast`. A re-entry first announces `verdict=pending`, since an exit verdict left
+  standing reads to the session observer as a finished run.
 - **The baton is one fixed template**, so every tier hands up the same text and a checkpointing
   run fills it from here, loading no skill. The next run reads nothing else of this one, so a
   section counts as filled only when it meets its line:
